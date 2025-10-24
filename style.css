@@ -355,6 +355,22 @@ p.question-desc {
   gap: 1.4rem;
 }
 
+.result-synthesis {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.4rem 1.6rem;
+  border-radius: 20px;
+  background: rgba(94, 74, 241, 0.06);
+  border: 1px solid rgba(94, 74, 241, 0.12);
+  font-size: 0.97rem;
+  line-height: 1.6;
+  color: #2d2d40;
+}
+
+.result-synthesis p {
+  margin: 0;
+}
+
 .result-content h3 {
   margin: 0;
   font-size: clamp(1.8rem, 3vw, 2.2rem);
@@ -383,6 +399,31 @@ p.question-desc {
   display: grid;
   gap: 0.75rem;
   font-size: 0.95rem;
+}
+
+.next-steps-wrapper {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.next-steps-wrapper h4 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.next-steps {
+  margin: 0;
+  padding: 0 0 0 1.1rem;
+  display: grid;
+  gap: 0.55rem;
+  font-size: 0.95rem;
+  color: #3b3b52;
+}
+
+.next-steps li::marker {
+  color: var(--accent-strong);
 }
 
 .restart {
