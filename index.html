@@ -1,37 +1,599 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coming Soon</title>
+  <title>Buchfinder – Deine Lektüreempfehlung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <style>
     :root {
       color-scheme: light dark;
     }
-    * {
-      box-sizing: border-box;
-    }
+
     body {
-      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #eef2ff 0%, #d6dcff 35%, #ffffff 100%);
+      color: #1d1d2f;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: radial-gradient(circle at top, #1a1a2e, #16213e 60%, #0f3460);
-      color: #eaeaea;
+      padding: 3rem 1rem;
     }
-    h1 {
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      letter-spacing: 0.3rem;
+
+    .app-shell {
+      width: min(960px, 100%);
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      box-shadow: 0 40px 60px -35px rgba(46, 54, 114, 0.7);
+      overflow: hidden;
+      border: 1px solid rgba(89, 97, 214, 0.15);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(73, 97, 242, 0.95), rgba(140, 82, 255, 0.9));
+      color: #fff;
+      padding: 3rem clamp(2rem, 6vw, 4rem);
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% -10%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
+                  radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 45%);
+      pointer-events: none;
+    }
+
+    .hero h1 {
+      font-weight: 700;
+      font-size: clamp(2.2rem, 5vw, 3.3rem);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      max-width: 640px;
+      opacity: 0.9;
+      margin-bottom: 0;
+    }
+
+    .content {
+      padding: clamp(2rem, 6vw, 3.5rem);
+    }
+
+    .question-card {
+      border-radius: 24px;
+      border: 1px solid rgba(93, 102, 241, 0.15);
+      padding: clamp(1.5rem, 5vw, 2.5rem);
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 25px 50px -35px rgba(80, 88, 226, 0.6);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .question-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 35px 70px -45px rgba(80, 88, 226, 0.8);
+    }
+
+    .option-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+
+    .option-card {
+      border-radius: 18px;
+      border: 1px solid rgba(93, 102, 241, 0.22);
+      padding: 1.25rem 1.35rem;
+      background: rgba(255, 255, 255, 0.92);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .option-card.active,
+    .option-card:hover {
+      border-color: rgba(72, 87, 255, 0.8);
+      box-shadow: inset 0 0 0 2px rgba(72, 87, 255, 0.25), 0 12px 30px -20px rgba(72, 87, 255, 0.85);
+      transform: translateY(-4px);
+    }
+
+    .option-card span {
+      font-size: 2rem;
+    }
+
+    .question-footer {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .progress {
+      height: 0.75rem;
+      border-radius: 999px;
+      background-color: rgba(72, 87, 255, 0.15);
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, rgba(73, 97, 242, 1), rgba(144, 92, 255, 1));
+      border-radius: 999px;
+    }
+
+    .result-card {
+      border-radius: 24px;
+      border: 1px solid rgba(103, 112, 255, 0.18);
+      padding: clamp(1.5rem, 5vw, 2.5rem);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 25px 60px -40px rgba(86, 94, 241, 0.75);
+    }
+
+    .badge {
+      font-size: 0.8rem;
       text-transform: uppercase;
-      text-align: center;
-      margin: 0;
-      text-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+      letter-spacing: 0.06em;
+      background: rgba(77, 88, 255, 0.12);
+      color: #4d58ff;
+      border: none;
+      padding: 0.35rem 0.75rem;
+    }
+
+    .result-card h2 {
+      font-weight: 700;
+      font-size: clamp(1.75rem, 3vw, 2.3rem);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .result-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .result-tags .badge {
+      background: rgba(64, 76, 255, 0.1);
+      color: #424aff;
+      font-weight: 500;
+    }
+
+    .restart-btn {
+      background: linear-gradient(135deg, rgba(73, 97, 242, 1), rgba(141, 90, 255, 0.95));
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .restart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px -20px rgba(79, 93, 255, 0.8);
+    }
+
+    .list-group-item {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(72, 87, 255, 0.16);
+      border-radius: 14px;
+      margin-bottom: 0.75rem;
+      padding: 0.9rem 1.1rem;
+    }
+
+    .list-group-item strong {
+      color: #3f49c3;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 2rem 0.75rem;
+      }
+
+      .option-card {
+        min-height: 120px;
+      }
+
+      .question-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Coming Soon</h1>
+  <main class="app-shell">
+    <section class="hero">
+      <h1>Finde dein nächstes Buch</h1>
+      <p>Beantworte ein paar schnelle Fragen und erhalte eine persönliche Empfehlung – egal ob Fachliteratur
+        oder fesselnde Unterhaltung. Lass dich inspirieren!</p>
+    </section>
+
+    <section class="content" id="quiz">
+      <div class="question-card" id="question-card" aria-live="polite"></div>
+      <div class="result-card d-none" id="result-card" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script>
+    const questions = [
+      {
+        id: 'intent',
+        prompt: 'Worauf hast du heute Lust?',
+        options: [
+          { value: 'fiction', label: 'Unterhaltungslektüre', description: 'Ich möchte in eine Geschichte eintauchen.', icon: '📚' },
+          { value: 'nonfiction', label: 'Fach- oder Sachbuch', description: 'Ich will etwas Neues lernen.', icon: '🧠' }
+        ]
+      },
+      {
+        id: 'tone',
+        prompt: 'Welches Lesegefühl suchst du?',
+        options: [
+          { value: 'uplifting', label: 'Inspirierend & optimistisch', description: 'Motivierend und positiv.', icon: '🌈' },
+          { value: 'reflective', label: 'Tiefgründig & nachdenklich', description: 'Zum Mitfühlen und Reflektieren.', icon: '🤔' },
+          { value: 'intense', label: 'Packend & spannend', description: 'Ich brauche Nervenkitzel.', icon: '⚡' },
+          { value: 'practical', label: 'Praxisnah & lösungsorientiert', description: 'Klare Strategien zum Anwenden.', icon: '🛠️' }
+        ]
+      },
+      {
+        id: 'time',
+        prompt: 'Wie viel Zeit möchtest du investieren?',
+        options: [
+          { value: 'compact', label: 'Kurz & knackig', description: 'Unter 250 Seiten oder Hörbuch < 6h.', icon: '⏱️' },
+          { value: 'medium', label: 'Ausgewogene Länge', description: 'Zwischen 250 und 400 Seiten.', icon: '📖' },
+          { value: 'immersive', label: 'Ich habe viel Zeit', description: 'Über 400 Seiten oder viel Tiefgang.', icon: '🕰️' }
+        ]
+      },
+      {
+        id: 'focus',
+        prompt: 'Welcher Schwerpunkt passt am besten?',
+        options: [
+          { value: 'career', label: 'Beruf & Lernen', description: 'Karriere, Strategie, Wissenserweiterung.', icon: '💼' },
+          { value: 'personal', label: 'Persönliche Entwicklung', description: 'Mindset, Achtsamkeit, Lebensgestaltung.', icon: '🌱' },
+          { value: 'imagination', label: 'Fantastische Welten', description: 'Science-Fiction, Fantasy, magischer Realismus.', icon: '🪐' },
+          { value: 'realworld', label: 'Zeitgeschehen & Gesellschaft', description: 'Aktuelle Themen, Kultur, Politik.', icon: '🌍' }
+        ]
+      }
+    ];
+
+    const library = [
+      {
+        title: 'Der Report der Magd',
+        author: 'Margaret Atwood',
+        type: 'fiction',
+        tone: ['reflective', 'intense'],
+        length: 'medium',
+        focus: ['realworld'],
+        tags: ['Dystopie', 'Gesellschaft', 'Frauenrechte'],
+        description: 'Ein dystopischer Klassiker, der patriarchale Machtstrukturen beleuchtet und zutiefst zum Nachdenken anregt.'
+      },
+      {
+        title: 'Projekt Hail Mary',
+        author: 'Andy Weir',
+        type: 'fiction',
+        tone: ['uplifting', 'intense'],
+        length: 'immersive',
+        focus: ['imagination'],
+        tags: ['Science-Fiction', 'Abenteuer', 'Wissenschaft'],
+        description: 'Science-Fiction mit viel Herz, Humor und wissenschaftlicher Raffinesse – perfekt für einen langen Lesemarathon.'
+      },
+      {
+        title: 'Altes Land',
+        author: 'Dörte Hansen',
+        type: 'fiction',
+        tone: ['reflective'],
+        length: 'medium',
+        focus: ['realworld'],
+        tags: ['Gegenwartsliteratur', 'Familie', 'Identität'],
+        description: 'Eine feinfühlige Geschichte über Herkunft, Heimat und die Suche nach einem Platz in der Welt.'
+      },
+      {
+        title: 'Die Mitternachtsbibliothek',
+        author: 'Matt Haig',
+        type: 'fiction',
+        tone: ['uplifting', 'reflective'],
+        length: 'medium',
+        focus: ['personal'],
+        tags: ['Philosophie', 'Lebenswege', 'Magischer Realismus'],
+        description: 'Ein hoffnungsvoller Roman über die Kraft der Entscheidungen und das Erforschen alternativer Lebenspfade.'
+      },
+      {
+        title: 'Atomic Habits',
+        author: 'James Clear',
+        type: 'nonfiction',
+        tone: ['uplifting', 'practical'],
+        length: 'compact',
+        focus: ['personal'],
+        tags: ['Gewohnheiten', 'Selbstmanagement', 'Strategien'],
+        description: 'Ein praxisnaher Leitfaden, wie kleine Veränderungen zu bemerkenswerten Ergebnissen führen können.'
+      },
+      {
+        title: 'Deep Work',
+        author: 'Cal Newport',
+        type: 'nonfiction',
+        tone: ['practical', 'reflective'],
+        length: 'medium',
+        focus: ['career'],
+        tags: ['Produktivität', 'Konzentration', 'Arbeit'],
+        description: 'Lerne, wie du fokussiert arbeitest und dir kreative Tiefenarbeit zur Gewohnheit machst.'
+      },
+      {
+        title: 'Factfulness',
+        author: 'Hans Rosling',
+        type: 'nonfiction',
+        tone: ['uplifting', 'reflective'],
+        length: 'medium',
+        focus: ['realworld'],
+        tags: ['Daten', 'Gesellschaft', 'Optimismus'],
+        description: 'Eine faktenbasierte Sicht auf den Zustand der Welt, die gängige Vorurteile entkräftet und Hoffnung macht.'
+      },
+      {
+        title: 'Clean Code',
+        author: 'Robert C. Martin',
+        type: 'nonfiction',
+        tone: ['practical'],
+        length: 'immersive',
+        focus: ['career'],
+        tags: ['Softwareentwicklung', 'Best Practices', 'Programmierung'],
+        description: 'Ein Standardwerk für Entwickler:innen, die nachhaltig besseren Code schreiben möchten.'
+      },
+      {
+        title: 'Der Wal und das Ende der Welt',
+        author: 'John Ironmonger',
+        type: 'fiction',
+        tone: ['uplifting', 'reflective'],
+        length: 'medium',
+        focus: ['realworld'],
+        tags: ['Roman', 'Menschlichkeit', 'Gemeinschaft'],
+        description: 'Ein herzerwärmender Roman, der Menschlichkeit in Krisenzeiten feiert.'
+      },
+      {
+        title: 'Think Again',
+        author: 'Adam Grant',
+        type: 'nonfiction',
+        tone: ['uplifting', 'practical'],
+        length: 'medium',
+        focus: ['personal', 'career'],
+        tags: ['Psychologie', 'Neugier', 'Entscheidungen'],
+        description: 'Ein Aufruf zum mutigen Umdenken – lerne, deine eigenen Überzeugungen zu hinterfragen und offener zu werden.'
+      },
+      {
+        title: 'Die siebte Kreuzigung',
+        author: 'José Eduardo Agualusa',
+        type: 'fiction',
+        tone: ['intense', 'reflective'],
+        length: 'compact',
+        focus: ['realworld'],
+        tags: ['Literatur', 'Politik', 'Afrika'],
+        description: 'Eine dichterisch verdichtete Erzählung über Macht, Identität und Erinnerung im modernen Angola.'
+      }
+    ];
+
+    const questionCard = document.getElementById('question-card');
+    const resultCard = document.getElementById('result-card');
+    let currentIndex = 0;
+    const answers = {};
+
+    function renderQuestion() {
+      const { id, prompt, options } = questions[currentIndex];
+      questionCard.innerHTML = `
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+          <div>
+            <span class="badge">Frage ${currentIndex + 1} von ${questions.length}</span>
+            <h2 class="mt-3 mb-2">${prompt}</h2>
+            <p class="text-muted">Wähle die Option, die dir am meisten zusagt.</p>
+          </div>
+        </div>
+        <div class="option-grid" role="list">
+          ${options.map(option => `
+            <button type="button" class="option-card text-start ${answers[id] === option.value ? 'active' : ''}" data-question="${id}" data-value="${option.value}">
+              <div>
+                <span>${option.icon}</span>
+              </div>
+              <div>
+                <h3 class="h5 fw-semibold">${option.label}</h3>
+                <p class="text-muted mb-0">${option.description}</p>
+              </div>
+            </button>
+          `).join('')}
+        </div>
+        <div class="question-footer">
+          <div class="flex-grow-1">
+            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${((currentIndex + (answers[id] ? 1 : 0)) / questions.length) * 100}">
+              <div class="progress-bar" style="width: ${((currentIndex) / questions.length) * 100}%"></div>
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary" id="back-btn" ${currentIndex === 0 ? 'disabled' : ''}>Zurück</button>
+            <button class="btn btn-primary" id="next-btn" ${answers[id] ? '' : 'disabled'}>Weiter</button>
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll('.option-card').forEach(button => {
+        button.addEventListener('click', () => {
+          const { question, value } = button.dataset;
+          answers[question] = value;
+          renderQuestion();
+        });
+      });
+
+      document.getElementById('next-btn').addEventListener('click', handleNext);
+      document.getElementById('back-btn').addEventListener('click', handleBack);
+    }
+
+    function handleNext() {
+      const currentQuestion = questions[currentIndex];
+      if (!answers[currentQuestion.id]) return;
+      if (currentIndex < questions.length - 1) {
+        currentIndex += 1;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function handleBack() {
+      if (currentIndex === 0) return;
+      currentIndex -= 1;
+      renderQuestion();
+    }
+
+    function showResult() {
+      const recommendation = scoreBooks();
+      const matchPercent = Math.round(recommendation.score * 100 / questions.length);
+      questionCard.classList.add('d-none');
+      resultCard.classList.remove('d-none');
+      resultCard.innerHTML = `
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+          <div>
+            <span class="badge">Empfehlung gefunden</span>
+            <h2 class="mt-3">${recommendation.book.title}</h2>
+            <p class="mb-2 text-muted">von ${recommendation.book.author}</p>
+          </div>
+          <div class="text-end">
+            <span class="display-6 fw-bold text-primary">${matchPercent}%</span>
+            <p class="text-muted mb-0">Match mit deinen Antworten</p>
+          </div>
+        </div>
+        <p class="lead">${recommendation.book.description}</p>
+        <div class="result-meta">
+          <span class="badge">${recommendation.book.type === 'fiction' ? 'Unterhaltungslektüre' : 'Fach- & Sachbuch'}</span>
+          <span class="badge">Leseumfang: ${formatLength(recommendation.book.length)}</span>
+        </div>
+        <div class="result-tags mb-4">
+          ${recommendation.book.tags.map(tag => `<span class="badge">${tag}</span>`).join('')}
+        </div>
+        <h3 class="h5 fw-semibold">Warum passt das zu dir?</h3>
+        <ul class="list-group list-group-flush mb-4">
+          ${recommendation.reasons.map(reason => `<li class="list-group-item">${reason}</li>`).join('')}
+        </ul>
+        <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+          <button class="restart-btn" id="restart-btn">Nochmals starten</button>
+          <p class="text-muted mb-0">Nicht überzeugt? Starte neu und kombiniere deine Antworten anders.</p>
+        </div>
+      `;
+
+      document.getElementById('restart-btn').addEventListener('click', restartQuiz);
+    }
+
+    function formatLength(length) {
+      return {
+        compact: 'kurz',
+        medium: 'mittlere Länge',
+        immersive: 'umfangreich'
+      }[length];
+    }
+
+    function scoreBooks() {
+      let best = { book: library[0], score: -Infinity, reasons: [] };
+
+      for (const book of library) {
+        let score = 0;
+        const localReasons = [];
+
+        if (book.type === answers.intent) {
+          score += 1.2;
+          localReasons.push(`<strong>Typ</strong>: Du suchst ${answers.intent === 'fiction' ? 'Unterhaltung' : 'Fachwissen'} und dieses Buch liefert genau das.`);
+        }
+
+        if (book.tone.includes(answers.tone)) {
+          score += 1;
+          localReasons.push(`<strong>Stimmung</strong>: ${toneDescription(answers.tone)} – dieses Buch trifft diesen Ton.`);
+        }
+
+        if (book.length === answers.time) {
+          score += 0.6;
+          localReasons.push(`<strong>Leseumfang</strong>: ${lengthDescription(answers.time)}.`);
+        }
+
+        if (book.focus.includes(answers.focus)) {
+          score += 1.1;
+          localReasons.push(`<strong>Schwerpunkt</strong>: Es deckt ${focusDescription(answers.focus)} ab.`);
+        }
+
+        // Bonus: wenn Buch mehrere Fokus-Werte und Tone matches
+        const bonus = Math.min(book.focus.filter(f => f === answers.focus).length * 0.2, 0.4);
+        score += bonus;
+
+        if (score > best.score) {
+          best = { book, score, reasons: localReasons };
+        }
+      }
+
+      return best;
+    }
+
+    function toneDescription(value) {
+      switch (value) {
+        case 'uplifting':
+          return 'Du wolltest etwas Inspirierendes';
+        case 'reflective':
+          return 'Du suchst Tiefgang und Reflexion';
+        case 'intense':
+          return 'Du hast nach Spannung und Tempo gefragt';
+        case 'practical':
+          return 'Du wünschst dir praxisnahe Anleitungen';
+        default:
+          return 'Diese Stimmung';
+      }
+    }
+
+    function lengthDescription(value) {
+      switch (value) {
+        case 'compact':
+          return 'Du wolltest etwas, das sich schnell lesen lässt';
+        case 'medium':
+          return 'Du bevorzugst eine ausgewogene Länge';
+        case 'immersive':
+          return 'Du hast Zeit für ein umfangreicheres Werk';
+        default:
+          return 'Dieser Umfang passt zu dir';
+      }
+    }
+
+    function focusDescription(value) {
+      switch (value) {
+        case 'career':
+          return 'berufliche Themen und Lernen';
+        case 'personal':
+          return 'persönliche Entwicklung und Mindset';
+        case 'imagination':
+          return 'fantastische Welten und neue Universen';
+        case 'realworld':
+          return 'aktuelle gesellschaftliche Fragen';
+        default:
+          return 'deinen Schwerpunkt';
+      }
+    }
+
+    function restartQuiz() {
+      resultCard.classList.add('d-none');
+      questionCard.classList.remove('d-none');
+      Object.keys(answers).forEach(key => delete answers[key]);
+      currentIndex = 0;
+      renderQuestion();
+    }
+
+    renderQuestion();
+  </script>
 </body>
 </html>
