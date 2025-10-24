@@ -3,994 +3,914 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cineclix – Dein Streaming-Guide</title>
+  <title>Buchfinder – Dein persönlicher Literatur-Guide</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <style>
     :root {
-      color-scheme: light dark;
+      color-scheme: light;
+      --bg: #f7f8ff;
+      --card: rgba(255, 255, 255, 0.88);
+      --accent: #5e4af1;
+      --accent-strong: #4c39d0;
+      --text: #13131f;
+      --muted: #6a6b7c;
+      --border: rgba(94, 74, 241, 0.16);
+      --shadow: 0 40px 70px -40px rgba(25, 30, 90, 0.45);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
     }
 
     body {
+      margin: 0;
       font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: radial-gradient(circle at top left, #eef2ff 0%, #dfe7ff 40%, #f8f6ff 70%, #ffffff 100%);
-      color: #131325;
+      background: radial-gradient(circle at top left, rgba(94, 74, 241, 0.15) 0%, transparent 42%),
+        radial-gradient(circle at 90% 10%, rgba(250, 167, 93, 0.18) 0%, transparent 55%),
+        var(--bg);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 3rem 1rem;
+      padding: clamp(2.5rem, 6vw, 4rem) clamp(1.2rem, 4vw, 2.5rem);
       position: relative;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     body::before {
       content: '';
       position: fixed;
-      inset: -30% -20% auto auto;
-      width: clamp(320px, 45vw, 520px);
-      aspect-ratio: 1;
-      background: radial-gradient(circle at 30% 30%, rgba(120, 94, 255, 0.35), transparent 70%);
+      inset: auto auto 10% 65%;
+      width: min(520px, 38vw);
+      aspect-ratio: 1 / 1;
+      background: radial-gradient(circle at 60% 40%, rgba(94, 74, 241, 0.25), transparent 68%);
       filter: blur(0px);
-      z-index: -2;
+      opacity: 0.9;
       pointer-events: none;
-      animation: float 12s ease-in-out infinite alternate;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      inset: auto auto -25% -15%;
-      width: clamp(260px, 40vw, 480px);
-      aspect-ratio: 1;
-      background: radial-gradient(circle at 70% 70%, rgba(93, 192, 255, 0.32), transparent 65%);
-      z-index: -2;
-      pointer-events: none;
-      animation: float 14s ease-in-out infinite alternate-reverse;
+      animation: float 18s ease-in-out infinite alternate;
+      z-index: -1;
     }
 
     @keyframes float {
-      from {
-        transform: translate3d(-12px, -16px, 0) scale(1.05);
-      }
-      to {
-        transform: translate3d(12px, 18px, 0) scale(0.98);
-      }
+      from { transform: translate3d(-12px, -14px, 0) scale(1.04); }
+      to { transform: translate3d(14px, 16px, 0) scale(0.98); }
     }
 
-    .app-shell {
-      width: min(1040px, 100%);
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(246, 247, 255, 0.88));
-      backdrop-filter: blur(18px);
-      border-radius: 36px;
-      box-shadow: 0 45px 90px -40px rgba(33, 45, 115, 0.55);
+    .app {
+      width: min(1100px, 100%);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(244, 245, 255, 0.92));
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
       overflow: hidden;
-      border: 1px solid rgba(109, 118, 255, 0.16);
-      position: relative;
     }
 
-    .app-shell::before {
-      content: '';
-      position: absolute;
-      inset: -120px 40% auto -120px;
-      height: 260px;
-      background: radial-gradient(circle at center, rgba(85, 102, 255, 0.18), transparent 70%);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, rgba(63, 76, 255, 0.96), rgba(112, 67, 255, 0.92) 50%, rgba(173, 103, 255, 0.9));
+    header.hero {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: clamp(2rem, 5vw, 3.5rem);
+      padding: clamp(3rem, 6vw, 4.5rem) clamp(2.8rem, 6vw, 4.5rem);
+      background: radial-gradient(circle at 15% 30%, rgba(255, 255, 255, 0.24), transparent 68%),
+        linear-gradient(135deg, #6350ff 0%, #8b5cff 55%, #b873ff 100%);
       color: #fff;
-      padding: clamp(3rem, 6vw, 4rem) clamp(2.25rem, 5vw, 4.5rem);
       position: relative;
-      overflow: hidden;
     }
 
-    .hero::before,
     .hero::after {
       content: '';
       position: absolute;
-      inset: -20% auto auto -10%;
-      width: clamp(220px, 35vw, 360px);
+      inset: auto -12% -30% auto;
+      width: clamp(220px, 28vw, 360px);
       aspect-ratio: 1;
-      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2), transparent 70%);
-      opacity: 0.6;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+      opacity: 0.7;
       filter: blur(0px);
       pointer-events: none;
-      animation: heroGlow 18s ease-in-out infinite;
     }
 
-    .hero::after {
-      inset: auto -15% -35% auto;
-      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.22), transparent 68%);
-      animation-delay: -9s;
-    }
-
-    @keyframes heroGlow {
-      0% {
-        transform: translate3d(-10px, -10px, 0) scale(1);
-      }
-      50% {
-        transform: translate3d(25px, 35px, 0) scale(1.1);
-      }
-      100% {
-        transform: translate3d(-15px, 10px, 0) scale(1.05);
-      }
-    }
-
-    .hero-grid {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: clamp(2rem, 4vw, 3rem);
-      align-items: center;
-    }
-
-    .hero-copy h1 {
+    .hero-content h1 {
       font-family: 'Playfair Display', 'Times New Roman', serif;
-      font-weight: 600;
-      font-size: clamp(2.6rem, 6vw, 3.8rem);
-      margin-bottom: 1rem;
-      letter-spacing: -0.015em;
+      font-size: clamp(2.6rem, 5vw, 3.6rem);
+      margin: 0 0 1rem;
+      line-height: 1.1;
     }
 
-    .hero-copy p {
-      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-      max-width: 540px;
-      opacity: 0.95;
-      margin-bottom: clamp(1.5rem, 3vw, 2rem);
-      line-height: 1.6;
+    .hero-content p {
+      margin: 0 0 2.2rem;
+      max-width: 480px;
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      color: rgba(255, 255, 255, 0.85);
     }
 
-    .hero-eyebrow {
+    .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 0.9rem;
-      letter-spacing: 0.15em;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.85);
-      margin-bottom: 1rem;
-    }
-
-    .hero-eyebrow::before {
-      content: '';
-      display: inline-block;
-      width: 36px;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.5);
-      transform: translateY(-1px);
-    }
-
-    .hero-features {
-      display: grid;
-      gap: 0.75rem;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-
-    .feature-pill {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.65rem;
-      padding: 0.85rem 1rem;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      backdrop-filter: blur(8px);
-    }
-
-    .feature-pill span {
-      font-size: 1.6rem;
-      line-height: 1;
-    }
-
-    .feature-pill strong {
-      display: block;
-      font-weight: 600;
-    }
-
-    .feature-pill small {
-      display: block;
-      color: rgba(255, 255, 255, 0.78);
-      line-height: 1.45;
-      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.75);
+      margin-bottom: 1.2rem;
     }
 
     .hero-visual {
-      position: relative;
-      padding: clamp(1.5rem, 3vw, 2rem);
+      background: rgba(22, 21, 61, 0.3);
+      border-radius: var(--radius-lg);
+      padding: clamp(1.6rem, 3vw, 2.4rem);
+      display: grid;
+      gap: 1.2rem;
+      align-content: start;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
     }
 
-    .glow-orb {
-      position: absolute;
-      inset: 10% 10% 5% 15%;
-      background: radial-gradient(circle at 30% 30%, rgba(255, 198, 118, 0.35), transparent 70%),
-                  radial-gradient(circle at 80% 80%, rgba(149, 207, 255, 0.25), transparent 70%);
-      filter: blur(0px);
-      transform: rotate(-6deg);
-      border-radius: 38px;
-      opacity: 0.7;
-      animation: orbPulse 10s ease-in-out infinite alternate;
-    }
-
-    @keyframes orbPulse {
-      from {
-        transform: rotate(-8deg) scale(0.96);
-      }
-      to {
-        transform: rotate(5deg) scale(1.04);
-      }
-    }
-
-    .floating-card,
-    .floating-card-secondary {
-      position: relative;
-      z-index: 1;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 24px;
-      padding: 1.4rem;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      box-shadow: 0 30px 60px -40px rgba(20, 13, 67, 0.55);
-      backdrop-filter: blur(10px);
-      color: #1a1643;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      max-width: 280px;
-    }
-
-    .floating-card {
-      margin-left: auto;
-      transform: translateY(12px) rotate(-2deg);
-    }
-
-    .floating-card-secondary {
-      margin-top: 1.5rem;
-      transform: translate(-8px, -4px) rotate(4deg);
-      background: rgba(255, 255, 255, 0.22);
-    }
-
-    .floating-card span,
-    .floating-card-secondary span {
-      font-size: 2rem;
-      line-height: 1;
-    }
-
-    .floating-card small,
-    .floating-card-secondary small {
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      color: rgba(26, 22, 67, 0.65);
-    }
-
-    .floating-card strong,
-    .floating-card-secondary strong {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #1a1643;
-    }
-
-    .floating-card p,
-    .floating-card-secondary p {
-      color: rgba(26, 22, 67, 0.65);
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
       font-size: 0.95rem;
-      line-height: 1.45;
+      font-weight: 500;
     }
 
-    .content {
-      padding: clamp(2.5rem, 6vw, 4rem);
-      position: relative;
-      z-index: 1;
+    .hero-list {
+      display: grid;
+      gap: 0.8rem;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.85);
     }
 
-    .question-card {
-      border-radius: 28px;
-      border: 1px solid rgba(93, 102, 241, 0.16);
-      padding: clamp(1.75rem, 4.5vw, 2.75rem);
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(249, 250, 255, 0.72));
-      box-shadow: 0 35px 70px -45px rgba(57, 62, 169, 0.65);
-      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    .hero-list li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: center;
     }
 
-    .question-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 45px 90px -55px rgba(57, 62, 169, 0.7);
+    .hero-list span.icon {
+      font-size: 1.1rem;
     }
 
-    .question-card h2 {
-      font-family: 'Playfair Display', 'Times New Roman', serif;
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.95rem 1.6rem;
+      border-radius: 999px;
+      background: #fff;
+      color: #3325ae;
       font-weight: 600;
-      letter-spacing: -0.01em;
-      color: #161633;
+      font-size: 1rem;
+      letter-spacing: 0.01em;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 18px 36px -22px rgba(12, 8, 55, 0.7);
     }
 
-    .question-card .text-muted {
-      color: rgba(19, 19, 37, 0.55) !important;
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px -18px rgba(12, 8, 55, 0.65);
+    }
+
+    main {
+      padding: clamp(2.8rem, 6vw, 4.5rem);
+      background: transparent;
+      display: grid;
+      gap: clamp(2.5rem, 5vw, 3.5rem);
+    }
+
+    .quiz-wrapper {
+      display: grid;
+      gap: clamp(1.8rem, 3vw, 2.4rem);
+    }
+
+    .quiz-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(103, 90, 241, 0.14);
+      padding: clamp(2rem, 4vw, 2.75rem);
+      box-shadow: 0 24px 50px -32px rgba(26, 24, 70, 0.28);
+      display: grid;
+      gap: 1.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quiz-card::after {
+      content: '';
+      position: absolute;
+      inset: -40% auto auto -35%;
+      width: clamp(240px, 40vw, 420px);
+      aspect-ratio: 1;
+      background: radial-gradient(circle at center, rgba(94, 74, 241, 0.12), transparent 65%);
+      pointer-events: none;
+    }
+
+    .quiz-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(94, 74, 241, 0.12);
+      overflow: hidden;
+    }
+
+    .progress-bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #5e4af1, #8b5cff);
+      transition: width 0.35s ease;
+    }
+
+    h2.question-title {
+      margin: 0;
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      letter-spacing: -0.01em;
+    }
+
+    p.question-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 540px;
     }
 
     .option-grid {
       display: grid;
       gap: 1rem;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
 
-    .option-card {
-      border-radius: 20px;
-      border: 1px solid rgba(93, 102, 241, 0.18);
-      padding: 1.35rem 1.4rem 1.5rem;
-      background: linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(244, 246, 255, 0.78));
-      cursor: pointer;
-      transition: all 0.25s ease;
-      min-height: 150px;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
+    .option {
       position: relative;
-      overflow: hidden;
-      border-inline-start: 3px solid transparent;
+      border-radius: 20px;
+      padding: 1.2rem 1.25rem;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(94, 74, 241, 0.1);
+      box-shadow: 0 12px 30px -20px rgba(27, 25, 68, 0.35);
+      text-align: left;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+      display: grid;
+      gap: 0.55rem;
     }
 
-    .option-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(95, 110, 255, 0.1), rgba(193, 150, 255, 0.08));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
+    .option:hover,
+    .option:focus-visible {
+      transform: translateY(-3px);
+      border-color: rgba(94, 74, 241, 0.4);
+      outline: none;
     }
 
-    .option-card.active,
-    .option-card:hover {
-      border-color: rgba(72, 87, 255, 0.75);
-      border-inline-start: 3px solid rgba(72, 87, 255, 0.8);
-      box-shadow: inset 0 0 0 2px rgba(72, 87, 255, 0.18), 0 18px 36px -25px rgba(72, 87, 255, 0.85);
-      transform: translateY(-4px);
+    .option.selected {
+      border-color: rgba(94, 74, 241, 0.8);
+      background: linear-gradient(135deg, rgba(94, 74, 241, 0.18), rgba(139, 92, 255, 0.12));
     }
 
-    .option-card.active::after,
-    .option-card:hover::after {
-      opacity: 1;
-    }
-
-    .option-card span {
-      font-size: 2rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: rgba(90, 106, 255, 0.12);
-    }
-
-    .option-card h3 {
+    .option-title {
       font-weight: 600;
-      margin-bottom: 0.35rem;
-      color: #1a1a3c;
+      font-size: 1.05rem;
     }
 
-    .option-card p {
-      color: rgba(19, 19, 37, 0.65);
+    .option-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
     }
 
-    .question-footer {
-      margin-top: 2rem;
+    .actions {
       display: flex;
+      gap: 1rem;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 1.25rem;
     }
 
-    .progress {
-      height: 0.75rem;
-      border-radius: 999px;
-      background: rgba(72, 87, 255, 0.12);
-      position: relative;
-      overflow: visible;
-    }
-
-    .progress::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
-      pointer-events: none;
-    }
-
-    .progress-bar {
-      background: linear-gradient(90deg, rgba(73, 97, 242, 1), rgba(144, 92, 255, 1));
-      border-radius: 999px;
-      box-shadow: 0 8px 18px -12px rgba(73, 97, 242, 0.9);
-    }
-
-    .btn {
-      border-radius: 999px;
-      font-weight: 600;
-      padding-inline: 1.4rem;
-      padding-block: 0.65rem;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, rgba(73, 97, 242, 1), rgba(141, 90, 255, 0.95));
+    .ghost-btn {
+      background: transparent;
+      color: var(--muted);
       border: none;
-      box-shadow: 0 15px 35px -20px rgba(79, 93, 255, 0.7);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0.75rem 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .btn-primary:hover,
-    .btn-primary:focus {
-      background: linear-gradient(135deg, rgba(73, 97, 242, 0.95), rgba(141, 90, 255, 0.92));
-      box-shadow: 0 18px 40px -22px rgba(79, 93, 255, 0.75);
-    }
-
-    .btn-outline-secondary {
-      border-radius: 999px;
-      color: #3b3b61;
-      border: 1px solid rgba(59, 59, 97, 0.25);
-      background: rgba(255, 255, 255, 0.75);
-      transition: all 0.2s ease;
-    }
-
-    .btn-outline-secondary:hover,
-    .btn-outline-secondary:focus {
-      color: #1e1e3e;
-      border-color: rgba(59, 59, 97, 0.4);
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 12px 28px -22px rgba(20, 20, 60, 0.35);
+    .ghost-btn:hover {
+      color: var(--accent);
     }
 
     .result-card {
-      border-radius: 28px;
-      border: 1px solid rgba(103, 112, 255, 0.18);
-      padding: clamp(1.75rem, 5vw, 2.75rem);
-      background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(244, 246, 255, 0.82));
-      box-shadow: 0 35px 80px -55px rgba(86, 94, 241, 0.78);
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2.4rem;
+      align-items: start;
     }
 
-    .result-card header {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 1.75rem;
+    .result-card.active {
+      display: grid;
     }
 
-    .badge {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      background: rgba(77, 88, 255, 0.14);
-      color: #4d58ff;
-      border: none;
-      padding: 0.35rem 0.8rem;
-      border-radius: 999px;
+    .result-media {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 28px 60px -35px rgba(27, 26, 80, 0.55);
     }
 
-    .result-card h2 {
-      font-family: 'Playfair Display', 'Times New Roman', serif;
-      font-weight: 600;
-      font-size: clamp(1.9rem, 3vw, 2.4rem);
-      margin-bottom: 0.35rem;
-      color: #171736;
+    .result-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
-    .result-card .subtitle {
-      color: rgba(23, 23, 54, 0.75);
+    .result-media::after {
+      content: '';
+      position: absolute;
+      inset: auto 12% -18% 12%;
+      height: 65px;
+      background: rgba(255, 255, 255, 0.46);
+      filter: blur(28px);
+      z-index: -1;
+    }
+
+    .result-content {
+      display: grid;
+      gap: 1.4rem;
+    }
+
+    .result-content h3 {
+      margin: 0;
+      font-size: clamp(1.8rem, 3vw, 2.2rem);
     }
 
     .result-meta {
-      display: flex;
+      display: inline-flex;
+      gap: 0.75rem;
       flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-bottom: 1.1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
     }
 
-    .result-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-bottom: 1.4rem;
+    .result-description {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #3d3d4f;
     }
 
-    .result-tags .badge {
-      background: rgba(64, 76, 255, 0.12);
-      color: #424aff;
-      font-weight: 500;
+    .highlights {
+      padding: 1.2rem 1.4rem;
+      border-radius: 20px;
+      background: rgba(94, 74, 241, 0.08);
+      border: 1px solid rgba(94, 74, 241, 0.14);
+      display: grid;
+      gap: 0.75rem;
+      font-size: 0.95rem;
     }
 
-    .restart-btn {
-      background: linear-gradient(135deg, rgba(73, 97, 242, 1), rgba(141, 90, 255, 0.95));
-      border: none;
-      padding: 0.9rem 1.95rem;
-      border-radius: 999px;
-      color: #fff;
-      font-weight: 600;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      letter-spacing: 0.02em;
+    .restart {
+      justify-self: start;
     }
 
-    .restart-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px -25px rgba(79, 93, 255, 0.8);
-    }
-
-    .list-group-item {
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid rgba(72, 87, 255, 0.14);
-      border-radius: 16px;
-      margin-bottom: 0.85rem;
-      padding: 1rem 1.15rem;
-      color: rgba(23, 23, 54, 0.78);
-    }
-
-    .list-group-item strong {
-      color: #3f49c3;
-    }
-
-    .list-group-item::marker {
-      display: none;
-    }
-
-    @media (max-width: 640px) {
-      body {
-        padding: 2.5rem 0.75rem;
-      }
-
-      .hero-grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 720px) {
+      header.hero {
+        border-radius: 0 0 var(--radius-xl) var(--radius-xl);
       }
 
       .hero-visual {
-        display: none;
+        order: -1;
       }
 
-      .option-card {
-        min-height: 120px;
-      }
-
-      .question-footer {
-        flex-direction: column;
-        align-items: stretch;
+      .option-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <main class="app-shell">
-    <section class="hero">
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <span class="hero-eyebrow">Streaming Kompass</span>
-          <h1>Finde deinen nächsten Film- oder Serienhit</h1>
-          <p>Cineclix verwandelt deine Stimmung und verfügbare Zeit in maßgeschneiderte Vorschläge – intuitiv, visuell und mit einem Hauch Kinomagie. Unser Quiz führt dich in wenigen Klicks zur passenden Empfehlung für den Abend.</p>
-          <div class="hero-features">
-            <div class="feature-pill">
-              <span>✨</span>
-              <div>
-                <strong>Smarte Analyse</strong>
-                <small>Wir lesen zwischen den Zeilen und finden Matches, die zu deinem Vibe passen.</small>
-              </div>
-            </div>
-            <div class="feature-pill">
-              <span>🎞️</span>
-              <div>
-                <strong>Kuratiertes Archiv</strong>
-                <small>Handverlesene Filme, Serien und Dokus für jede Stimmung und jeden Anlass.</small>
-              </div>
-            </div>
-            <div class="feature-pill">
-              <span>🕒</span>
-              <div>
-                <strong>Abendplanung leicht gemacht</strong>
-                <small>Erhalte auf einen Blick Laufzeit, Plattform und Gründe, warum es passt.</small>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="glow-orb"></div>
-          <div class="floating-card">
-            <span>🌌</span>
-            <small>Trend</small>
-            <strong>Cinephile Crowdpleaser</strong>
-            <p class="mb-0">Beliebt bei 62% der Cineclix Nutzer:innen in dieser Woche.</p>
-          </div>
-          <div class="floating-card-secondary">
-            <span>⏳</span>
-            <small>Watchtime</small>
-            <strong>3-Minuten-Check</strong>
-            <p class="mb-0">Schnell beantwortet, bevor das Popcorn fertig ist.</p>
-          </div>
-        </div>
+  <div class="app">
+    <header class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">Alles in einer Experience</div>
+        <h1>Finde das Buch, das heute perfekt zu dir passt.</h1>
+        <p>Beantworte ein paar inspirierende Fragen und lass unseren Buchfinder deine nächste Lektüre entdecken – von Fachwissen
+          für die Karriere bis zu Geschichten zum Wegträumen.</p>
+        <button class="btn-primary" id="startQuiz">
+          Jetzt Empfehlung starten
+          <span aria-hidden="true">→</span>
+        </button>
       </div>
-    </section>
+      <aside class="hero-visual" aria-label="Highlights der Buchsuche">
+        <div class="hero-badge">📚 Intelligente Buchdatenbank</div>
+        <ul class="hero-list">
+          <li><span class="icon">🎯</span> <span>Analyse deiner Ziele & Stimmung</span></li>
+          <li><span class="icon">🧠</span> <span>Fachliteratur & Fiction gleichermaßen</span></li>
+          <li><span class="icon">✨</span> <span>Präzise Empfehlungen mit Storytelling</span></li>
+        </ul>
+      </aside>
+    </header>
 
-    <section class="content" id="quiz">
-      <div class="question-card" id="question-card" aria-live="polite"></div>
-      <div class="result-card d-none" id="result-card" aria-live="polite"></div>
-    </section>
-  </main>
+    <main>
+      <section class="quiz-wrapper">
+        <article class="quiz-card" id="questionCard" aria-live="polite" aria-atomic="true" hidden>
+          <div class="quiz-progress">
+            <span id="stepLabel">Frage 1 von 5</span>
+            <div class="progress-bar"><span id="progressBar"></span></div>
+          </div>
+          <div>
+            <h2 class="question-title" id="questionTitle">Wofür suchst du ein Buch?</h2>
+            <p class="question-desc" id="questionDesc">Wir wollen wissen, wohin dich deine nächste Lektüre bringen darf.</p>
+          </div>
+          <div class="option-grid" id="optionGrid"></div>
+          <div class="actions">
+            <button class="ghost-btn" id="backBtn" type="button" hidden>
+              ← Zurück
+            </button>
+            <button class="btn-primary" id="nextBtn" type="button">
+              Weiter
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </article>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+        <article class="quiz-card result-card" id="resultCard" hidden>
+          <div class="result-media">
+            <img id="resultImage" src="" alt="Cover des empfohlenen Buchs">
+          </div>
+          <div class="result-content">
+            <div>
+              <div class="eyebrow" style="color: var(--accent-strong);">Dein Match</div>
+              <h3 id="resultTitle">Titel</h3>
+              <div class="result-meta" id="resultMeta"></div>
+            </div>
+            <p class="result-description" id="resultDescription"></p>
+            <div class="highlights" id="resultHighlights"></div>
+            <button class="btn-primary restart" id="restartBtn" type="button">Noch einmal starten</button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
   <script>
     const questions = [
       {
-        id: 'format',
-        prompt: 'Was steht heute auf dem Programm?',
+        id: 'goal',
+        title: 'Wofür suchst du gerade ein Buch?',
+        description: 'Ob beruflich, fürs Studium oder einfach zum Abschalten – dein Ziel bestimmt den Fokus.',
         options: [
-          { value: 'movie', label: 'Filmabend', description: 'Ein abgeschlossenes Erlebnis für heute.', icon: '🎬' },
-          { value: 'series', label: 'Serienmarathon', description: 'Mehrere Episoden für echtes Binge-Feeling.', icon: '📺' },
-          { value: 'documentary', label: 'Doku Night', description: 'Wissen, reale Geschichten und Insights.', icon: '🎥' }
+          {
+            value: 'career',
+            title: 'Beruflich wachsen',
+            description: 'Strategien, Produktivität, Leadership und Skills, die dich weiterbringen.'
+          },
+          {
+            value: 'learn',
+            title: 'Etwas Neues lernen',
+            description: 'Fundierte Sachbücher, die Wissen vertiefen und Horizonte erweitern.'
+          },
+          {
+            value: 'escape',
+            title: 'Abschalten & Abtauchen',
+            description: 'Geschichten, die dich in andere Welten tragen und den Alltag vergessen lassen.'
+          },
+          {
+            value: 'emotions',
+            title: 'Gefühl & Inspiration',
+            description: 'Literarische Reisen mit großen Emotionen und persönlicher Tiefe.'
+          }
         ]
       },
       {
         id: 'mood',
-        prompt: 'Welche Stimmung soll es treffen?',
+        title: 'Welche Stimmung wünschst du dir?',
+        description: 'Wir stimmen die Tonalität des Buches auf deinen aktuellen Vibe ab.',
         options: [
-          { value: 'feelgood', label: 'Feel-Good & leicht', description: 'Warmherzig, optimistisch und humorvoll.', icon: '😊' },
-          { value: 'thrilling', label: 'Spannend & intensiv', description: 'Gänsehaut, Adrenalin und Plot-Twists.', icon: '🔥' },
-          { value: 'emotional', label: 'Emotional & tiefgründig', description: 'Berührend, nachdenklich und bewegend.', icon: '💜' },
-          { value: 'mindbending', label: 'Mind-Bending & clever', description: 'Überraschend, kreativ und mit Wow-Effekt.', icon: '🌀' }
+          { value: 'motivated', title: 'Energiegeladen & motivierend', description: 'Power, Drive und kluge Ideen für die nächsten Schritte.' },
+          { value: 'calm', title: 'Ruhig & reflektiert', description: 'Sanfte, tiefgründige Texte zum Entschleunigen.' },
+          { value: 'thrilling', title: 'Spannend & fesselnd', description: 'Pageturner mit Plot-Twists und starkem Tempo.' },
+          { value: 'wonder', title: 'Magisch & visionär', description: 'Fantastische Settings, Zukunftsszenarien oder surreale Welten.' }
         ]
       },
       {
-        id: 'duration',
-        prompt: 'Wie viel Zeit bringst du mit?',
+        id: 'complexity',
+        title: 'Wie komplex darf es sein?',
+        description: 'Wir berücksichtigen, wie tief die Inhalte gehen und wie konzentriert du lesen möchtest.',
         options: [
-          { value: 'quick', label: 'Kurz & knackig', description: 'Bis 100 Minuten oder Mini-Serie.', icon: '⏱️' },
-          { value: 'standard', label: 'Ein Abend Zeit', description: '120 Minuten Film oder 4–6 Episoden.', icon: '🍿' },
-          { value: 'epic', label: 'Zeit für Epen', description: 'Lange Filme oder Staffeln mit Tiefgang.', icon: '🕰️' }
+          { value: 'light', title: 'Leicht & zugänglich', description: 'Klare Sprache, kurze Kapitel – perfekt für zwischendurch.' },
+          { value: 'medium', title: 'Gut strukturiert', description: 'Ausgewogenes Tempo, solide Tiefe und viel Praxis.' },
+          { value: 'deep', title: 'Anspruchsvoll & analytisch', description: 'Dichte Inhalte für intensives Lesen und neue Perspektiven.' }
         ]
       },
       {
         id: 'setting',
-        prompt: 'Wohin soll die Reise gehen?',
+        title: 'Welche Welt möchtest du erkunden?',
+        description: 'Vom Hier & Jetzt bis ins Fantastische – deine Vorliebe zählt.',
         options: [
-          { value: 'reality', label: 'Hier & Jetzt', description: 'Gegenwart, reale Geschichten, Alltag.', icon: '🌍' },
-          { value: 'future', label: 'Zukunft & Sci-Fi', description: 'Technologie, Space, alternative Welten.', icon: '🚀' },
-          { value: 'historical', label: 'Historisch & episch', description: 'Vergangene Zeiten, Kostüme, Geschichte.', icon: '🏰' },
-          { value: 'fantasy', label: 'Fantastisch & magisch', description: 'Mythen, Parallelwelten, Surreales.', icon: '🪄' }
+          { value: 'realistic', title: 'Reale Gegenwart', description: 'Authentische Szenarien, Sachbuch oder zeitgenössische Romane.' },
+          { value: 'future', title: 'Zukunft & Technik', description: 'Visionen, Innovation und ein Blick nach vorn.' },
+          { value: 'historical', title: 'Geschichte & Vergangenheit', description: 'Epochenreisen, Biografien und historische Romane.' },
+          { value: 'fantasy', title: 'Fantastische Welten', description: 'Mythen, Magie und epische Abenteuer.' }
+        ]
+      },
+      {
+        id: 'length',
+        title: 'Wie viel Lesezeit bringst du mit?',
+        description: 'So finden wir das Format, das zu deinem Alltag passt.',
+        options: [
+          { value: 'short', title: 'Kurz & knackig', description: 'Bis 250 Seiten oder schnell konsumierbar.' },
+          { value: 'standard', title: 'Ausgewogen', description: '300–450 Seiten, ein gutes Gleichgewicht.' },
+          { value: 'long', title: 'Eintauchen & verweilen', description: 'Epische Stoffe über 500 Seiten oder mehrbändig.' }
         ]
       }
     ];
 
-    const library = [
+    const bookDatabase = [
       {
-        title: 'Everything Everywhere All at Once',
-        format: 'movie',
-        mood: ['mindbending', 'emotional'],
-        duration: 'standard',
-        setting: ['fantasy', 'reality'],
-        platform: 'WOW, Apple TV+',
-        tags: ['Multiversum', 'Action', 'Familie'],
-        description: 'Ein kreatives Multiversum-Abenteuer, das Action, Emotion und Humor zu einem einzigartigen Kinoerlebnis verbindet.'
+        id: 'deep-work',
+        title: 'Deep Work',
+        author: 'Cal Newport',
+        type: 'fachliteratur',
+        goal: ['career', 'learn'],
+        mood: ['motivated', 'calm'],
+        complexity: 'medium',
+        setting: ['realistic'],
+        length: 'standard',
+        description: 'Ein fokussierter Leitfaden für produktives Arbeiten im digitalen Zeitalter. Newport zeigt Strategien, um Ablenkungen zu minimieren und echte Konzentration zu kultivieren.',
+        image: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=700&q=80'
       },
       {
-        title: 'The Bear',
-        format: 'series',
-        mood: ['emotional', 'feelgood'],
-        duration: 'standard',
-        setting: ['reality'],
-        platform: 'Disney+',
-        tags: ['Drama', 'Kulinarik', 'Chicago'],
-        description: 'Intensives Serienerlebnis über ein junges Küchenteam, das Chaos, Traumata und große Träume balanciert.'
+        id: 'think-again',
+        title: 'Think Again',
+        author: 'Adam Grant',
+        type: 'fachliteratur',
+        goal: ['learn', 'career'],
+        mood: ['motivated'],
+        complexity: 'light',
+        setting: ['realistic', 'future'],
+        length: 'short',
+        description: 'Organisationspsychologe Adam Grant ermutigt dazu, die eigene Meinung zu hinterfragen und Neuem offen zu begegnen. Ein inspirierender Perspektivwechsel mit vielen Praxisbeispielen.',
+        image: 'https://images.unsplash.com/photo-1455884981818-54cb785db6fc?auto=format&fit=crop&w=700&q=80'
       },
       {
-        title: 'Dune: Part Two',
-        format: 'movie',
-        mood: ['thrilling', 'mindbending'],
-        duration: 'epic',
-        setting: ['future', 'fantasy'],
-        platform: 'Kino, demnächst auf WOW',
-        tags: ['Sci-Fi', 'Epos', 'Hans Zimmer Score'],
-        description: 'Monumentales Sci-Fi-Kino mit politischer Spannung, Wüstenepik und audiovisueller Wucht.'
+        id: 'atomic-habits',
+        title: 'Die 1% Methode',
+        author: 'James Clear',
+        type: 'fachliteratur',
+        goal: ['career', 'learn'],
+        mood: ['motivated'],
+        complexity: 'light',
+        setting: ['realistic'],
+        length: 'short',
+        description: 'Ein Bestseller über den Aufbau guter Gewohnheiten. Mit klaren Modellen und sofort anwendbaren Schritten für nachhaltige Veränderung.',
+        image: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=700&q=80'
       },
       {
-        title: 'Arcane',
-        format: 'series',
-        mood: ['mindbending', 'thrilling'],
-        duration: 'epic',
-        setting: ['fantasy', 'future'],
-        platform: 'Netflix',
-        tags: ['Animation', 'League of Legends', 'Soundtrack'],
-        description: 'Stylische Animationsserie mit komplexen Figuren, großem Worldbuilding und einem herausragenden Score.'
+        id: 'educated',
+        title: 'Befreit',
+        author: 'Tara Westover',
+        type: 'fachliteratur',
+        goal: ['learn', 'emotions'],
+        mood: ['calm'],
+        complexity: 'medium',
+        setting: ['historical', 'realistic'],
+        length: 'standard',
+        description: 'Eine bewegende Memoire über Bildung, Selbstbestimmung und den Mut, sich vom eigenen Ursprung zu lösen – poetisch und inspirierend zugleich.',
+        image: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=700&q=80'
       },
       {
-        title: 'Past Lives',
-        format: 'movie',
-        mood: ['emotional', 'feelgood'],
-        duration: 'quick',
-        setting: ['reality'],
-        platform: 'Leihstream, Blu-ray',
-        tags: ['Indie', 'Romantik', 'Coming-of-Age'],
-        description: 'Zarte Liebesgeschichte über verpasste Chancen, Freundschaft und Schicksal zwischen Seoul und New York.'
+        id: 'project-hail-mary',
+        title: 'Der Astronaut',
+        author: 'Andy Weir',
+        type: 'unterhaltung',
+        goal: ['escape'],
+        mood: ['thrilling', 'wonder'],
+        complexity: 'medium',
+        setting: ['future'],
+        length: 'long',
+        description: 'Ein Lehrer wacht allein in einem Raumschiff auf und muss die Menschheit retten. Wissenschaft trifft auf Humor in diesem Sci-Fi-Abenteuer.',
+        image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=700&q=80'
       },
       {
-        title: 'Top Gun: Maverick',
-        format: 'movie',
-        mood: ['thrilling', 'feelgood'],
-        duration: 'standard',
-        setting: ['reality'],
-        platform: 'Paramount+, WOW',
-        tags: ['Action', 'Blockbuster', 'Jets'],
-        description: 'Perfekter Adrenalin-Kick mit praktischen Flugstunts, Nostalgie und viel Herz für Teamgeist.'
-      },
-      {
-        title: 'Heartstopper',
-        format: 'series',
-        mood: ['feelgood', 'emotional'],
-        duration: 'quick',
-        setting: ['reality'],
-        platform: 'Netflix',
-        tags: ['Coming-of-Age', 'Queer', 'Graphic-Novel-Adaption'],
-        description: 'Warme, hoffnungsvolle Teen-Serie über queere Liebe, Freundschaft und Identität – perfekt zum Wohlfühlen.'
-      },
-      {
-        title: 'Free Solo',
-        format: 'documentary',
-        mood: ['thrilling', 'emotional'],
-        duration: 'quick',
-        setting: ['reality'],
-        platform: 'Disney+',
-        tags: ['Bergsteigen', 'Naturspektakel', 'Oscar-prämiert'],
-        description: 'Nervenaufreibende Doku über Alex Honnolds Free-Solo-Besteigung des El Capitan – pure Höhenangst inklusive.'
-      },
-      {
-        title: 'The Last Dance',
-        format: 'documentary',
-        mood: ['thrilling', 'feelgood'],
-        duration: 'epic',
-        setting: ['reality'],
-        platform: 'Netflix',
-        tags: ['Basketball', '90er', 'Michael Jordan'],
-        description: 'Mitreißende Doku-Serie über den Aufstieg der Chicago Bulls, Archivmaterial und Team-Dynamiken inklusive.'
-      },
-      {
-        title: 'Guillermo del Toro’s Pinocchio',
-        format: 'movie',
-        mood: ['emotional', 'mindbending'],
-        duration: 'standard',
+        id: 'night-circus',
+        title: 'Der Nachtzirkus',
+        author: 'Erin Morgenstern',
+        type: 'unterhaltung',
+        goal: ['escape', 'emotions'],
+        mood: ['wonder'],
+        complexity: 'medium',
         setting: ['fantasy', 'historical'],
-        platform: 'Netflix',
-        tags: ['Stop-Motion', 'Märchen', 'Oscargewinner'],
-        description: 'Aufwendig inszeniertes Stop-Motion-Märchen mit dunklem Charme, politischen Untertönen und viel Herz.'
+        length: 'standard',
+        description: 'Ein geheimnisvoller Zirkus erscheint nur bei Nacht – voller Magie, Rivalität und einer zarten Liebesgeschichte. Atmosphärisch und traumhaft.',
+        image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=700&q=80'
+      },
+      {
+        id: 'where-crawdads',
+        title: 'Der Gesang der Flusskrebse',
+        author: 'Delia Owens',
+        type: 'unterhaltung',
+        goal: ['escape', 'emotions'],
+        mood: ['calm', 'thrilling'],
+        complexity: 'medium',
+        setting: ['realistic'],
+        length: 'standard',
+        description: 'Naturbeschreibungen, Coming-of-Age und ein Kriminalfall in einem. Ein Roman, der lange nachhallt.',
+        image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=700&q=80'
+      },
+      {
+        id: 'sapiens',
+        title: 'Eine kurze Geschichte der Menschheit',
+        author: 'Yuval Noah Harari',
+        type: 'fachliteratur',
+        goal: ['learn'],
+        mood: ['calm'],
+        complexity: 'deep',
+        setting: ['historical', 'future'],
+        length: 'long',
+        description: 'Harari entfaltet die Geschichte der Spezies Mensch – umfassend, analytisch und voller Denkanstöße für Gegenwart und Zukunft.',
+        image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=700&q=80'
+      },
+      {
+        id: 'song-achilles',
+        title: 'Das Lied des Achill',
+        author: 'Madeline Miller',
+        type: 'unterhaltung',
+        goal: ['escape', 'emotions'],
+        mood: ['wonder', 'calm'],
+        complexity: 'medium',
+        setting: ['historical', 'fantasy'],
+        length: 'standard',
+        description: 'Eine poetische Neuerzählung des trojanischen Krieges aus Sicht des Patroklos. Zart, heroisch und herzzerreißend.',
+        image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=700&q=80'
+      },
+      {
+        id: 'factfulness',
+        title: 'Factfulness',
+        author: 'Hans Rosling',
+        type: 'fachliteratur',
+        goal: ['learn', 'career'],
+        mood: ['motivated', 'calm'],
+        complexity: 'light',
+        setting: ['realistic'],
+        length: 'standard',
+        description: 'Ein optimistisches, datenbasiertes Buch über den Zustand der Welt – entlarvt Denkirrtümer und liefert Klarheit.',
+        image: 'https://images.unsplash.com/photo-1454165205744-3b78555e5572?auto=format&fit=crop&w=700&q=80'
       }
     ];
 
-    const questionCard = document.getElementById('question-card');
-    const resultCard = document.getElementById('result-card');
-    let currentIndex = 0;
     const answers = {};
-    const MAX_SCORE = 4.5;
+    let currentIndex = 0;
 
-    function renderQuestion() {
-      const { id, prompt, options } = questions[currentIndex];
-      questionCard.innerHTML = `
-        <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
-          <div>
-            <span class="badge">Frage ${currentIndex + 1} von ${questions.length}</span>
-            <h2 class="mt-3 mb-2">${prompt}</h2>
-            <p class="text-muted">Wähle die Option, die dir am meisten zusagt.</p>
-          </div>
-        </div>
-        <div class="option-grid" role="list">
-          ${options.map(option => `
-            <button type="button" class="option-card text-start ${answers[id] === option.value ? 'active' : ''}" data-question="${id}" data-value="${option.value}">
-              <div>
-                <span>${option.icon}</span>
-              </div>
-              <div>
-                <h3 class="h5 fw-semibold">${option.label}</h3>
-                <p class="text-muted mb-0">${option.description}</p>
-              </div>
-            </button>
-          `).join('')}
-        </div>
-        <div class="question-footer">
-          <div class="flex-grow-1">
-            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${((currentIndex + (answers[id] ? 1 : 0)) / questions.length) * 100}">
-              <div class="progress-bar" style="width: ${((currentIndex + (answers[id] ? 1 : 0)) / questions.length) * 100}%"></div>
-            </div>
-          </div>
-          <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary" id="back-btn" ${currentIndex === 0 ? 'disabled' : ''}>Zurück</button>
-            <button class="btn btn-primary" id="next-btn" ${answers[id] ? '' : 'disabled'}>Weiter</button>
-          </div>
-        </div>
-      `;
+    const startBtn = document.getElementById('startQuiz');
+    const questionCard = document.getElementById('questionCard');
+    const resultCard = document.getElementById('resultCard');
+    const optionGrid = document.getElementById('optionGrid');
+    const stepLabel = document.getElementById('stepLabel');
+    const progressBar = document.getElementById('progressBar');
+    const questionTitle = document.getElementById('questionTitle');
+    const questionDesc = document.getElementById('questionDesc');
+    const nextBtn = document.getElementById('nextBtn');
+    const backBtn = document.getElementById('backBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const resultImage = document.getElementById('resultImage');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultMeta = document.getElementById('resultMeta');
+    const resultDescription = document.getElementById('resultDescription');
+    const resultHighlights = document.getElementById('resultHighlights');
 
-      document.querySelectorAll('.option-card').forEach(button => {
-        button.addEventListener('click', () => {
-          const { question, value } = button.dataset;
-          answers[question] = value;
-          renderQuestion();
-        });
-      });
+    startBtn.addEventListener('click', () => {
+      document.querySelector('.hero').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      startBtn.setAttribute('disabled', 'true');
+      questionCard.hidden = false;
+      renderQuestion();
+    });
 
-      document.getElementById('next-btn').addEventListener('click', handleNext);
-      document.getElementById('back-btn').addEventListener('click', handleBack);
-    }
-
-    function handleNext() {
+    nextBtn.addEventListener('click', () => {
       const currentQuestion = questions[currentIndex];
-      if (!answers[currentQuestion.id]) return;
-      if (currentIndex < questions.length - 1) {
-        currentIndex += 1;
-        renderQuestion();
-      } else {
-        showResult();
+      if (!answers[currentQuestion.id]) {
+        shakeCard(questionCard);
+        return;
       }
-    }
+      currentIndex += 1;
+      if (currentIndex >= questions.length) {
+        showResults();
+      } else {
+        renderQuestion();
+      }
+    });
 
-    function handleBack() {
+    backBtn.addEventListener('click', () => {
       if (currentIndex === 0) return;
       currentIndex -= 1;
       renderQuestion();
+    });
+
+    restartBtn.addEventListener('click', resetQuiz);
+
+    function renderQuestion() {
+      const question = questions[currentIndex];
+      questionTitle.textContent = question.title;
+      questionDesc.textContent = question.description;
+      stepLabel.textContent = `Frage ${currentIndex + 1} von ${questions.length}`;
+      progressBar.style.width = `${((currentIndex) / questions.length) * 100}%`;
+
+      optionGrid.innerHTML = '';
+      question.options.forEach(option => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'option';
+        if (answers[question.id] === option.value) {
+          button.classList.add('selected');
+        }
+        button.innerHTML = `
+          <span class="option-title">${option.title}</span>
+          <span class="option-desc">${option.description}</span>
+        `;
+        button.addEventListener('click', () => {
+          answers[question.id] = option.value;
+          [...optionGrid.children].forEach(child => child.classList.remove('selected'));
+          button.classList.add('selected');
+          nextBtn.focus();
+        });
+        optionGrid.appendChild(button);
+      });
+
+      backBtn.hidden = currentIndex === 0;
+      nextBtn.textContent = currentIndex === questions.length - 1 ? 'Ergebnis anzeigen' : 'Weiter';
     }
 
-    function showResult() {
-      const recommendation = scoreEntries();
-      const matchPercent = Math.min(100, Math.round((recommendation.score / MAX_SCORE) * 100));
-      questionCard.classList.add('d-none');
-      resultCard.classList.remove('d-none');
-      resultCard.innerHTML = `
-        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-          <div>
-            <span class="badge">Streaming-Tipp</span>
-            <h2 class="mt-3">${recommendation.entry.title}</h2>
-            <p class="mb-2 text-muted">${formatLabel(recommendation.entry.format)} • ${recommendation.entry.platform}</p>
-          </div>
-          <div class="text-end">
-            <span class="display-6 fw-bold text-primary">${matchPercent}%</span>
-            <p class="text-muted mb-0">Match mit deinen Antworten</p>
-          </div>
-        </div>
-        <p class="lead">${recommendation.entry.description}</p>
-        <div class="result-meta">
-          <span class="badge">${formatLabel(recommendation.entry.format)}</span>
-          <span class="badge">Watchtime: ${durationLabel(recommendation.entry.duration)}</span>
-          <span class="badge">Setting: ${recommendation.entry.setting.map(settingLabel).join(', ')}</span>
-        </div>
-        <div class="result-tags mb-4">
-          ${recommendation.entry.tags.map(tag => `<span class="badge">${tag}</span>`).join('')}
-        </div>
-        <h3 class="h5 fw-semibold">Warum passt das zu dir?</h3>
-        <ul class="list-group list-group-flush mb-4">
-          ${recommendation.reasons.map(reason => `<li class="list-group-item">${reason}</li>`).join('')}
-        </ul>
-        <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
-          <button class="restart-btn" id="restart-btn">Quiz neu starten</button>
-          <p class="text-muted mb-0">Du willst etwas anderes? Starte neu und wähle neue Stimmungen.</p>
-        </div>
-      `;
-
-      document.getElementById('restart-btn').addEventListener('click', restartQuiz);
+    function shakeCard(element) {
+      element.animate([
+        { transform: 'translateX(0)' },
+        { transform: 'translateX(-8px)' },
+        { transform: 'translateX(8px)' },
+        { transform: 'translateX(-4px)' },
+        { transform: 'translateX(0)' }
+      ], {
+        duration: 400,
+        easing: 'ease-in-out'
+      });
     }
 
-    function scoreEntries() {
-      let best = { entry: library[0], score: -Infinity, reasons: [] };
+    async function fetchBooksFromDatabase() {
+      // simuliert eine asynchrone Datenbankabfrage
+      return new Promise(resolve => {
+        setTimeout(() => resolve(JSON.parse(JSON.stringify(bookDatabase))), 320);
+      });
+    }
 
-      for (const entry of library) {
+    async function showResults() {
+      progressBar.style.width = '100%';
+      questionCard.hidden = true;
+      resultCard.hidden = false;
+      resultCard.classList.add('active');
+
+      const entries = await fetchBooksFromDatabase();
+      const match = rankEntries(entries, answers);
+      presentResult(match);
+    }
+
+    function rankEntries(entries, filters) {
+      let best = null;
+      let bestScore = -Infinity;
+
+      entries.forEach(entry => {
         let score = 0;
-        const localReasons = [];
+        const highlights = [];
 
-        if (entry.format === answers.format) {
-          score += 1.3;
-          localReasons.push(`<strong>Format</strong>: Du wolltest ${formatLabel(answers.format)} und ${entry.title} liefert genau das.`);
+        if (entry.goal.includes(filters.goal)) {
+          score += 2.2;
+          highlights.push(`✔️ Passt zu deinem Ziel <strong>${goalLabel(filters.goal)}</strong>.`);
         }
 
-        if (entry.mood.includes(answers.mood)) {
+        if (entry.mood.includes(filters.mood)) {
+          score += 1.8;
+          highlights.push(`✔️ Trifft deine gewünschte Stimmung: <strong>${moodLabel(filters.mood)}</strong>.`);
+        }
+
+        if (entry.complexity === filters.complexity) {
+          score += 1.4;
+          highlights.push(`✔️ Genau die richtige Tiefe: <strong>${complexityLabel(filters.complexity)}</strong>.`);
+        }
+
+        if (entry.setting.includes(filters.setting)) {
           score += 1.1;
-          localReasons.push(`<strong>Stimmung</strong>: ${moodDescription(answers.mood)} – passt perfekt zu ${entry.title}.`);
+          highlights.push(`✔️ Setting passt: <strong>${settingLabel(filters.setting)}</strong>.`);
         }
 
-        if (entry.duration === answers.duration) {
+        if (entry.length === filters.length) {
           score += 0.7;
-          localReasons.push(`<strong>Watchtime</strong>: ${durationDescription(answers.duration)}.`);
+          highlights.push(`✔️ Umfang entspricht <strong>${lengthLabel(filters.length)}</strong>.`);
         }
 
-        if (entry.setting.includes(answers.setting)) {
-          score += 1;
-          localReasons.push(`<strong>Setting</strong>: ${settingDescription(answers.setting)}.`);
+        if (entry.type === 'fachliteratur' && (filters.goal === 'career' || filters.goal === 'learn')) {
+          score += 0.5;
+        }
+        if (entry.type === 'unterhaltung' && (filters.goal === 'escape' || filters.goal === 'emotions')) {
+          score += 0.5;
         }
 
-        const overlap = entry.mood.filter(m => m === answers.mood).length + entry.setting.filter(s => s === answers.setting).length;
-        const bonus = Math.min(overlap * 0.2, 0.4);
-        score += bonus;
-
-        if (score > best.score) {
-          best = { entry, score, reasons: localReasons };
+        if (score > bestScore) {
+          bestScore = score;
+          best = { entry, highlights };
         }
-      }
+      });
 
       return best;
     }
 
-    function formatLabel(value) {
+    function presentResult(result) {
+      if (!result) return;
+      const { entry, highlights } = result;
+
+      resultImage.src = entry.image;
+      resultTitle.textContent = `${entry.title}`;
+      resultMeta.innerHTML = `von ${entry.author} · ${entry.type === 'fachliteratur' ? 'Fachliteratur' : 'Unterhaltung'}`;
+      resultDescription.textContent = entry.description;
+      resultHighlights.innerHTML = highlights.map(item => `<span>${item}</span>`).join('');
+      restartBtn.focus();
+    }
+
+    function resetQuiz() {
+      Object.keys(answers).forEach(key => delete answers[key]);
+      currentIndex = 0;
+      resultCard.hidden = true;
+      resultCard.classList.remove('active');
+      questionCard.hidden = false;
+      progressBar.style.width = '0%';
+      nextBtn.textContent = 'Weiter';
+      renderQuestion();
+    }
+
+    function goalLabel(value) {
       return {
-        movie: 'Film',
-        series: 'Serie',
-        documentary: 'Dokumentation'
+        career: 'beruflich wachsen',
+        learn: 'etwas Neues lernen',
+        escape: 'abschalten & abtauchen',
+        emotions: 'Gefühl & Inspiration'
       }[value];
     }
 
-    function durationLabel(value) {
+    function moodLabel(value) {
       return {
-        quick: 'Kurzformat (bis ca. 100 Min.)',
-        standard: 'Ein Abend (ca. 2–3 Std.)',
-        epic: 'Binge-Night (länger als 3 Std.)'
+        motivated: 'energiegeladen',
+        calm: 'ruhig & reflektiert',
+        thrilling: 'spannend',
+        wonder: 'magisch & visionär'
       }[value];
     }
 
-    function durationDescription(value) {
-      switch (value) {
-        case 'quick':
-          return 'Du wolltest etwas für eine kurze Session';
-        case 'standard':
-          return 'Perfekt für einen klassischen Film- oder Serienabend';
-        case 'epic':
-          return 'Du hast Zeit für ein langes, immersives Erlebnis';
-        default:
-          return 'Diese Laufzeit passt zu dir';
-      }
-    }
-
-    function moodDescription(value) {
-      switch (value) {
-        case 'feelgood':
-          return 'Du hast Lust auf Feel-Good-Vibes';
-        case 'thrilling':
-          return 'Du suchst Spannung und Tempo';
-        case 'emotional':
-          return 'Du möchtest etwas mit Herz und Tiefgang';
-        case 'mindbending':
-          return 'Du willst überrascht und herausgefordert werden';
-        default:
-          return 'Diese Stimmung passt';
-      }
+    function complexityLabel(value) {
+      return {
+        light: 'leicht & zugänglich',
+        medium: 'gut strukturiert',
+        deep: 'anspruchsvoll'
+      }[value];
     }
 
     function settingLabel(value) {
       return {
-        reality: 'Hier & Jetzt',
-        future: 'Zukunft',
-        historical: 'Historisch',
-        fantasy: 'Fantastisch'
+        realistic: 'reale Gegenwart',
+        future: 'Zukunft & Technik',
+        historical: 'Geschichte & Vergangenheit',
+        fantasy: 'fantastische Welten'
       }[value];
     }
 
-    function settingDescription(value) {
-      switch (value) {
-        case 'reality':
-          return 'Du wolltest nahe an realen Geschichten bleiben';
-        case 'future':
-          return 'Du hattest Lust auf futuristische Visionen';
-        case 'historical':
-          return 'Du suchst epische Reisen in die Vergangenheit';
-        case 'fantasy':
-          return 'Du möchtest in fantastische Welten eintauchen';
-        default:
-          return 'Dieses Setting liegt dir';
-      }
+    function lengthLabel(value) {
+      return {
+        short: 'Kurzformat',
+        standard: 'ausgewogenem Umfang',
+        long: 'epischer Lesezeit'
+      }[value];
     }
-
-    function restartQuiz() {
-      resultCard.classList.add('d-none');
-      questionCard.classList.remove('d-none');
-      Object.keys(answers).forEach(key => delete answers[key]);
-      currentIndex = 0;
-      renderQuestion();
-    }
-
-    renderQuestion();
   </script>
 </body>
 </html>
