@@ -418,21 +418,22 @@
   <div class="app">
     <header class="hero">
       <div class="hero-content">
-        <div class="eyebrow">Alles in einer Experience</div>
-        <h1>Finde das Buch, das heute perfekt zu dir passt.</h1>
-        <p>Beantworte ein paar inspirierende Fragen und lass unseren Buchfinder deine nächste Lektüre entdecken – von Fachwissen
-          für die Karriere bis zu Geschichten zum Wegträumen.</p>
+        <div class="eyebrow">Kuratiert für Expert:innen</div>
+        <h1>Finde die Fachliteratur, die deinen nächsten Durchbruch ermöglicht.</h1>
+        <p>Unser intelligenter Literatur-Guide analysiert deine strategischen Ziele, deinen Kontext und deine bevorzugte
+          Arbeitstiefe. Nach nur wenigen Antworten erhältst du eine Empfehlung, die zu deinem Fachgebiet und deinem Anspruch
+          passt.</p>
         <button class="btn-primary" id="startQuiz">
-          Jetzt Empfehlung starten
+          Jetzt Analyse starten
           <span aria-hidden="true">→</span>
         </button>
       </div>
       <aside class="hero-visual" aria-label="Highlights der Buchsuche">
-        <div class="hero-badge">📚 Intelligente Buchdatenbank</div>
+        <div class="hero-badge">📚 Evidenzbasierte Datenbank</div>
         <ul class="hero-list">
-          <li><span class="icon">🎯</span> <span>Analyse deiner Ziele & Stimmung</span></li>
-          <li><span class="icon">🧠</span> <span>Fachliteratur & Fiction gleichermaßen</span></li>
-          <li><span class="icon">✨</span> <span>Präzise Empfehlungen mit Storytelling</span></li>
+          <li><span class="icon">🎯</span> <span>Fokus auf berufliche & wissenschaftliche Ziele</span></li>
+          <li><span class="icon">🧭</span> <span>Mehrstufige Analyse von Methodik & Praxisnähe</span></li>
+          <li><span class="icon">🧠</span> <span>Empfehlungen aus führender Fachliteratur</span></li>
         </ul>
       </aside>
     </header>
@@ -441,12 +442,12 @@
       <section class="quiz-wrapper">
         <article class="quiz-card" id="questionCard" aria-live="polite" aria-atomic="true" hidden>
           <div class="quiz-progress">
-            <span id="stepLabel">Frage 1 von 5</span>
+            <span id="stepLabel">Frage 1 von 8</span>
             <div class="progress-bar"><span id="progressBar"></span></div>
           </div>
           <div>
-            <h2 class="question-title" id="questionTitle">Wofür suchst du ein Buch?</h2>
-            <p class="question-desc" id="questionDesc">Wir wollen wissen, wohin dich deine nächste Lektüre bringen darf.</p>
+            <h2 class="question-title" id="questionTitle">In welchem Fachbereich brauchst du neue Impulse?</h2>
+            <p class="question-desc" id="questionDesc">Wir starten mit der inhaltlichen Einordnung deiner Recherche.</p>
           </div>
           <div class="option-grid" id="optionGrid"></div>
           <div class="actions">
@@ -482,206 +483,237 @@
   <script>
     const questions = [
       {
+        id: 'domain',
+        title: 'In welchem Fachbereich brauchst du neue Impulse?',
+        description: 'Wir ordnen deine Anfrage einem thematischen Cluster zu, um wirklich relevante Quellen zu finden.',
+        options: [
+          { value: 'management', title: 'Strategie & Leadership', description: 'Organisationen führen, Transformation gestalten, Verantwortung tragen.' },
+          { value: 'technology', title: 'Technologie & IT-Architektur', description: 'Systemdesign, Digitalisierung, Software- und Datenkompetenz.' },
+          { value: 'people', title: 'People & Organisation', description: 'Talententwicklung, New Work, Change-Kommunikation und Kultur.' },
+          { value: 'research', title: 'Wissenschaft & Analyse', description: 'Empirische Studien, Methodenkompetenz und analytische Tiefe.' },
+          { value: 'health', title: 'Gesundheit & Pflegeinnovation', description: 'Versorgungsmodelle, evidenzbasierte Praxis und Public Health.' }
+        ]
+      },
+      {
         id: 'goal',
-        title: 'Wofür suchst du gerade ein Buch?',
-        description: 'Ob beruflich, fürs Studium oder einfach zum Abschalten – dein Ziel bestimmt den Fokus.',
+        title: 'Welches Ziel verfolgst du mit der Lektüre?',
+        description: 'Dein Ziel entscheidet, ob wir eher Grundlagen, Best Practices oder Zukunftsmodelle priorisieren.',
         options: [
-          {
-            value: 'career',
-            title: 'Beruflich wachsen',
-            description: 'Strategien, Produktivität, Leadership und Skills, die dich weiterbringen.'
-          },
-          {
-            value: 'learn',
-            title: 'Etwas Neues lernen',
-            description: 'Fundierte Sachbücher, die Wissen vertiefen und Horizonte erweitern.'
-          },
-          {
-            value: 'escape',
-            title: 'Abschalten & Abtauchen',
-            description: 'Geschichten, die dich in andere Welten tragen und den Alltag vergessen lassen.'
-          },
-          {
-            value: 'emotions',
-            title: 'Gefühl & Inspiration',
-            description: 'Literarische Reisen mit großen Emotionen und persönlicher Tiefe.'
-          }
+          { value: 'transform', title: 'Transformation vorantreiben', description: 'Strategische Weichen stellen, komplexe Veränderung steuern.' },
+          { value: 'optimize', title: 'Prozesse verbessern', description: 'Operational Excellence, Skalierung und messbare Effizienz.' },
+          { value: 'upskill', title: 'Fachwissen vertiefen', description: 'Theorien verdichten, Modelle verstehen, Expertise erweitern.' },
+          { value: 'teach', title: 'Wissen weitergeben', description: 'Didaktik, Frameworks und Beispiele für Teams & Lehre.' }
         ]
       },
       {
-        id: 'mood',
-        title: 'Welche Stimmung wünschst du dir?',
-        description: 'Wir stimmen die Tonalität des Buches auf deinen aktuellen Vibe ab.',
+        id: 'experience',
+        title: 'Auf welchem Erfahrungsniveau bewegst du dich?',
+        description: 'So stellen wir sicher, dass das Buch sprachlich und methodisch zu dir passt.',
         options: [
-          { value: 'motivated', title: 'Energiegeladen & motivierend', description: 'Power, Drive und kluge Ideen für die nächsten Schritte.' },
-          { value: 'calm', title: 'Ruhig & reflektiert', description: 'Sanfte, tiefgründige Texte zum Entschleunigen.' },
-          { value: 'thrilling', title: 'Spannend & fesselnd', description: 'Pageturner mit Plot-Twists und starkem Tempo.' },
-          { value: 'wonder', title: 'Magisch & visionär', description: 'Fantastische Settings, Zukunftsszenarien oder surreale Welten.' }
+          { value: 'entry', title: 'Professioneller Einstieg', description: 'Fundierte Grundlagen, klare Strukturen, gut nachvollziehbar.' },
+          { value: 'advanced', title: 'Fortgeschritten', description: 'Vertiefung mit anspruchsvollen Konzepten und Fallbeispielen.' },
+          { value: 'expert', title: 'Executive / Expert Level', description: 'State-of-the-Art, Meta-Analysen und High-Level-Diskurs.' }
         ]
       },
       {
-        id: 'complexity',
-        title: 'Wie komplex darf es sein?',
-        description: 'Wir berücksichtigen, wie tief die Inhalte gehen und wie konzentriert du lesen möchtest.',
+        id: 'approach',
+        title: 'Welche Art von Erkenntnissen suchst du?',
+        description: 'Wir unterscheiden zwischen Strategie, Umsetzung, Forschung und Story-driven Learnings.',
         options: [
-          { value: 'light', title: 'Leicht & zugänglich', description: 'Klare Sprache, kurze Kapitel – perfekt für zwischendurch.' },
-          { value: 'medium', title: 'Gut strukturiert', description: 'Ausgewogenes Tempo, solide Tiefe und viel Praxis.' },
-          { value: 'deep', title: 'Anspruchsvoll & analytisch', description: 'Dichte Inhalte für intensives Lesen und neue Perspektiven.' }
+          { value: 'strategic', title: 'Strategische Modelle & Frameworks', description: 'Referenzmodelle, Roadmaps und Gestaltungsprinzipien.' },
+          { value: 'operational', title: 'Operative Umsetzung & Tools', description: 'Playbooks, Checklisten und konkrete Instrumente.' },
+          { value: 'researchDriven', title: 'Forschungs- & Datenorientiert', description: 'Studien, Metaanalysen, evidenzbasierte Empfehlungen.' },
+          { value: 'caseStudy', title: 'Fallstudien & Erfahrungsberichte', description: 'Best Practices, Lessons Learned und narrative Einblicke.' }
         ]
       },
       {
-        id: 'setting',
-        title: 'Welche Welt möchtest du erkunden?',
-        description: 'Vom Hier & Jetzt bis ins Fantastische – deine Vorliebe zählt.',
+        id: 'depth',
+        title: 'Welche Tiefe erwartest du?',
+        description: 'Von kompakt verdichteten Insights bis hin zu tiefgehenden Analysen.',
         options: [
-          { value: 'realistic', title: 'Reale Gegenwart', description: 'Authentische Szenarien, Sachbuch oder zeitgenössische Romane.' },
-          { value: 'future', title: 'Zukunft & Technik', description: 'Visionen, Innovation und ein Blick nach vorn.' },
-          { value: 'historical', title: 'Geschichte & Vergangenheit', description: 'Epochenreisen, Biografien und historische Romane.' },
-          { value: 'fantasy', title: 'Fantastische Welten', description: 'Mythen, Magie und epische Abenteuer.' }
+          { value: 'concise', title: 'Kompakt & auf den Punkt', description: 'Verdichtete Quintessenzen, Executive Summaries, klare Handlungsimpulse.' },
+          { value: 'structured', title: 'Strukturiert & praxisnah', description: 'Ausgewogene Balance aus Theorie, Beispielen und Umsetzung.' },
+          { value: 'immersive', title: 'Tiefgreifend & analytisch', description: 'Dichte Argumentationen, umfangreiche Modelle, hohe Komplexität.' }
+        ]
+      },
+      {
+        id: 'evidence',
+        title: 'Wie möchtest du überzeugt werden?',
+        description: 'Wir matchen auf deine bevorzugte Evidenzbasis.',
+        options: [
+          { value: 'data', title: 'Daten & Studien', description: 'Quantitative Analysen, Statistiken, harte Kennzahlen.' },
+          { value: 'cases', title: 'Case Studies', description: 'Detaillierte Praxisbeispiele mit messbaren Ergebnissen.' },
+          { value: 'frameworks', title: 'Frameworks & Modelle', description: 'Referenzarchitekturen, Reifegradmodelle, strukturierte Denkrahmen.' },
+          { value: 'trends', title: 'Trends & Szenarien', description: 'Vorausschauende Analysen, Zukunftsbilder, foresight-getrieben.' }
+        ]
+      },
+      {
+        id: 'format',
+        title: 'Welches Lernformat unterstützt dich am besten?',
+        description: 'Von Handbüchern bis zu analytischen Erzählungen – wir passen den Stil an.',
+        options: [
+          { value: 'playbook', title: 'Playbook & Umsetzungsleitfaden', description: 'Schritt-für-Schritt, Templates, sofortige Anwendung.' },
+          { value: 'handbook', title: 'Handbuch & Referenz', description: 'Umfassende Kompendien zum Nachschlagen und Vertiefen.' },
+          { value: 'narrative', title: 'Narrative Analyse', description: 'Storytelling, Perspektivwechsel, reflektierende Essays.' },
+          { value: 'academic', title: 'Akademisch & methodisch', description: 'Peer-Review-Niveau, Methodendiskussion, Theoriearbeit.' }
         ]
       },
       {
         id: 'length',
-        title: 'Wie viel Lesezeit bringst du mit?',
-        description: 'So finden wir das Format, das zu deinem Alltag passt.',
+        title: 'Wie viel Zeit kannst du investieren?',
+        description: 'Wir berücksichtigen Umfang, Dichte und Lesedauer.',
         options: [
-          { value: 'short', title: 'Kurz & knackig', description: 'Bis 250 Seiten oder schnell konsumierbar.' },
-          { value: 'standard', title: 'Ausgewogen', description: '300–450 Seiten, ein gutes Gleichgewicht.' },
-          { value: 'long', title: 'Eintauchen & verweilen', description: 'Epische Stoffe über 500 Seiten oder mehrbändig.' }
+          { value: 'short', title: 'Verdichtet', description: 'Bis 220 Seiten bzw. sehr konzentrierte Formate.' },
+          { value: 'medium', title: 'Ausgewogen', description: '250–420 Seiten, solide Lesedauer mit Tiefgang.' },
+          { value: 'long', title: 'Umfassend', description: 'Über 420 Seiten oder modulare Sammelbände.' }
         ]
       }
     ];
 
     const bookDatabase = [
       {
-        id: 'deep-work',
-        title: 'Deep Work',
-        author: 'Cal Newport',
+        id: 'leading-change',
+        title: 'Leading Change',
+        author: 'John P. Kotter',
         type: 'fachliteratur',
-        goal: ['career', 'learn'],
-        mood: ['motivated', 'calm'],
-        complexity: 'medium',
-        setting: ['realistic'],
-        length: 'standard',
-        description: 'Ein fokussierter Leitfaden für produktives Arbeiten im digitalen Zeitalter. Newport zeigt Strategien, um Ablenkungen zu minimieren und echte Konzentration zu kultivieren.',
-        image: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=700&q=80'
+        domain: ['management', 'people'],
+        goal: ['transform', 'teach'],
+        experience: ['entry', 'advanced'],
+        approach: ['strategic', 'caseStudy'],
+        depth: 'structured',
+        evidence: ['frameworks', 'cases'],
+        format: ['handbook', 'playbook'],
+        length: 'medium',
+        description: 'Kotter liefert einen präzisen Fahrplan für erfolgreiche Veränderungsprozesse – von der Dringlichkeitsanalyse bis zur kulturellen Verankerung.',
+        image: 'https://images.unsplash.com/photo-1485217988980-11786ced9454?auto=format&fit=crop&w=700&q=80'
       },
       {
-        id: 'think-again',
-        title: 'Think Again',
-        author: 'Adam Grant',
+        id: 'devops-handbook',
+        title: 'The DevOps Handbook',
+        author: 'Gene Kim u. a.',
         type: 'fachliteratur',
-        goal: ['learn', 'career'],
-        mood: ['motivated'],
-        complexity: 'light',
-        setting: ['realistic', 'future'],
-        length: 'short',
-        description: 'Organisationspsychologe Adam Grant ermutigt dazu, die eigene Meinung zu hinterfragen und Neuem offen zu begegnen. Ein inspirierender Perspektivwechsel mit vielen Praxisbeispielen.',
-        image: 'https://images.unsplash.com/photo-1455884981818-54cb785db6fc?auto=format&fit=crop&w=700&q=80'
-      },
-      {
-        id: 'atomic-habits',
-        title: 'Die 1% Methode',
-        author: 'James Clear',
-        type: 'fachliteratur',
-        goal: ['career', 'learn'],
-        mood: ['motivated'],
-        complexity: 'light',
-        setting: ['realistic'],
-        length: 'short',
-        description: 'Ein Bestseller über den Aufbau guter Gewohnheiten. Mit klaren Modellen und sofort anwendbaren Schritten für nachhaltige Veränderung.',
-        image: 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=700&q=80'
-      },
-      {
-        id: 'educated',
-        title: 'Befreit',
-        author: 'Tara Westover',
-        type: 'fachliteratur',
-        goal: ['learn', 'emotions'],
-        mood: ['calm'],
-        complexity: 'medium',
-        setting: ['historical', 'realistic'],
-        length: 'standard',
-        description: 'Eine bewegende Memoire über Bildung, Selbstbestimmung und den Mut, sich vom eigenen Ursprung zu lösen – poetisch und inspirierend zugleich.',
-        image: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=700&q=80'
-      },
-      {
-        id: 'project-hail-mary',
-        title: 'Der Astronaut',
-        author: 'Andy Weir',
-        type: 'unterhaltung',
-        goal: ['escape'],
-        mood: ['thrilling', 'wonder'],
-        complexity: 'medium',
-        setting: ['future'],
+        domain: ['technology', 'management'],
+        goal: ['optimize', 'transform'],
+        experience: ['advanced'],
+        approach: ['operational', 'strategic'],
+        depth: 'immersive',
+        evidence: ['cases', 'data'],
+        format: ['playbook', 'handbook'],
         length: 'long',
-        description: 'Ein Lehrer wacht allein in einem Raumschiff auf und muss die Menschheit retten. Wissenschaft trifft auf Humor in diesem Sci-Fi-Abenteuer.',
-        image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=700&q=80'
+        description: 'Ein tiefes Kompendium über Continuous Delivery, Plattformteams und Metriken – gespickt mit Erfahrungen führender Tech-Unternehmen.',
+        image: 'https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=700&q=80'
       },
       {
-        id: 'night-circus',
-        title: 'Der Nachtzirkus',
-        author: 'Erin Morgenstern',
-        type: 'unterhaltung',
-        goal: ['escape', 'emotions'],
-        mood: ['wonder'],
-        complexity: 'medium',
-        setting: ['fantasy', 'historical'],
-        length: 'standard',
-        description: 'Ein geheimnisvoller Zirkus erscheint nur bei Nacht – voller Magie, Rivalität und einer zarten Liebesgeschichte. Atmosphärisch und traumhaft.',
-        image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=700&q=80'
-      },
-      {
-        id: 'where-crawdads',
-        title: 'Der Gesang der Flusskrebse',
-        author: 'Delia Owens',
-        type: 'unterhaltung',
-        goal: ['escape', 'emotions'],
-        mood: ['calm', 'thrilling'],
-        complexity: 'medium',
-        setting: ['realistic'],
-        length: 'standard',
-        description: 'Naturbeschreibungen, Coming-of-Age und ein Kriminalfall in einem. Ein Roman, der lange nachhallt.',
-        image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=700&q=80'
-      },
-      {
-        id: 'sapiens',
-        title: 'Eine kurze Geschichte der Menschheit',
-        author: 'Yuval Noah Harari',
+        id: 'ddia',
+        title: 'Designing Data-Intensive Applications',
+        author: 'Martin Kleppmann',
         type: 'fachliteratur',
-        goal: ['learn'],
-        mood: ['calm'],
-        complexity: 'deep',
-        setting: ['historical', 'future'],
+        domain: ['technology', 'research'],
+        goal: ['upskill', 'teach'],
+        experience: ['expert'],
+        approach: ['researchDriven', 'strategic'],
+        depth: 'immersive',
+        evidence: ['data', 'frameworks'],
+        format: ['handbook', 'academic'],
         length: 'long',
-        description: 'Harari entfaltet die Geschichte der Spezies Mensch – umfassend, analytisch und voller Denkanstöße für Gegenwart und Zukunft.',
-        image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=700&q=80'
+        description: 'Kleppmann analysiert Architekturen verteilter Systeme, Datenmodelle und Skalierungsstrategien – ein Standardwerk für technische Entscheider:innen.',
+        image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=80'
       },
       {
-        id: 'song-achilles',
-        title: 'Das Lied des Achill',
-        author: 'Madeline Miller',
-        type: 'unterhaltung',
-        goal: ['escape', 'emotions'],
-        mood: ['wonder', 'calm'],
-        complexity: 'medium',
-        setting: ['historical', 'fantasy'],
-        length: 'standard',
-        description: 'Eine poetische Neuerzählung des trojanischen Krieges aus Sicht des Patroklos. Zart, heroisch und herzzerreißend.',
-        image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=700&q=80'
-      },
-      {
-        id: 'factfulness',
-        title: 'Factfulness',
-        author: 'Hans Rosling',
+        id: 'reinventing-organizations',
+        title: 'Reinventing Organizations',
+        author: 'Frederic Laloux',
         type: 'fachliteratur',
-        goal: ['learn', 'career'],
-        mood: ['motivated', 'calm'],
-        complexity: 'light',
-        setting: ['realistic'],
-        length: 'standard',
-        description: 'Ein optimistisches, datenbasiertes Buch über den Zustand der Welt – entlarvt Denkirrtümer und liefert Klarheit.',
-        image: 'https://images.unsplash.com/photo-1454165205744-3b78555e5572?auto=format&fit=crop&w=700&q=80'
+        domain: ['people', 'management'],
+        goal: ['transform', 'teach'],
+        experience: ['advanced'],
+        approach: ['strategic', 'caseStudy'],
+        depth: 'structured',
+        evidence: ['cases', 'trends'],
+        format: ['narrative', 'handbook'],
+        length: 'medium',
+        description: 'Eine umfassende Analyse selbstorganisierter Unternehmen mit praxisnahen Beispielen und konkreten Gestaltungsprinzipien.',
+        image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=700&q=80'
+      },
+      {
+        id: 'lean-analytics',
+        title: 'Lean Analytics',
+        author: 'Alistair Croll & Benjamin Yoskovitz',
+        type: 'fachliteratur',
+        domain: ['technology', 'research'],
+        goal: ['optimize', 'upskill'],
+        experience: ['advanced'],
+        approach: ['operational', 'researchDriven'],
+        depth: 'structured',
+        evidence: ['data', 'cases'],
+        format: ['playbook'],
+        length: 'medium',
+        description: 'Zeigt, wie datengetriebenes Arbeiten Produktentscheidungen verbessert – mit konkreten KPI-Modellen für jede Wachstumsphase.',
+        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=700&q=80'
+      },
+      {
+        id: 'digital-transformation-playbook',
+        title: 'The Digital Transformation Playbook',
+        author: 'David L. Rogers',
+        type: 'fachliteratur',
+        domain: ['management', 'technology'],
+        goal: ['transform'],
+        experience: ['entry', 'advanced'],
+        approach: ['strategic'],
+        depth: 'structured',
+        evidence: ['frameworks', 'trends'],
+        format: ['handbook', 'playbook'],
+        length: 'medium',
+        description: 'Rogers verbindet Geschäftsmodellinnovation, Kundenzentrierung und Plattformlogiken zu einer klaren Transformationsagenda.',
+        image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=700&q=80'
+      },
+      {
+        id: 'value-based-healthcare',
+        title: 'Redefining Health Care',
+        author: 'Michael E. Porter & Elizabeth Olmsted Teisberg',
+        type: 'fachliteratur',
+        domain: ['health', 'management'],
+        goal: ['transform', 'optimize'],
+        experience: ['expert'],
+        approach: ['researchDriven', 'strategic'],
+        depth: 'immersive',
+        evidence: ['data', 'frameworks'],
+        format: ['academic', 'handbook'],
+        length: 'long',
+        description: 'Ein Referenzwerk für Value-Based Healthcare mit präzisen Kennzahlensystemen und praxisnahen Implementierungspfaden.',
+        image: 'https://images.unsplash.com/photo-1587502536240-183035fb2d1d?auto=format&fit=crop&w=700&q=80'
+      },
+      {
+        id: 'evidence-based-management',
+        title: 'Hard Facts, Dangerous Half-Truths & Total Nonsense',
+        author: 'Jeffrey Pfeffer & Robert I. Sutton',
+        type: 'fachliteratur',
+        domain: ['management', 'research'],
+        goal: ['upskill', 'teach'],
+        experience: ['entry', 'advanced'],
+        approach: ['researchDriven'],
+        depth: 'structured',
+        evidence: ['data', 'frameworks'],
+        format: ['narrative', 'academic'],
+        length: 'medium',
+        description: 'Zeigt, wie Managemententscheidungen konsequent auf Evidenz basieren – mit klaren Kriterien zur Bewertung von Studien und Best Practices.',
+        image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=700&q=80'
+      },
+      {
+        id: 'fearless-organization',
+        title: 'The Fearless Organization',
+        author: 'Amy C. Edmondson',
+        type: 'fachliteratur',
+        domain: ['people', 'management'],
+        goal: ['transform', 'optimize'],
+        experience: ['advanced'],
+        approach: ['caseStudy', 'strategic'],
+        depth: 'structured',
+        evidence: ['cases', 'frameworks'],
+        format: ['handbook', 'narrative'],
+        length: 'medium',
+        description: 'Edmondson erklärt, wie psychologische Sicherheit Leistung und Innovation steigert – mit diagnostischen Tools und Interventionsempfehlungen.',
+        image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=700&q=80'
       }
     ];
 
@@ -797,6 +829,14 @@
       presentResult(match);
     }
 
+    function matchesPreference(entryValue, filterValue) {
+      if (!entryValue || !filterValue) return false;
+      if (Array.isArray(entryValue)) {
+        return entryValue.includes(filterValue);
+      }
+      return entryValue === filterValue;
+    }
+
     function rankEntries(entries, filters) {
       let best = null;
       let bestScore = -Infinity;
@@ -805,36 +845,51 @@
         let score = 0;
         const highlights = [];
 
-        if (entry.goal.includes(filters.goal)) {
-          score += 2.2;
-          highlights.push(`✔️ Passt zu deinem Ziel <strong>${goalLabel(filters.goal)}</strong>.`);
+        if (matchesPreference(entry.domain, filters.domain)) {
+          score += 2.6;
+          highlights.push(`✔️ Fachfokus <strong>${domainLabel(filters.domain)}</strong> trifft dein Anliegen.`);
         }
 
-        if (entry.mood.includes(filters.mood)) {
-          score += 1.8;
-          highlights.push(`✔️ Trifft deine gewünschte Stimmung: <strong>${moodLabel(filters.mood)}</strong>.`);
+        if (matchesPreference(entry.goal, filters.goal)) {
+          score += 2.3;
+          highlights.push(`✔️ Unterstützt dein Ziel <strong>${goalLabel(filters.goal)}</strong>.`);
         }
 
-        if (entry.complexity === filters.complexity) {
-          score += 1.4;
-          highlights.push(`✔️ Genau die richtige Tiefe: <strong>${complexityLabel(filters.complexity)}</strong>.`);
+        if (matchesPreference(entry.experience, filters.experience)) {
+          score += 1.9;
+          highlights.push(`✔️ Anspruchsniveau: <strong>${experienceLabel(filters.experience)}</strong>.`);
+          if (filters.experience === 'expert' && matchesPreference(entry.depth, 'immersive')) {
+            score += 0.3;
+          }
         }
 
-        if (entry.setting.includes(filters.setting)) {
-          score += 1.1;
-          highlights.push(`✔️ Setting passt: <strong>${settingLabel(filters.setting)}</strong>.`);
+        if (matchesPreference(entry.approach, filters.approach)) {
+          score += 2.0;
+          highlights.push(`✔️ Erkenntnisstil: <strong>${approachLabel(filters.approach)}</strong>.`);
+        }
+
+        if (matchesPreference(entry.depth, filters.depth)) {
+          score += 1.6;
+          highlights.push(`✔️ Tiefe entspricht <strong>${depthLabel(filters.depth)}</strong>.`);
+        }
+
+        if (matchesPreference(entry.evidence, filters.evidence)) {
+          score += 1.5;
+          highlights.push(`✔️ Belegt durch <strong>${evidenceLabel(filters.evidence)}</strong>.`);
+        }
+
+        if (matchesPreference(entry.format, filters.format)) {
+          score += 1.2;
+          highlights.push(`✔️ Lernformat <strong>${formatLabel(filters.format)}</strong> passt zu dir.`);
         }
 
         if (entry.length === filters.length) {
-          score += 0.7;
-          highlights.push(`✔️ Umfang entspricht <strong>${lengthLabel(filters.length)}</strong>.`);
+          score += 0.9;
+          highlights.push(`✔️ Umfang liegt im Bereich <strong>${lengthLabel(filters.length)}</strong>.`);
         }
 
-        if (entry.type === 'fachliteratur' && (filters.goal === 'career' || filters.goal === 'learn')) {
-          score += 0.5;
-        }
-        if (entry.type === 'unterhaltung' && (filters.goal === 'escape' || filters.goal === 'emotions')) {
-          score += 0.5;
+        if (entry.type === 'fachliteratur') {
+          score += 0.4;
         }
 
         if (score > bestScore) {
@@ -852,7 +907,9 @@
 
       resultImage.src = entry.image;
       resultTitle.textContent = `${entry.title}`;
-      resultMeta.innerHTML = `von ${entry.author} · ${entry.type === 'fachliteratur' ? 'Fachliteratur' : 'Unterhaltung'}`;
+      const primaryDomain = Array.isArray(entry.domain) ? entry.domain[0] : entry.domain;
+      const domainText = primaryDomain ? domainLabel(primaryDomain) : 'Interdisziplinär';
+      resultMeta.innerHTML = `von ${entry.author} · Fachliteratur · ${domainText}`;
       resultDescription.textContent = entry.description;
       resultHighlights.innerHTML = highlights.map(item => `<span>${item}</span>`).join('');
       restartBtn.focus();
@@ -869,47 +926,74 @@
       renderQuestion();
     }
 
+    function domainLabel(value) {
+      return {
+        management: 'Strategie & Leadership',
+        technology: 'Technologie & IT-Architektur',
+        people: 'People & Organisation',
+        research: 'Wissenschaft & Analyse',
+        health: 'Gesundheit & Pflegeinnovation'
+      }[value] || value;
+    }
+
     function goalLabel(value) {
       return {
-        career: 'beruflich wachsen',
-        learn: 'etwas Neues lernen',
-        escape: 'abschalten & abtauchen',
-        emotions: 'Gefühl & Inspiration'
-      }[value];
+        transform: 'Transformation vorantreiben',
+        optimize: 'Prozesse verbessern',
+        upskill: 'Fachwissen vertiefen',
+        teach: 'Wissen weitergeben'
+      }[value] || value;
     }
 
-    function moodLabel(value) {
+    function experienceLabel(value) {
       return {
-        motivated: 'energiegeladen',
-        calm: 'ruhig & reflektiert',
-        thrilling: 'spannend',
-        wonder: 'magisch & visionär'
-      }[value];
+        entry: 'Professioneller Einstieg',
+        advanced: 'Fortgeschritten',
+        expert: 'Executive / Expert Level'
+      }[value] || value;
     }
 
-    function complexityLabel(value) {
+    function approachLabel(value) {
       return {
-        light: 'leicht & zugänglich',
-        medium: 'gut strukturiert',
-        deep: 'anspruchsvoll'
-      }[value];
+        strategic: 'Strategische Modelle & Frameworks',
+        operational: 'Operative Umsetzung & Tools',
+        researchDriven: 'Forschungs- & Datenorientiert',
+        caseStudy: 'Fallstudien & Erfahrungsberichte'
+      }[value] || value;
     }
 
-    function settingLabel(value) {
+    function depthLabel(value) {
       return {
-        realistic: 'reale Gegenwart',
-        future: 'Zukunft & Technik',
-        historical: 'Geschichte & Vergangenheit',
-        fantasy: 'fantastische Welten'
-      }[value];
+        concise: 'Kompakt & auf den Punkt',
+        structured: 'Strukturiert & praxisnah',
+        immersive: 'Tiefgreifend & analytisch'
+      }[value] || value;
+    }
+
+    function evidenceLabel(value) {
+      return {
+        data: 'Daten & Studien',
+        cases: 'Case Studies',
+        frameworks: 'Frameworks & Modelle',
+        trends: 'Trends & Szenarien'
+      }[value] || value;
+    }
+
+    function formatLabel(value) {
+      return {
+        playbook: 'Playbook & Umsetzungsleitfaden',
+        handbook: 'Handbuch & Referenz',
+        narrative: 'Narrative Analyse',
+        academic: 'Akademisch & methodisch'
+      }[value] || value;
     }
 
     function lengthLabel(value) {
       return {
-        short: 'Kurzformat',
-        standard: 'ausgewogenem Umfang',
-        long: 'epischer Lesezeit'
-      }[value];
+        short: 'verdichteter Lektüre',
+        medium: 'ausgewogenem Umfang',
+        long: 'umfassender Vertiefung'
+      }[value] || value;
     }
   </script>
 </body>
