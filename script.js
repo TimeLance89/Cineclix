@@ -215,6 +215,34 @@ const questions = [
     ]
   },
   {
+    id: 'context',
+    title: 'In welchem organisationalen Kontext setzt du das Wissen ein?',
+    description:
+      'So können wir abschätzen, ob Skalierung, Regulatorik oder agile Lernzyklen im Vordergrund stehen.',
+    options: [
+      {
+        value: 'enterprise',
+        title: 'Konzern & reguliertes Umfeld',
+        description: 'Mehrere Hierarchien, Stakeholder-Gremien, Compliance-Druck.'
+      },
+      {
+        value: 'scaleup',
+        title: 'Scale-up & wachsendes Unternehmen',
+        description: 'Schnelles Wachstum, iteratives Arbeiten, Fokus auf Produkt-Markt-Fit.'
+      },
+      {
+        value: 'publicSector',
+        title: 'Öffentlicher Sektor / NGO',
+        description: 'Politische Legitimation, Wirkung auf Systeme, gesellschaftlicher Auftrag.'
+      },
+      {
+        value: 'researchLab',
+        title: 'Forschungs- & Innovationslabor',
+        description: 'Interdisziplinäre Teams, Prototyping, akademische Kooperationen.'
+      }
+    ]
+  },
+  {
     id: 'format',
     title: 'Welches Lernformat unterstützt dich am besten?',
     description: 'Von Handbüchern bis zu analytischen Erzählungen – wir passen den Stil an.',
@@ -238,6 +266,28 @@ const questions = [
         value: 'academic',
         title: 'Akademisch & methodisch',
         description: 'Peer-Review-Niveau, Methodendiskussion, Theoriearbeit.'
+      }
+    ]
+  },
+  {
+    id: 'timeHorizon',
+    title: 'Welchen Wirkungshorizont hast du im Blick?',
+    description: 'Wir berücksichtigen, ob du schnelle Impulse oder langfristige Transformationen planst.',
+    options: [
+      {
+        value: 'quickWins',
+        title: 'Quick Wins (0–3 Monate)',
+        description: 'Schnell umsetzbare Maßnahmen, unmittelbare Wirkung.'
+      },
+      {
+        value: 'midTerm',
+        title: 'Mittelfristig (3–12 Monate)',
+        description: 'Iterative Skalierung, Etablierung neuer Routinen.'
+      },
+      {
+        value: 'longTerm',
+        title: 'Langfristig (12+ Monate)',
+        description: 'Systemische Veränderung, kulturelle und strukturelle Transformation.'
       }
     ]
   },
@@ -306,7 +356,9 @@ const bookDatabase = [
     methodology: ['qualitative', 'conceptual'],
     evidence: ['frameworks', 'cases'],
     transfer: ['strategyBlueprints', 'capabilityBuilding'],
+    context: ['enterprise', 'publicSector'],
     format: ['handbook', 'playbook'],
+    timeHorizon: ['midTerm', 'longTerm'],
     length: 'medium',
     insight: 'pragmaticPlaybook',
     description:
@@ -326,7 +378,9 @@ const bookDatabase = [
     methodology: ['mixed', 'quantitative'],
     evidence: ['cases', 'data'],
     transfer: ['innovationLab', 'capabilityBuilding'],
+    context: ['scaleup', 'enterprise'],
     format: ['playbook', 'handbook'],
+    timeHorizon: ['midTerm', 'longTerm'],
     length: 'long',
     insight: 'pragmaticPlaybook',
     description:
@@ -346,7 +400,9 @@ const bookDatabase = [
     methodology: ['quantitative', 'conceptual'],
     evidence: ['data', 'frameworks'],
     transfer: ['innovationLab', 'strategyBlueprints'],
+    context: ['scaleup', 'enterprise', 'researchLab'],
     format: ['handbook', 'academic'],
+    timeHorizon: ['longTerm'],
     length: 'long',
     insight: 'metaAnalysis',
     description:
@@ -366,7 +422,9 @@ const bookDatabase = [
     methodology: ['qualitative', 'mixed'],
     evidence: ['cases', 'trends'],
     transfer: ['capabilityBuilding', 'governance'],
+    context: ['scaleup', 'publicSector'],
     format: ['narrative', 'handbook'],
+    timeHorizon: ['midTerm', 'longTerm'],
     length: 'medium',
     insight: 'criticalReflection',
     description:
@@ -386,7 +444,9 @@ const bookDatabase = [
     methodology: ['quantitative', 'mixed'],
     evidence: ['data', 'cases'],
     transfer: ['innovationLab', 'strategyBlueprints'],
+    context: ['scaleup', 'enterprise'],
     format: ['playbook'],
+    timeHorizon: ['quickWins', 'midTerm'],
     length: 'medium',
     insight: 'pragmaticPlaybook',
     description:
@@ -406,7 +466,9 @@ const bookDatabase = [
     methodology: ['conceptual', 'mixed'],
     evidence: ['frameworks', 'trends'],
     transfer: ['strategyBlueprints', 'capabilityBuilding'],
+    context: ['enterprise', 'scaleup'],
     format: ['handbook', 'playbook'],
+    timeHorizon: ['midTerm', 'longTerm'],
     length: 'medium',
     insight: 'pragmaticPlaybook',
     description:
@@ -426,7 +488,9 @@ const bookDatabase = [
     methodology: ['quantitative', 'conceptual'],
     evidence: ['data', 'frameworks'],
     transfer: ['governance', 'strategyBlueprints'],
+    context: ['enterprise', 'publicSector'],
     format: ['academic', 'handbook'],
+    timeHorizon: ['longTerm'],
     length: 'long',
     insight: 'metaAnalysis',
     description:
@@ -446,7 +510,9 @@ const bookDatabase = [
     methodology: ['mixed', 'quantitative'],
     evidence: ['data', 'frameworks'],
     transfer: ['governance', 'capabilityBuilding'],
+    context: ['enterprise', 'publicSector'],
     format: ['narrative', 'academic'],
+    timeHorizon: ['midTerm'],
     length: 'medium',
     insight: 'criticalReflection',
     description:
@@ -466,12 +532,80 @@ const bookDatabase = [
     methodology: ['qualitative', 'mixed'],
     evidence: ['cases', 'frameworks'],
     transfer: ['capabilityBuilding', 'governance'],
+    context: ['scaleup', 'enterprise'],
     format: ['handbook', 'narrative'],
+    timeHorizon: ['midTerm', 'longTerm'],
     length: 'medium',
     insight: 'narrativeCase',
     description:
       'Edmondson erklärt, wie psychologische Sicherheit Leistung und Innovation steigert – mit diagnostischen Tools und Interventionsempfehlungen.',
     image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=700&q=80'
+  },
+  {
+    id: 'systems-leadership',
+    title: 'The Fifth Discipline: Systems Thinking in Practice',
+    author: 'Peter M. Senge',
+    type: 'fachliteratur',
+    domain: ['management', 'people'],
+    goal: ['transform', 'teach'],
+    experience: ['advanced', 'expert'],
+    approach: ['strategic', 'researchDriven'],
+    depth: 'immersive',
+    methodology: ['conceptual', 'mixed'],
+    evidence: ['frameworks', 'trends'],
+    transfer: ['governance', 'strategyBlueprints'],
+    context: ['enterprise', 'publicSector'],
+    format: ['handbook', 'academic'],
+    timeHorizon: ['longTerm'],
+    length: 'long',
+    insight: 'metaAnalysis',
+    description:
+      'Senge illustriert, wie systemisches Denken komplexe Veränderungsprozesse ermöglicht – mit Archetypen, Lernarchitekturen und Governance-Prinzipien.',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=700&q=80'
+  },
+  {
+    id: 'mission-economy',
+    title: 'Mission Economy',
+    author: 'Mariana Mazzucato',
+    type: 'fachliteratur',
+    domain: ['health', 'management'],
+    goal: ['transform', 'teach'],
+    experience: ['advanced'],
+    approach: ['strategic', 'caseStudy'],
+    depth: 'structured',
+    methodology: ['mixed', 'conceptual'],
+    evidence: ['trends', 'cases'],
+    transfer: ['governance', 'strategyBlueprints'],
+    context: ['publicSector', 'enterprise'],
+    format: ['narrative', 'handbook'],
+    timeHorizon: ['midTerm', 'longTerm'],
+    length: 'medium',
+    insight: 'criticalReflection',
+    description:
+      'Mazzucato zeigt, wie staatliche und gesellschaftliche Akteur:innen missionsorientierte Innovationen orchestrieren – mit Beispielen aus Gesundheits-, Klima- und Technologiefeldern.',
+    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=700&q=82'
+  },
+  {
+    id: 'designing-for-digital',
+    title: 'Designed for Digital',
+    author: 'Jeanne W. Ross, Cynthia M. Beath & Martin Mocker',
+    type: 'fachliteratur',
+    domain: ['technology', 'management'],
+    goal: ['transform', 'optimize'],
+    experience: ['advanced', 'expert'],
+    approach: ['strategic', 'operational'],
+    depth: 'structured',
+    methodology: ['mixed', 'conceptual'],
+    evidence: ['frameworks', 'cases'],
+    transfer: ['strategyBlueprints', 'capabilityBuilding'],
+    context: ['enterprise', 'scaleup'],
+    format: ['handbook'],
+    timeHorizon: ['midTerm', 'longTerm'],
+    length: 'medium',
+    insight: 'pragmaticPlaybook',
+    description:
+      'Ross und Kolleg:innen beschreiben Plattformarchitekturen, modulare Operating Models und Governance-Mechanismen für digitale Unternehmen.',
+    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=700&q=80'
   }
 ];
 
@@ -494,6 +628,8 @@ const resultTitle = document.getElementById('resultTitle');
 const resultMeta = document.getElementById('resultMeta');
 const resultDescription = document.getElementById('resultDescription');
 const resultHighlights = document.getElementById('resultHighlights');
+const resultSynthesis = document.getElementById('resultSynthesis');
+const resultNextSteps = document.getElementById('resultNextSteps');
 
 startBtn.addEventListener('click', () => {
   document.querySelector('.hero').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -586,7 +722,7 @@ async function showResults() {
 
   const entries = await fetchBooksFromDatabase();
   const match = rankEntries(entries, answers);
-  presentResult(match);
+  presentResult(match, answers);
 }
 
 function matchesPreference(entryValue, filterValue) {
@@ -607,12 +743,12 @@ function rankEntries(entries, filters) {
 
     if (matchesPreference(entry.domain, filters.domain)) {
       score += 2.6;
-      highlights.push(`✔️ Fachfokus <strong>${domainLabel(filters.domain)}</strong> trifft dein Anliegen.`);
+      highlights.push(`✔️ Fachfokus: <strong>${domainLabel(filters.domain)}</strong> adressiert dein Vorhaben.`);
     }
 
     if (matchesPreference(entry.goal, filters.goal)) {
       score += 2.3;
-      highlights.push(`✔️ Unterstützt dein Ziel <strong>${goalLabel(filters.goal)}</strong>.`);
+      highlights.push(`✔️ Zielbild „${goalLabel(filters.goal)}“ wird direkt unterstützt.`);
     }
 
     if (matchesPreference(entry.experience, filters.experience)) {
@@ -625,17 +761,17 @@ function rankEntries(entries, filters) {
 
     if (matchesPreference(entry.approach, filters.approach)) {
       score += 2.0;
-      highlights.push(`✔️ Erkenntnisstil: <strong>${approachLabel(filters.approach)}</strong>.`);
+      highlights.push(`✔️ Erkenntnisstil auf <strong>${approachLabel(filters.approach)}</strong> ausgerichtet.`);
     }
 
     if (matchesPreference(entry.depth, filters.depth)) {
       score += 1.6;
-      highlights.push(`✔️ Tiefe entspricht <strong>${depthLabel(filters.depth)}</strong>.`);
+      highlights.push(`✔️ Tiefe entspricht deinem Wunsch nach <strong>${depthLabel(filters.depth)}</strong>.`);
     }
 
     if (matchesPreference(entry.methodology, filters.methodology)) {
       score += 1.4;
-      highlights.push(`✔️ Methodische Fundierung: <strong>${methodologyLabel(filters.methodology)}</strong>.`);
+      highlights.push(`✔️ Methodische Fundierung basiert auf <strong>${methodologyLabel(filters.methodology)}</strong>.`);
       if (filters.methodology === 'mixed' && matchesPreference(entry.evidence, filters.evidence)) {
         score += 0.2;
       }
@@ -643,12 +779,17 @@ function rankEntries(entries, filters) {
 
     if (matchesPreference(entry.evidence, filters.evidence)) {
       score += 1.5;
-      highlights.push(`✔️ Belegt durch <strong>${evidenceLabel(filters.evidence)}</strong>.`);
+      highlights.push(`✔️ Evidenzform: <strong>${evidenceLabel(filters.evidence)}</strong>.`);
     }
 
     if (matchesPreference(entry.transfer, filters.transfer)) {
       score += 1.3;
-      highlights.push(`✔️ Transfer in Richtung <strong>${transferLabel(filters.transfer)}</strong>.`);
+      highlights.push(`✔️ Transferpfad: <strong>${transferLabel(filters.transfer)}</strong>.`);
+    }
+
+    if (matchesPreference(entry.context, filters.context)) {
+      score += 1.7;
+      highlights.push(`✔️ Umsetzungskontext <strong>${contextLabel(filters.context)}</strong> wird adressiert.`);
     }
 
     if (matchesPreference(entry.format, filters.format)) {
@@ -656,9 +797,17 @@ function rankEntries(entries, filters) {
       highlights.push(`✔️ Lernformat <strong>${formatLabel(filters.format)}</strong> passt zu dir.`);
     }
 
+    if (matchesPreference(entry.timeHorizon, filters.timeHorizon)) {
+      score += 1.1;
+      highlights.push(`✔️ Wirkungshorizont <strong>${timeHorizonLabel(filters.timeHorizon)}</strong>.`);
+      if (filters.timeHorizon === 'quickWins' && matchesPreference(entry.format, 'playbook')) {
+        score += 0.2;
+      }
+    }
+
     if (entry.length === filters.length) {
       score += 0.9;
-      highlights.push(`✔️ Umfang liegt im Bereich <strong>${lengthLabel(filters.length)}</strong>.`);
+      highlights.push(`✔️ Umfang bleibt innerhalb <strong>${lengthLabel(filters.length)}</strong>.`);
     }
 
     if (matchesPreference(entry.insight, filters.insight)) {
@@ -679,7 +828,7 @@ function rankEntries(entries, filters) {
   return best;
 }
 
-function presentResult(result) {
+function presentResult(result, filters) {
   if (!result) return;
   const { entry, highlights } = result;
 
@@ -689,8 +838,80 @@ function presentResult(result) {
   const domainText = primaryDomain ? domainLabel(primaryDomain) : 'Interdisziplinär';
   resultMeta.innerHTML = `von ${entry.author} · Fachliteratur · ${domainText}`;
   resultDescription.textContent = entry.description;
+  resultSynthesis.innerHTML = craftSynthesis(entry, filters);
   resultHighlights.innerHTML = highlights.map(item => `<span>${item}</span>`).join('');
+  const steps = buildNextSteps(entry, filters);
+  resultNextSteps.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
   restartBtn.focus();
+}
+
+function craftSynthesis(entry, filters) {
+  const domainValue = filters.domain || (Array.isArray(entry.domain) ? entry.domain[0] : entry.domain);
+  const goalValue = filters.goal || (Array.isArray(entry.goal) ? entry.goal[0] : entry.goal);
+  const contextValue = filters.context || (Array.isArray(entry.context) ? entry.context[0] : entry.context);
+  const approachValue = filters.approach || (Array.isArray(entry.approach) ? entry.approach[0] : entry.approach);
+  const methodologyValue = filters.methodology || (Array.isArray(entry.methodology) ? entry.methodology[0] : entry.methodology);
+  const evidenceValue = filters.evidence || (Array.isArray(entry.evidence) ? entry.evidence[0] : entry.evidence);
+  const depthValue = filters.depth || entry.depth;
+  const insightValue = filters.insight || entry.insight;
+  const timeValue = filters.timeHorizon || (Array.isArray(entry.timeHorizon) ? entry.timeHorizon[0] : entry.timeHorizon);
+
+  const fragments = [];
+  const contextSnippet = contextValue ? ` im Kontext <strong>${contextLabel(contextValue)}</strong>` : '';
+  const domainSnippet = domainValue ? `<strong>${domainLabel(domainValue)}</strong>` : 'deinem Themenfeld';
+  const goalSnippet = goalValue ? ` mit dem Ziel „${goalLabel(goalValue)}“` : '';
+  fragments.push(`Das Werk verschränkt ${domainSnippet}${goalSnippet}${contextSnippet} und liefert einen kuratierten Orientierungsrahmen.`);
+
+  const approachSnippet = approachValue ? `<strong>${approachLabel(approachValue)}</strong>` : 'mehrere Perspektiven';
+  const evidenceSnippet = evidenceValue ? `<strong>${evidenceLabel(evidenceValue)}</strong>` : 'relevanten Quellen';
+  const methodologySnippet = methodologyValue ? `<strong>${methodologyLabel(methodologyValue)}</strong>` : 'einer ausgewogenen Methodik';
+  fragments.push(`Es kombiniert ${approachSnippet} mit Evidenzen aus ${evidenceSnippet} und stützt sich methodisch auf ${methodologySnippet}.`);
+
+  const depthSnippet = depthValue ? depthLabel(depthValue).toLowerCase() : 'präzise';
+  const insightSnippet = insightValue ? `<strong>${insightLabel(insightValue)}</strong>` : 'tiefe Reflexion';
+  const timeSnippet = timeValue ? ` entlang des Horizonts <strong>${timeHorizonLabel(timeValue)}</strong>` : '';
+  fragments.push(`Erwarte eine ${depthSnippet} Aufbereitung, die auf ${insightSnippet} zielt${timeSnippet}.`);
+
+  return fragments.map(text => `<p>${text}</p>`).join('');
+}
+
+function buildNextSteps(entry, filters) {
+  const steps = [];
+  const goalValue = filters.goal || (Array.isArray(entry.goal) ? entry.goal[0] : entry.goal);
+  const transferValue = filters.transfer || (Array.isArray(entry.transfer) ? entry.transfer[0] : entry.transfer);
+  const formatValue = filters.format || (Array.isArray(entry.format) ? entry.format[0] : entry.format);
+  const timeValue = filters.timeHorizon || (Array.isArray(entry.timeHorizon) ? entry.timeHorizon[0] : entry.timeHorizon);
+  const methodologyValue = filters.methodology || (Array.isArray(entry.methodology) ? entry.methodology[0] : entry.methodology);
+  const evidenceValue = filters.evidence || (Array.isArray(entry.evidence) ? entry.evidence[0] : entry.evidence);
+  const contextValue = filters.context || (Array.isArray(entry.context) ? entry.context[0] : entry.context);
+
+  if (goalValue) {
+    steps.push(`Starte mit einem Kick-off, in dem du das Ziel „${goalLabel(goalValue)}“ und den Nutzen für alle Stakeholder klar machst.`);
+  }
+
+  if (transferValue || formatValue) {
+    const pieces = [];
+    if (transferValue) pieces.push(`Transferartefakte für ${transferLabel(transferValue)}`);
+    if (formatValue) pieces.push(`das Format ${formatLabel(formatValue)}`);
+    steps.push(`Arbeite Kapitelsynopsen heraus und übersetze sie in ${pieces.join(' und ')}.`);
+  }
+
+  if (methodologyValue || evidenceValue) {
+    const details = [];
+    if (methodologyValue) details.push(`Methodik (${methodologyLabel(methodologyValue)})`);
+    if (evidenceValue) details.push(`Evidenzen (${evidenceLabel(evidenceValue)})`);
+    steps.push(`Dokumentiere ${details.join(' & ')} in einem Research-Log, damit Entscheidungen nachvollziehbar bleiben.`);
+  }
+
+  if (timeValue) {
+    steps.push(`Setze Review-Meilensteine entlang des Horizonts ${timeHorizonLabel(timeValue)} und verbinde sie mit klaren Entscheidungspunkten.`);
+  }
+
+  if (contextValue) {
+    steps.push(`Binde Schlüsselpersonen aus dem Kontext ${contextLabel(contextValue)} über Co-Creation-Sessions und Feedback-Loops ein.`);
+  }
+
+  return steps.slice(0, 4);
 }
 
 function resetQuiz() {
@@ -701,6 +922,9 @@ function resetQuiz() {
   questionCard.hidden = false;
   progressBar.style.width = '0%';
   nextBtn.textContent = 'Weiter';
+  resultHighlights.innerHTML = '';
+  resultSynthesis.innerHTML = '';
+  resultNextSteps.innerHTML = '';
   renderQuestion();
 }
 
@@ -768,10 +992,19 @@ function evidenceLabel(value) {
 
 function transferLabel(value) {
   return {
-    strategyBlueprints: 'strategischer Blaupausen',
+    strategyBlueprints: 'strategische Blaupausen',
     capabilityBuilding: 'Capability-Building-Initiativen',
-    innovationLab: 'experimenteller Innovationsarbeit',
+    innovationLab: 'experimentelle Innovationsarbeit',
     governance: 'Governance- & Policy-Strukturen'
+  }[value] || value;
+}
+
+function contextLabel(value) {
+  return {
+    enterprise: 'Konzern & reguliertes Umfeld',
+    scaleup: 'Scale-up & wachsendes Unternehmen',
+    publicSector: 'Öffentlicher Sektor / NGO',
+    researchLab: 'Forschungs- & Innovationslabor'
   }[value] || value;
 }
 
@@ -786,9 +1019,9 @@ function formatLabel(value) {
 
 function lengthLabel(value) {
   return {
-    short: 'verdichteter Lektüre',
-    medium: 'ausgewogenem Umfang',
-    long: 'umfassender Vertiefung'
+    short: 'einer verdichteten Lektüre',
+    medium: 'eines ausgewogenen Umfangs',
+    long: 'einer umfassenden Vertiefung'
   }[value] || value;
 }
 
@@ -798,5 +1031,13 @@ function insightLabel(value) {
     criticalReflection: 'kritischer Reflexion',
     pragmaticPlaybook: 'pragmatischem Implementierungsleitfaden',
     narrativeCase: 'narrativem Fallarchiv'
+  }[value] || value;
+}
+
+function timeHorizonLabel(value) {
+  return {
+    quickWins: 'Quick Wins (0–3 Monate)',
+    midTerm: 'Mittelfristig (3–12 Monate)',
+    longTerm: 'Langfristig (12+ Monate)'
   }[value] || value;
 }
