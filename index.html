@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buchfinder – Deine Lektüreempfehlung</title>
+  <title>Cineclix – Dein Streaming-Guide</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
@@ -568,29 +568,29 @@
     <section class="hero">
       <div class="hero-grid">
         <div class="hero-copy">
-          <span class="hero-eyebrow">Kuratiert &amp; Persönlich</span>
-          <h1>Finde dein nächstes Buch mit spielerischer Präzision</h1>
-          <p>Unser Buchfinder begleitet dich durch einen kuratierten Entscheidungsprozess – intuitiv, visuell und mit einem Hauch Magie. So entsteht aus ein paar Antworten eine Empfehlung, die sich anfühlt, als wäre sie nur für dich geschrieben.</p>
+          <span class="hero-eyebrow">Streaming Kompass</span>
+          <h1>Finde deinen nächsten Film- oder Serienhit</h1>
+          <p>Cineclix verwandelt deine Stimmung und verfügbare Zeit in maßgeschneiderte Vorschläge – intuitiv, visuell und mit einem Hauch Kinomagie. Unser Quiz führt dich in wenigen Klicks zur passenden Empfehlung für den Abend.</p>
           <div class="hero-features">
             <div class="feature-pill">
               <span>✨</span>
               <div>
                 <strong>Smarte Analyse</strong>
-                <small>Antworten werden in Echtzeit in ein fein abgestimmtes Profil verwandelt.</small>
+                <small>Wir lesen zwischen den Zeilen und finden Matches, die zu deinem Vibe passen.</small>
               </div>
             </div>
             <div class="feature-pill">
-              <span>📚</span>
+              <span>🎞️</span>
               <div>
                 <strong>Kuratiertes Archiv</strong>
-                <small>Handverlesene Titel für jede Stimmung, jedes Ziel und jeden Zeitplan.</small>
+                <small>Handverlesene Filme, Serien und Dokus für jede Stimmung und jeden Anlass.</small>
               </div>
             </div>
             <div class="feature-pill">
-              <span>🎨</span>
+              <span>🕒</span>
               <div>
-                <strong>Inspirierende Visuals</strong>
-                <small>Ein ästhetisches Erlebnis, das Lust aufs Stöbern und Entdecken macht.</small>
+                <strong>Abendplanung leicht gemacht</strong>
+                <small>Erhalte auf einen Blick Laufzeit, Plattform und Gründe, warum es passt.</small>
               </div>
             </div>
           </div>
@@ -600,14 +600,14 @@
           <div class="floating-card">
             <span>🌌</span>
             <small>Trend</small>
-            <strong>Fantastische Welten</strong>
-            <p class="mb-0">Beliebt bei 62% der Leser:innen in diesem Monat.</p>
+            <strong>Cinephile Crowdpleaser</strong>
+            <p class="mb-0">Beliebt bei 62% der Cineclix Nutzer:innen in dieser Woche.</p>
           </div>
           <div class="floating-card-secondary">
             <span>⏳</span>
-            <small>Lesetempo</small>
-            <strong>5 Minuten Quiz</strong>
-            <p class="mb-0">Maximaler Überblick, bevor du ins neue Kapitel startest.</p>
+            <small>Watchtime</small>
+            <strong>3-Minuten-Check</strong>
+            <p class="mb-0">Schnell beantwortet, bevor das Popcorn fertig ist.</p>
           </div>
         </div>
       </div>
@@ -623,154 +623,145 @@
   <script>
     const questions = [
       {
-        id: 'intent',
-        prompt: 'Worauf hast du heute Lust?',
+        id: 'format',
+        prompt: 'Was steht heute auf dem Programm?',
         options: [
-          { value: 'fiction', label: 'Unterhaltungslektüre', description: 'Ich möchte in eine Geschichte eintauchen.', icon: '📚' },
-          { value: 'nonfiction', label: 'Fach- oder Sachbuch', description: 'Ich will etwas Neues lernen.', icon: '🧠' }
+          { value: 'movie', label: 'Filmabend', description: 'Ein abgeschlossenes Erlebnis für heute.', icon: '🎬' },
+          { value: 'series', label: 'Serienmarathon', description: 'Mehrere Episoden für echtes Binge-Feeling.', icon: '📺' },
+          { value: 'documentary', label: 'Doku Night', description: 'Wissen, reale Geschichten und Insights.', icon: '🎥' }
         ]
       },
       {
-        id: 'tone',
-        prompt: 'Welches Lesegefühl suchst du?',
+        id: 'mood',
+        prompt: 'Welche Stimmung soll es treffen?',
         options: [
-          { value: 'uplifting', label: 'Inspirierend & optimistisch', description: 'Motivierend und positiv.', icon: '🌈' },
-          { value: 'reflective', label: 'Tiefgründig & nachdenklich', description: 'Zum Mitfühlen und Reflektieren.', icon: '🤔' },
-          { value: 'intense', label: 'Packend & spannend', description: 'Ich brauche Nervenkitzel.', icon: '⚡' },
-          { value: 'practical', label: 'Praxisnah & lösungsorientiert', description: 'Klare Strategien zum Anwenden.', icon: '🛠️' }
+          { value: 'feelgood', label: 'Feel-Good & leicht', description: 'Warmherzig, optimistisch und humorvoll.', icon: '😊' },
+          { value: 'thrilling', label: 'Spannend & intensiv', description: 'Gänsehaut, Adrenalin und Plot-Twists.', icon: '🔥' },
+          { value: 'emotional', label: 'Emotional & tiefgründig', description: 'Berührend, nachdenklich und bewegend.', icon: '💜' },
+          { value: 'mindbending', label: 'Mind-Bending & clever', description: 'Überraschend, kreativ und mit Wow-Effekt.', icon: '🌀' }
         ]
       },
       {
-        id: 'time',
-        prompt: 'Wie viel Zeit möchtest du investieren?',
+        id: 'duration',
+        prompt: 'Wie viel Zeit bringst du mit?',
         options: [
-          { value: 'compact', label: 'Kurz & knackig', description: 'Unter 250 Seiten oder Hörbuch < 6h.', icon: '⏱️' },
-          { value: 'medium', label: 'Ausgewogene Länge', description: 'Zwischen 250 und 400 Seiten.', icon: '📖' },
-          { value: 'immersive', label: 'Ich habe viel Zeit', description: 'Über 400 Seiten oder viel Tiefgang.', icon: '🕰️' }
+          { value: 'quick', label: 'Kurz & knackig', description: 'Bis 100 Minuten oder Mini-Serie.', icon: '⏱️' },
+          { value: 'standard', label: 'Ein Abend Zeit', description: '120 Minuten Film oder 4–6 Episoden.', icon: '🍿' },
+          { value: 'epic', label: 'Zeit für Epen', description: 'Lange Filme oder Staffeln mit Tiefgang.', icon: '🕰️' }
         ]
       },
       {
-        id: 'focus',
-        prompt: 'Welcher Schwerpunkt passt am besten?',
+        id: 'setting',
+        prompt: 'Wohin soll die Reise gehen?',
         options: [
-          { value: 'career', label: 'Beruf & Lernen', description: 'Karriere, Strategie, Wissenserweiterung.', icon: '💼' },
-          { value: 'personal', label: 'Persönliche Entwicklung', description: 'Mindset, Achtsamkeit, Lebensgestaltung.', icon: '🌱' },
-          { value: 'imagination', label: 'Fantastische Welten', description: 'Science-Fiction, Fantasy, magischer Realismus.', icon: '🪐' },
-          { value: 'realworld', label: 'Zeitgeschehen & Gesellschaft', description: 'Aktuelle Themen, Kultur, Politik.', icon: '🌍' }
+          { value: 'reality', label: 'Hier & Jetzt', description: 'Gegenwart, reale Geschichten, Alltag.', icon: '🌍' },
+          { value: 'future', label: 'Zukunft & Sci-Fi', description: 'Technologie, Space, alternative Welten.', icon: '🚀' },
+          { value: 'historical', label: 'Historisch & episch', description: 'Vergangene Zeiten, Kostüme, Geschichte.', icon: '🏰' },
+          { value: 'fantasy', label: 'Fantastisch & magisch', description: 'Mythen, Parallelwelten, Surreales.', icon: '🪄' }
         ]
       }
     ];
 
     const library = [
       {
-        title: 'Der Report der Magd',
-        author: 'Margaret Atwood',
-        type: 'fiction',
-        tone: ['reflective', 'intense'],
-        length: 'medium',
-        focus: ['realworld'],
-        tags: ['Dystopie', 'Gesellschaft', 'Frauenrechte'],
-        description: 'Ein dystopischer Klassiker, der patriarchale Machtstrukturen beleuchtet und zutiefst zum Nachdenken anregt.'
+        title: 'Everything Everywhere All at Once',
+        format: 'movie',
+        mood: ['mindbending', 'emotional'],
+        duration: 'standard',
+        setting: ['fantasy', 'reality'],
+        platform: 'WOW, Apple TV+',
+        tags: ['Multiversum', 'Action', 'Familie'],
+        description: 'Ein kreatives Multiversum-Abenteuer, das Action, Emotion und Humor zu einem einzigartigen Kinoerlebnis verbindet.'
       },
       {
-        title: 'Projekt Hail Mary',
-        author: 'Andy Weir',
-        type: 'fiction',
-        tone: ['uplifting', 'intense'],
-        length: 'immersive',
-        focus: ['imagination'],
-        tags: ['Science-Fiction', 'Abenteuer', 'Wissenschaft'],
-        description: 'Science-Fiction mit viel Herz, Humor und wissenschaftlicher Raffinesse – perfekt für einen langen Lesemarathon.'
+        title: 'The Bear',
+        format: 'series',
+        mood: ['emotional', 'feelgood'],
+        duration: 'standard',
+        setting: ['reality'],
+        platform: 'Disney+',
+        tags: ['Drama', 'Kulinarik', 'Chicago'],
+        description: 'Intensives Serienerlebnis über ein junges Küchenteam, das Chaos, Traumata und große Träume balanciert.'
       },
       {
-        title: 'Altes Land',
-        author: 'Dörte Hansen',
-        type: 'fiction',
-        tone: ['reflective'],
-        length: 'medium',
-        focus: ['realworld'],
-        tags: ['Gegenwartsliteratur', 'Familie', 'Identität'],
-        description: 'Eine feinfühlige Geschichte über Herkunft, Heimat und die Suche nach einem Platz in der Welt.'
+        title: 'Dune: Part Two',
+        format: 'movie',
+        mood: ['thrilling', 'mindbending'],
+        duration: 'epic',
+        setting: ['future', 'fantasy'],
+        platform: 'Kino, demnächst auf WOW',
+        tags: ['Sci-Fi', 'Epos', 'Hans Zimmer Score'],
+        description: 'Monumentales Sci-Fi-Kino mit politischer Spannung, Wüstenepik und audiovisueller Wucht.'
       },
       {
-        title: 'Die Mitternachtsbibliothek',
-        author: 'Matt Haig',
-        type: 'fiction',
-        tone: ['uplifting', 'reflective'],
-        length: 'medium',
-        focus: ['personal'],
-        tags: ['Philosophie', 'Lebenswege', 'Magischer Realismus'],
-        description: 'Ein hoffnungsvoller Roman über die Kraft der Entscheidungen und das Erforschen alternativer Lebenspfade.'
+        title: 'Arcane',
+        format: 'series',
+        mood: ['mindbending', 'thrilling'],
+        duration: 'epic',
+        setting: ['fantasy', 'future'],
+        platform: 'Netflix',
+        tags: ['Animation', 'League of Legends', 'Soundtrack'],
+        description: 'Stylische Animationsserie mit komplexen Figuren, großem Worldbuilding und einem herausragenden Score.'
       },
       {
-        title: 'Atomic Habits',
-        author: 'James Clear',
-        type: 'nonfiction',
-        tone: ['uplifting', 'practical'],
-        length: 'compact',
-        focus: ['personal'],
-        tags: ['Gewohnheiten', 'Selbstmanagement', 'Strategien'],
-        description: 'Ein praxisnaher Leitfaden, wie kleine Veränderungen zu bemerkenswerten Ergebnissen führen können.'
+        title: 'Past Lives',
+        format: 'movie',
+        mood: ['emotional', 'feelgood'],
+        duration: 'quick',
+        setting: ['reality'],
+        platform: 'Leihstream, Blu-ray',
+        tags: ['Indie', 'Romantik', 'Coming-of-Age'],
+        description: 'Zarte Liebesgeschichte über verpasste Chancen, Freundschaft und Schicksal zwischen Seoul und New York.'
       },
       {
-        title: 'Deep Work',
-        author: 'Cal Newport',
-        type: 'nonfiction',
-        tone: ['practical', 'reflective'],
-        length: 'medium',
-        focus: ['career'],
-        tags: ['Produktivität', 'Konzentration', 'Arbeit'],
-        description: 'Lerne, wie du fokussiert arbeitest und dir kreative Tiefenarbeit zur Gewohnheit machst.'
+        title: 'Top Gun: Maverick',
+        format: 'movie',
+        mood: ['thrilling', 'feelgood'],
+        duration: 'standard',
+        setting: ['reality'],
+        platform: 'Paramount+, WOW',
+        tags: ['Action', 'Blockbuster', 'Jets'],
+        description: 'Perfekter Adrenalin-Kick mit praktischen Flugstunts, Nostalgie und viel Herz für Teamgeist.'
       },
       {
-        title: 'Factfulness',
-        author: 'Hans Rosling',
-        type: 'nonfiction',
-        tone: ['uplifting', 'reflective'],
-        length: 'medium',
-        focus: ['realworld'],
-        tags: ['Daten', 'Gesellschaft', 'Optimismus'],
-        description: 'Eine faktenbasierte Sicht auf den Zustand der Welt, die gängige Vorurteile entkräftet und Hoffnung macht.'
+        title: 'Heartstopper',
+        format: 'series',
+        mood: ['feelgood', 'emotional'],
+        duration: 'quick',
+        setting: ['reality'],
+        platform: 'Netflix',
+        tags: ['Coming-of-Age', 'Queer', 'Graphic-Novel-Adaption'],
+        description: 'Warme, hoffnungsvolle Teen-Serie über queere Liebe, Freundschaft und Identität – perfekt zum Wohlfühlen.'
       },
       {
-        title: 'Clean Code',
-        author: 'Robert C. Martin',
-        type: 'nonfiction',
-        tone: ['practical'],
-        length: 'immersive',
-        focus: ['career'],
-        tags: ['Softwareentwicklung', 'Best Practices', 'Programmierung'],
-        description: 'Ein Standardwerk für Entwickler:innen, die nachhaltig besseren Code schreiben möchten.'
+        title: 'Free Solo',
+        format: 'documentary',
+        mood: ['thrilling', 'emotional'],
+        duration: 'quick',
+        setting: ['reality'],
+        platform: 'Disney+',
+        tags: ['Bergsteigen', 'Naturspektakel', 'Oscar-prämiert'],
+        description: 'Nervenaufreibende Doku über Alex Honnolds Free-Solo-Besteigung des El Capitan – pure Höhenangst inklusive.'
       },
       {
-        title: 'Der Wal und das Ende der Welt',
-        author: 'John Ironmonger',
-        type: 'fiction',
-        tone: ['uplifting', 'reflective'],
-        length: 'medium',
-        focus: ['realworld'],
-        tags: ['Roman', 'Menschlichkeit', 'Gemeinschaft'],
-        description: 'Ein herzerwärmender Roman, der Menschlichkeit in Krisenzeiten feiert.'
+        title: 'The Last Dance',
+        format: 'documentary',
+        mood: ['thrilling', 'feelgood'],
+        duration: 'epic',
+        setting: ['reality'],
+        platform: 'Netflix',
+        tags: ['Basketball', '90er', 'Michael Jordan'],
+        description: 'Mitreißende Doku-Serie über den Aufstieg der Chicago Bulls, Archivmaterial und Team-Dynamiken inklusive.'
       },
       {
-        title: 'Think Again',
-        author: 'Adam Grant',
-        type: 'nonfiction',
-        tone: ['uplifting', 'practical'],
-        length: 'medium',
-        focus: ['personal', 'career'],
-        tags: ['Psychologie', 'Neugier', 'Entscheidungen'],
-        description: 'Ein Aufruf zum mutigen Umdenken – lerne, deine eigenen Überzeugungen zu hinterfragen und offener zu werden.'
-      },
-      {
-        title: 'Die siebte Kreuzigung',
-        author: 'José Eduardo Agualusa',
-        type: 'fiction',
-        tone: ['intense', 'reflective'],
-        length: 'compact',
-        focus: ['realworld'],
-        tags: ['Literatur', 'Politik', 'Afrika'],
-        description: 'Eine dichterisch verdichtete Erzählung über Macht, Identität und Erinnerung im modernen Angola.'
+        title: 'Guillermo del Toro’s Pinocchio',
+        format: 'movie',
+        mood: ['emotional', 'mindbending'],
+        duration: 'standard',
+        setting: ['fantasy', 'historical'],
+        platform: 'Netflix',
+        tags: ['Stop-Motion', 'Märchen', 'Oscargewinner'],
+        description: 'Aufwendig inszeniertes Stop-Motion-Märchen mit dunklem Charme, politischen Untertönen und viel Herz.'
       }
     ];
 
@@ -778,6 +769,7 @@
     const resultCard = document.getElementById('result-card');
     let currentIndex = 0;
     const answers = {};
+    const MAX_SCORE = 4.5;
 
     function renderQuestion() {
       const { id, prompt, options } = questions[currentIndex];
@@ -845,130 +837,148 @@
     }
 
     function showResult() {
-      const recommendation = scoreBooks();
-      const matchPercent = Math.round(recommendation.score * 100 / questions.length);
+      const recommendation = scoreEntries();
+      const matchPercent = Math.min(100, Math.round((recommendation.score / MAX_SCORE) * 100));
       questionCard.classList.add('d-none');
       resultCard.classList.remove('d-none');
       resultCard.innerHTML = `
         <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
           <div>
-            <span class="badge">Empfehlung gefunden</span>
-            <h2 class="mt-3">${recommendation.book.title}</h2>
-            <p class="mb-2 text-muted">von ${recommendation.book.author}</p>
+            <span class="badge">Streaming-Tipp</span>
+            <h2 class="mt-3">${recommendation.entry.title}</h2>
+            <p class="mb-2 text-muted">${formatLabel(recommendation.entry.format)} • ${recommendation.entry.platform}</p>
           </div>
           <div class="text-end">
             <span class="display-6 fw-bold text-primary">${matchPercent}%</span>
             <p class="text-muted mb-0">Match mit deinen Antworten</p>
           </div>
         </div>
-        <p class="lead">${recommendation.book.description}</p>
+        <p class="lead">${recommendation.entry.description}</p>
         <div class="result-meta">
-          <span class="badge">${recommendation.book.type === 'fiction' ? 'Unterhaltungslektüre' : 'Fach- & Sachbuch'}</span>
-          <span class="badge">Leseumfang: ${formatLength(recommendation.book.length)}</span>
+          <span class="badge">${formatLabel(recommendation.entry.format)}</span>
+          <span class="badge">Watchtime: ${durationLabel(recommendation.entry.duration)}</span>
+          <span class="badge">Setting: ${recommendation.entry.setting.map(settingLabel).join(', ')}</span>
         </div>
         <div class="result-tags mb-4">
-          ${recommendation.book.tags.map(tag => `<span class="badge">${tag}</span>`).join('')}
+          ${recommendation.entry.tags.map(tag => `<span class="badge">${tag}</span>`).join('')}
         </div>
         <h3 class="h5 fw-semibold">Warum passt das zu dir?</h3>
         <ul class="list-group list-group-flush mb-4">
           ${recommendation.reasons.map(reason => `<li class="list-group-item">${reason}</li>`).join('')}
         </ul>
         <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3">
-          <button class="restart-btn" id="restart-btn">Nochmals starten</button>
-          <p class="text-muted mb-0">Nicht überzeugt? Starte neu und kombiniere deine Antworten anders.</p>
+          <button class="restart-btn" id="restart-btn">Quiz neu starten</button>
+          <p class="text-muted mb-0">Du willst etwas anderes? Starte neu und wähle neue Stimmungen.</p>
         </div>
       `;
 
       document.getElementById('restart-btn').addEventListener('click', restartQuiz);
     }
 
-    function formatLength(length) {
-      return {
-        compact: 'kurz',
-        medium: 'mittlere Länge',
-        immersive: 'umfangreich'
-      }[length];
-    }
+    function scoreEntries() {
+      let best = { entry: library[0], score: -Infinity, reasons: [] };
 
-    function scoreBooks() {
-      let best = { book: library[0], score: -Infinity, reasons: [] };
-
-      for (const book of library) {
+      for (const entry of library) {
         let score = 0;
         const localReasons = [];
 
-        if (book.type === answers.intent) {
-          score += 1.2;
-          localReasons.push(`<strong>Typ</strong>: Du suchst ${answers.intent === 'fiction' ? 'Unterhaltung' : 'Fachwissen'} und dieses Buch liefert genau das.`);
+        if (entry.format === answers.format) {
+          score += 1.3;
+          localReasons.push(`<strong>Format</strong>: Du wolltest ${formatLabel(answers.format)} und ${entry.title} liefert genau das.`);
         }
 
-        if (book.tone.includes(answers.tone)) {
-          score += 1;
-          localReasons.push(`<strong>Stimmung</strong>: ${toneDescription(answers.tone)} – dieses Buch trifft diesen Ton.`);
-        }
-
-        if (book.length === answers.time) {
-          score += 0.6;
-          localReasons.push(`<strong>Leseumfang</strong>: ${lengthDescription(answers.time)}.`);
-        }
-
-        if (book.focus.includes(answers.focus)) {
+        if (entry.mood.includes(answers.mood)) {
           score += 1.1;
-          localReasons.push(`<strong>Schwerpunkt</strong>: Es deckt ${focusDescription(answers.focus)} ab.`);
+          localReasons.push(`<strong>Stimmung</strong>: ${moodDescription(answers.mood)} – passt perfekt zu ${entry.title}.`);
         }
 
-        // Bonus: wenn Buch mehrere Fokus-Werte und Tone matches
-        const bonus = Math.min(book.focus.filter(f => f === answers.focus).length * 0.2, 0.4);
+        if (entry.duration === answers.duration) {
+          score += 0.7;
+          localReasons.push(`<strong>Watchtime</strong>: ${durationDescription(answers.duration)}.`);
+        }
+
+        if (entry.setting.includes(answers.setting)) {
+          score += 1;
+          localReasons.push(`<strong>Setting</strong>: ${settingDescription(answers.setting)}.`);
+        }
+
+        const overlap = entry.mood.filter(m => m === answers.mood).length + entry.setting.filter(s => s === answers.setting).length;
+        const bonus = Math.min(overlap * 0.2, 0.4);
         score += bonus;
 
         if (score > best.score) {
-          best = { book, score, reasons: localReasons };
+          best = { entry, score, reasons: localReasons };
         }
       }
 
       return best;
     }
 
-    function toneDescription(value) {
+    function formatLabel(value) {
+      return {
+        movie: 'Film',
+        series: 'Serie',
+        documentary: 'Dokumentation'
+      }[value];
+    }
+
+    function durationLabel(value) {
+      return {
+        quick: 'Kurzformat (bis ca. 100 Min.)',
+        standard: 'Ein Abend (ca. 2–3 Std.)',
+        epic: 'Binge-Night (länger als 3 Std.)'
+      }[value];
+    }
+
+    function durationDescription(value) {
       switch (value) {
-        case 'uplifting':
-          return 'Du wolltest etwas Inspirierendes';
-        case 'reflective':
-          return 'Du suchst Tiefgang und Reflexion';
-        case 'intense':
-          return 'Du hast nach Spannung und Tempo gefragt';
-        case 'practical':
-          return 'Du wünschst dir praxisnahe Anleitungen';
+        case 'quick':
+          return 'Du wolltest etwas für eine kurze Session';
+        case 'standard':
+          return 'Perfekt für einen klassischen Film- oder Serienabend';
+        case 'epic':
+          return 'Du hast Zeit für ein langes, immersives Erlebnis';
         default:
-          return 'Diese Stimmung';
+          return 'Diese Laufzeit passt zu dir';
       }
     }
 
-    function lengthDescription(value) {
+    function moodDescription(value) {
       switch (value) {
-        case 'compact':
-          return 'Du wolltest etwas, das sich schnell lesen lässt';
-        case 'medium':
-          return 'Du bevorzugst eine ausgewogene Länge';
-        case 'immersive':
-          return 'Du hast Zeit für ein umfangreicheres Werk';
+        case 'feelgood':
+          return 'Du hast Lust auf Feel-Good-Vibes';
+        case 'thrilling':
+          return 'Du suchst Spannung und Tempo';
+        case 'emotional':
+          return 'Du möchtest etwas mit Herz und Tiefgang';
+        case 'mindbending':
+          return 'Du willst überrascht und herausgefordert werden';
         default:
-          return 'Dieser Umfang passt zu dir';
+          return 'Diese Stimmung passt';
       }
     }
 
-    function focusDescription(value) {
+    function settingLabel(value) {
+      return {
+        reality: 'Hier & Jetzt',
+        future: 'Zukunft',
+        historical: 'Historisch',
+        fantasy: 'Fantastisch'
+      }[value];
+    }
+
+    function settingDescription(value) {
       switch (value) {
-        case 'career':
-          return 'berufliche Themen und Lernen';
-        case 'personal':
-          return 'persönliche Entwicklung und Mindset';
-        case 'imagination':
-          return 'fantastische Welten und neue Universen';
-        case 'realworld':
-          return 'aktuelle gesellschaftliche Fragen';
+        case 'reality':
+          return 'Du wolltest nahe an realen Geschichten bleiben';
+        case 'future':
+          return 'Du hattest Lust auf futuristische Visionen';
+        case 'historical':
+          return 'Du suchst epische Reisen in die Vergangenheit';
+        case 'fantasy':
+          return 'Du möchtest in fantastische Welten eintauchen';
         default:
-          return 'deinen Schwerpunkt';
+          return 'Dieses Setting liegt dir';
       }
     }
 
