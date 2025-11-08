@@ -3,81 +3,364 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buchfinder – Dein persönlicher Literatur-Guide</title>
+  <title>LANstead – Persistente LAN-Siedlungssimulation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app">
-    <header class="hero">
+    <header class="hero" id="top">
       <div class="hero-content">
-        <div class="eyebrow">Kuratiert für Expert:innen</div>
-        <h1>Finde die Fachliteratur, die deinen nächsten Durchbruch ermöglicht.</h1>
-        <p>Unser intelligenter Literatur-Guide analysiert deine strategischen Ziele, deinen Kontext und deine bevorzugte
-          Arbeitstiefe. Nach nur wenigen Antworten erhältst du eine Empfehlung, die zu deinem Fachgebiet und deinem Anspruch
-          passt.</p>
-        <button class="btn-primary" id="startQuiz">
-          Jetzt Analyse starten
-          <span aria-hidden="true">→</span>
-        </button>
+        <div class="badge">Kurzpitch</div>
+        <h1>LANstead: Die persistente LAN-first Siedlungssimulation im Browser</h1>
+        <p>Ein leichtgewichtiges Multiplayer-Erlebnis für lokale Netzwerke. Spieler:innen verwalten eine prozedural erzeugte Inselgruppe, sammeln Ressourcen, produzieren Waren und handeln miteinander – ohne Installation, mit serverseitig gesichertem Fortschritt.</p>
+        <div class="cta-group">
+          <a class="btn-primary" href="#roadmap">Zur Roadmap</a>
+          <a class="btn-secondary" href="#architecture">Technischer Überblick</a>
+        </div>
       </div>
-      <aside class="hero-visual" aria-label="Highlights der Buchsuche">
-        <div class="hero-badge">📚 Evidenzbasierte Datenbank</div>
-        <ul class="hero-list">
-          <li><span class="icon">🎯</span> <span>Fokus auf berufliche & wissenschaftliche Ziele</span></li>
-          <li><span class="icon">🧭</span> <span>Mehrstufige Analyse von Methodik & Praxisnähe</span></li>
-          <li><span class="icon">🧠</span> <span>Empfehlungen aus führender Fachliteratur</span></li>
-        </ul>
+      <aside class="hero-highlights" aria-label="Highlights">
+        <div class="highlight-card">
+          <h2>Designziele</h2>
+          <ul>
+            <li>Sofort spielbar im Browser</li>
+            <li>Optimiert für LAN &amp; Offline-Modus</li>
+            <li>Persistenter Fortschritt</li>
+            <li>Kooperatives Wirtschaftsspiel</li>
+            <li>Modular &amp; server-autoritativ</li>
+          </ul>
+        </div>
       </aside>
     </header>
 
-    <main>
-      <section class="quiz-wrapper">
-        <article class="quiz-card" id="questionCard" aria-live="polite" aria-atomic="true" hidden>
-          <div class="quiz-progress">
-            <span id="stepLabel">Frage 1 von 11</span>
-            <div class="progress-bar"><span id="progressBar"></span></div>
-          </div>
-          <div>
-            <h2 class="question-title" id="questionTitle">In welchem Fachbereich brauchst du neue Impulse?</h2>
-            <p class="question-desc" id="questionDesc">Wir starten mit der inhaltlichen Einordnung deiner Recherche.</p>
-          </div>
-          <div class="option-grid" id="optionGrid"></div>
-          <div class="actions">
-            <button class="ghost-btn" id="backBtn" type="button" hidden>
-              ← Zurück
-            </button>
-            <button class="btn-primary" id="nextBtn" type="button">
-              Weiter
-              <span aria-hidden="true">→</span>
-            </button>
-          </div>
-        </article>
+    <div class="layout">
+      <aside class="toc" aria-label="Inhaltsverzeichnis">
+        <nav>
+          <p class="toc-title">Inhalte</p>
+          <ol>
+            <li><a href="#vision">Vision &amp; Design</a></li>
+            <li><a href="#core-loop">Core Loop</a></li>
+            <li><a href="#features">Feature-Überblick</a></li>
+            <li><a href="#ux">UX &amp; UI</a></li>
+            <li><a href="#game-design">Game-Design</a></li>
+            <li><a href="#economy">Ökonomie &amp; Aufträge</a></li>
+            <li><a href="#architecture">Technik</a></li>
+            <li><a href="#data-model">Datenmodell</a></li>
+            <li><a href="#api">APIs &amp; Events</a></li>
+            <li><a href="#lifecycle">Abläufe &amp; Policies</a></li>
+            <li><a href="#deployment">Deployment &amp; Tests</a></li>
+            <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="#next-steps">Nächste Schritte</a></li>
+          </ol>
+        </nav>
+      </aside>
 
-        <article class="quiz-card result-card" id="resultCard" hidden>
-          <div class="result-media">
-            <img id="resultImage" src="" alt="Cover des empfohlenen Buchs">
-          </div>
-          <div class="result-content">
+      <main>
+        <section class="panel" id="vision">
+          <h2>Vision &amp; Designziele</h2>
+          <div class="grid two-col">
             <div>
-              <div class="eyebrow" style="color: var(--accent-strong);">Dein Match</div>
-              <h3 id="resultTitle">Titel</h3>
-              <div class="result-meta" id="resultMeta"></div>
+              <h3>Erlebnis</h3>
+              <ul class="bullet-list">
+                <li>Browserbasiert, kein Client-Install.</li>
+                <li>LAN-freundlich: niedrige Latenz, lokale Discovery (mDNS) und Offline-Fähigkeit.</li>
+                <li>Persistenter Fortschritt: Settlement-Level, Skills, Blaupausen, Besitz.</li>
+              </ul>
             </div>
-            <p class="result-description" id="resultDescription"></p>
-            <div class="result-synthesis" id="resultSynthesis"></div>
-            <div class="highlights" id="resultHighlights"></div>
-            <div class="next-steps-wrapper">
-              <h4>Konkrete nächste Schritte</h4>
-              <ul class="next-steps" id="resultNextSteps"></ul>
+            <div>
+              <h3>Gameplay-Schwerpunkte</h3>
+              <ul class="bullet-list">
+                <li>Kooperative Jobs &amp; Handel mit Auktionsbrett und Direkt-Trades.</li>
+                <li>Datengetriebene Inhalte für einfache Erweiterbarkeit.</li>
+                <li>Server-Autorität für faire, cheat-resistente Spielsessions.</li>
+              </ul>
             </div>
-            <button class="btn-primary restart" id="restartBtn" type="button">Noch einmal starten</button>
           </div>
-        </article>
-      </section>
-    </main>
+        </section>
+
+        <section class="panel" id="core-loop">
+          <h2>Core Gameplay Loop</h2>
+          <ol class="core-loop">
+            <li><strong>Planen:</strong> Regionen erkunden, Ressourcenqualität und Bonusmodifikatoren prüfen.</li>
+            <li><strong>Zuweisen:</strong> Arbeiter:innen Jobs zuordnen – Sammeln, Produktion, Logistik oder Bau.</li>
+            <li><strong>Laufen lassen:</strong> Serverseitige Timer tracken Fortschritt, Events und Zwischenstände.</li>
+            <li><strong>Claimen:</strong> Ergebnisse einsammeln, XP &amp; Skills verteilen, Inventar aktualisieren.</li>
+            <li><strong>Veredeln &amp; Handeln:</strong> Rezepte starten, Engpässe lösen, Waren über Markt &amp; Trades bewegen.</li>
+          </ol>
+        </section>
+
+        <section class="panel" id="features">
+          <h2>Feature-Überblick</h2>
+          <div class="feature-grid">
+            <article>
+              <h3>Singleplayer &amp; Multiplayer</h3>
+              <p>Gemeinsame Weltinstanz pro Region. Settlement-basierte Progression statt Avatar-Steuerung.</p>
+            </article>
+            <article>
+              <h3>Ressourcen &amp; Nodes</h3>
+              <p>Qualitätsstufen (Q1–Q5) mit Respawn-Logik, beeinflusst durch Spieleraktivität.</p>
+            </article>
+            <article>
+              <h3>Produktion &amp; Gebäude</h3>
+              <p>Datengetriebene Rezepte, Warteschlangen, Werkbank-Level und Gebäude-Upgrades.</p>
+            </article>
+            <article>
+              <h3>Ökonomie</h3>
+              <p>Gold, Marktgebühren, Steuern auf Verkäufe, Reparaturen und Schnellreisen als Gold-Sinks.</p>
+            </article>
+            <article>
+              <h3>Contracts</h3>
+              <p>Servergenerierte Liefer- &amp; Sammelaufträge nach Angebot/Nachfrage.</p>
+            </article>
+            <article>
+              <h3>Social &amp; Admin</h3>
+              <p>Chat, Emotes, Gruppeneinladungen sowie Admin-Panel für Live-Patching &amp; Weltverwaltung.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="ux">
+          <h2>UX &amp; Visual Design</h2>
+          <div class="grid two-col">
+            <div>
+              <h3>Look &amp; Feel</h3>
+              <p>Klarer UI-Look mit sanften Farben, großzügigen Touch-Zielen und hellem/dunklem Theme. Karten- und Dashboard-zentriert.</p>
+            </div>
+            <div>
+              <h3>Wichtige Screens</h3>
+              <ul class="bullet-list">
+                <li>Login/Weiter (Name + PIN oder Gerätetoken)</li>
+                <li>Dashboard mit Panels für Karte, Arbeiter, Produktion, Markt, Aufträge, Gebäude</li>
+                <li>Admin-Oberfläche für Live-Management der Welt</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="game-design">
+          <h2>Game-Design Details</h2>
+          <div class="grid two-col">
+            <div>
+              <h3>Progression</h3>
+              <ul class="bullet-list">
+                <li>Settlement-Level erhöht Arbeiter-Kapazität und Basis-Effizienz.</li>
+                <li>Skill-Trees für Holzfällerei, Bergbau, Kräuterkunde, Angeln, Schmieden, Kochen, Handel.</li>
+                <li>Talente bieten prozentuale Boni und Qualitätswürfe.</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Arbeiter &amp; Jobs</h3>
+              <ul class="bullet-list">
+                <li>Arbeiter besitzen Traits (z.&nbsp;B. +10&nbsp;% Holztempo, Tageszeit-Boni).</li>
+                <li>Jobtypen: Sammeln, Produktion, Logistik, Bau, Scouting.</li>
+                <li>Qualitätsknoten bringen höheres Risiko, längere Dauer, Werkzeugverschleiß.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="economy">
+          <h2>Ökonomie &amp; Auftragsdesign</h2>
+          <div class="grid two-col">
+            <div>
+              <h3>Handel</h3>
+              <ul class="bullet-list">
+                <li>Direkt-Trades als serverbestätigte 2-Phasen-Transaktionen.</li>
+                <li>Auktionsbrett mit Kauf-/Verkaufsorders, Matching via Preis/Zeit, 5&nbsp;% Gebühr.</li>
+                <li>Gold-Sinks: Reparaturen, Marktgebühren, Schnellreisen.</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Contracts</h3>
+              <ul class="bullet-list">
+                <li>Rotierende Liefer- und Sammelaufträge im Stunden-/Tagesrhythmus.</li>
+                <li>Belohnungen: Gold, XP, seltene Blaupausen.</li>
+                <li>Generierung basierend auf Überangebot/Knappheit der Ökonomie.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="architecture">
+          <h2>Technischer Überblick</h2>
+          <div class="grid two-col">
+            <div>
+              <h3>Client</h3>
+              <ul class="bullet-list">
+                <li>TypeScript, React, Vite, Zustand.</li>
+                <li>PixiJS oder Phaser für 2D-Karten und Animationen.</li>
+                <li>Zod für Validierung, optionale Colyseus-Schema DTOs.</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Server</h3>
+              <ul class="bullet-list">
+                <li>Python FastAPI/Starlette mit python-socketio.</li>
+                <li>SQLModel/SQLAlchemy, Alembic, SQLite → optional PostgreSQL.</li>
+                <li>Redis für Pub/Sub, Rate-Limits, Scheduler-Unterstützung.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="panel-note">
+            <p><strong>Transport:</strong> REST für Boot/CRUD, WebSocket für Echtzeit-Events &amp; Intents. Server-Tick 5–10&nbsp;Hz für Job-Fortschritt, Respawns und Broadcast-Deltas.</p>
+          </div>
+        </section>
+
+        <section class="panel" id="data-model">
+          <h2>Datenmodell (Auszug)</h2>
+          <div class="data-grid">
+            <div>
+              <h3>Accounts &amp; Siedlungen</h3>
+              <pre><code>users(id, name, pin_hash, created_at)
+settlements(id, user_id, name, level, xp, workers_max, region_home_id)
+workers(id, settlement_id, name, traits_json, efficiency, fatigue)
+jobs(id, settlement_id, worker_id, job_type, payload_json, started_at,
+     finishes_at, state, progress)</code></pre>
+            </div>
+            <div>
+              <h3>Welt &amp; Ressourcen</h3>
+              <pre><code>regions(id, name, biome, modifiers_json)
+resource_nodes(id, region_id, node_type, quality,
+               cooldown_until, active)</code></pre>
+            </div>
+            <div>
+              <h3>Produktion &amp; Inventar</h3>
+              <pre><code>recipes(id, name, time_s, out_def_id, out_qty, xp, building_req)
+craft_jobs(id, settlement_id, recipe_id, started_at,
+          finishes_at, claimed)
+buildings(id, settlement_id, building_key, level)
+items(id, def_id, quality, durability, owner_settlement_id, bound)
+orders(id, settlement_id, side, def_id, price, qty, open_qty, created_at)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="api">
+          <h2>APIs &amp; Echtzeit-Events</h2>
+          <div class="grid two-col">
+            <div>
+              <h3>REST (Auszug)</h3>
+              <pre><code>POST /auth/register {name, pin}
+POST /auth/login {name, pin}
+GET  /boot
+POST /jobs/start {worker_id, job_type, target_id}
+POST /jobs/claim {job_id}
+POST /buildings/upgrade {building_key}
+GET  /market/orders?def_id=&side=&limit=</code></pre>
+            </div>
+            <div>
+              <h3>WebSocket</h3>
+              <pre><code>Client → Server
+  job_start {worker_id, job_type, target_id}
+  job_cancel {job_id}
+  market_order {side, def_id, price, qty}
+
+Server → Client
+  job_update {job_id, progress, finishes_at, state}
+  inventory_delta {items_added, items_removed}
+  market_update {order_id, state, fills}
+  contracts_rotation {list}
+  chat_msg {from, text}</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="lifecycle">
+          <h2>Abläufe, Policies &amp; Sicherheit</h2>
+          <div class="accordion" data-accordion>
+            <button class="accordion-trigger" aria-expanded="false">Beispielablauf: Sammelauftrag</button>
+            <div class="accordion-content" hidden>
+              <ol>
+                <li>Client sendet <code>job_start</code> mit Worker- und Node-ID.</li>
+                <li>Server validiert Slots, Werkzeuge und Node-Status, legt Job an.</li>
+                <li>Scheduler trackt Fortschritt und broadcastet <code>job_update</code>.</li>
+                <li>Bei Abschluss: Loot-Wurf, Inventarbuchung, Node-Cooldown.</li>
+                <li>Settlement claimt Output manuell oder via Auto-Claim.</li>
+              </ol>
+            </div>
+
+            <button class="accordion-trigger" aria-expanded="false">Cheat- &amp; Missbrauchsprävention</button>
+            <div class="accordion-content" hidden>
+              <ul class="bullet-list">
+                <li>Server-autoritative Aktionen, deterministische Checks, Audit-Logs.</li>
+                <li>Rate-Limits pro Intent/IP/Device, Backoff &amp; Soft-Bans.</li>
+                <li>Inventartransaktionen als DB-Transaktionen mit Idempotenz-Keys.</li>
+                <li>Order-Matching mit Revisions-Tabellen zur Nachvollziehbarkeit.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="deployment">
+          <h2>Deployment, Tests &amp; Betrieb</h2>
+          <div class="grid two-col">
+            <div>
+              <h3>Deployment (LAN/WLAN)</h3>
+              <ol>
+                <li><code>.env</code> mit Secrets, DB &amp; Origins konfigurieren.</li>
+                <li><code>docker-compose up -d</code> (API, Web, optional Redis/Postgres).</li>
+                <li>Client über <code>http://&lt;server-ip&gt;</code> aufrufen, Discovery via mDNS.</li>
+                <li>Backups: tägliche DB-Dumps, JSON-Exports für Items &amp; Rezepte.</li>
+              </ol>
+            </div>
+            <div>
+              <h3>Testplan</h3>
+              <ul class="bullet-list">
+                <li>Unit: Rezepte, Loot-Rolls, Gebühren, Rate-Limits.</li>
+                <li>Integration: Produktions-Queues, Order-Matching, Trades.</li>
+                <li>Load: ≥50 gleichzeitige Spieler:innen pro Region, 500 Intent/s.</li>
+                <li>E2E: Login → Job starten → Claim → Verkaufen → Logout → Resume.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="roadmap">
+          <h2>Roadmap &amp; Meilensteine</h2>
+          <div class="milestone-grid">
+            <article>
+              <h3>M1 – MVP</h3>
+              <p>Login, Settlement-Management, Sammeljobs, Produktion, Direkt-Trade, persistenter Fortschritt.</p>
+            </article>
+            <article>
+              <h3>M2 – Markt &amp; Contracts</h3>
+              <p>Auktionsbrett mit Gebühren, rotierende Aufträge, ökonomisches Balancing.</p>
+            </article>
+            <article>
+              <h3>M3 – Skills &amp; Talente</h3>
+              <p>Skill-XP, Talentpunkte, Worker-Traits, Qualitätsboni.</p>
+            </article>
+            <article>
+              <h3>M4 – Regionen &amp; Welt</h3>
+              <p>Neue Biome, Respawn-Tuning, Schnellreise als Gold-Sink.</p>
+            </article>
+            <article>
+              <h3>M5 – Admin &amp; Live-Tuning</h3>
+              <p>Admin-Panel, Live-Patching von Items &amp; Rezepten, Events.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="next-steps">
+          <h2>Nächste Schritte für das Team</h2>
+          <ol class="core-loop">
+            <li>Migration V2: Siedlungs- &amp; Job-Tabellen einführen, Charakterdaten migrieren.</li>
+            <li>REST-/WS-Schichten für Jobs, Scheduler und Boot-Endpunkt erweitern.</li>
+            <li>Dashboard-Prototyp in React (Karte, Arbeiterliste, Produktionsqueues).</li>
+            <li>Job-Validierung, Loot-Rolls, Node-Cooldowns serverseitig implementieren.</li>
+            <li>Gebäude-Upgrades samt UI und Effekten auf Slots/Speed.</li>
+            <li>Migrationswerkzeug für Bestandsdaten bereitstellen.</li>
+          </ol>
+        </section>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <a href="#top">Zurück nach oben</a>
+      <span>LANstead · Stand: 08.11.2025 · Avatar-freies Management-Gameplay</span>
+    </footer>
   </div>
 
   <script src="script.js" defer></script>
