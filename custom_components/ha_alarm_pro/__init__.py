@@ -1,9 +1,7 @@
 
 from __future__ import annotations
 
-import asyncio
-from datetime import time as dtime
-from typing import Any, Callable
+from typing import Callable
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -12,20 +10,13 @@ from homeassistant.helpers.event import (
     async_track_time_change,
     async_call_later,
 )
-from homeassistant.components import tag
 from homeassistant.const import STATE_ON
-from homeassistant.helpers.restore_state import RestoreEntity
 
 from .const import (
     DOMAIN,
-    CONF_INDICATOR_LIGHT,
-    CONF_SIREN_PLAYER,
-    CONF_SIREN_VOLUME,
-    CONF_MP3_FILE,
     CONF_ENTRY_SENSORS,
     CONF_NFC_TAG,
     CONF_ALLOW_ANY_TAG,
-    CONF_EXIT_DELAY,
     CONF_ENTRY_DELAY,
     CONF_AUTO_DISARM_TIME,
 )
@@ -39,7 +30,6 @@ class AlarmController:
         self.entry = entry
         self._unsubs: list[Callable[[], None]] = []
         self.state: str = "disarmed"
-        self.pending_task: asyncio.Task | None = None
         self.listeners_ready = False
 
     async def async_setup(self) -> None:
@@ -53,8 +43,6 @@ class AlarmController:
             except Exception:
                 pass
         self._unsubs.clear()
-        if self.pending_task:
-            self.pending_task.cancel()
 
     async def _attach_listeners(self) -> None:
         cfg = self.entry.options or self.entry.data
@@ -63,7 +51,6 @@ class AlarmController:
         @callback
         def _on_sensor_event(event) -> None:
             # A sensor turned on -> start entry delay or trigger if already armed_away
-            from_state = event.data.get("old_state")
             to_state = event.data.get("new_state")
             if not to_state:
                 return
