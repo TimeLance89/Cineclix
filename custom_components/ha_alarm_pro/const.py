@@ -36,3 +36,4 @@ EVENT_ENTRY_DELAY_STARTED = f"{DOMAIN}_entry_delay_started"
 EVENT_ENTRY_DELAY_CANCELLED = f"{DOMAIN}_entry_delay_cancelled"
 
 SERVICE_TEST_ALARM_SOUND = "test_alarm_sound"
+SERVICE_TEST_ALARM = "test_alarm"

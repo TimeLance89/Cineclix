@@ -1,9 +1,9 @@
 {
   "domain": "ha_alarm_pro",
   "name": "HA Alarm Pro",
-  "version": "0.5.1",
+  "version": "0.7.0",
   "documentation": "https://github.com/TimeLance89/ha-alarm-pro",
-  "requirements": [],
+  "requirements": ["PyYAML"],
   "codeowners": [
     "@TimeLance89"
   ],

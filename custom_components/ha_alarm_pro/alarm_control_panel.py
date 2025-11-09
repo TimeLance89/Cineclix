@@ -117,6 +117,9 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         self._unsubs.append(
             self.hass.bus.async_listen(f"{DOMAIN}_test_sound", self._handle_test_sound)
         )
+        self._unsubs.append(
+            self.hass.bus.async_listen(f"{DOMAIN}_test_alarm", self._handle_test_alarm)
+        )
 
         # Ensure controller knows the initial state
         self._controller.state = self._state
@@ -480,6 +483,13 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         entity_id = event.data.get("entity_id")
         if entity_id and entity_id == self.entity_id:
             await self._play_siren()
+
+    @callback
+    async def _handle_test_alarm(self, event) -> None:
+        """Handle test alarm event to trigger the alarm."""
+        entity_id = event.data.get("entity_id")
+        if entity_id and entity_id == self.entity_id:
+            await self.async_alarm_trigger()
 
     async def async_will_remove_from_hass(self) -> None:
         self._stop_indicator_loop()

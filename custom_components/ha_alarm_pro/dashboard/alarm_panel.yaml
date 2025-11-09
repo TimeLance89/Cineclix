@@ -1,9 +1,9 @@
-# HA Alarm Pro - Automatisches Dashboard Panel
-# Diese Konfiguration wird automatisch mit den konfigurierten Sensoren und Lichtern gefüllt
+# HA Alarm Pro - Dashboard Panel Configuration
+# This file defines the Lovelace dashboard for the alarm system
 
 type: vertical-stack
 cards:
-  # Conditional warning when alarm is triggered
+  # Conditional warning card when alarm is triggered
   - type: conditional
     conditions:
       - entity: alarm_control_panel.ha_alarm_pro
@@ -13,8 +13,14 @@ cards:
       content: |
         ## 🔴 ALARM AUSGELÖST
         Quittiere den Alarm mit **„Alarm quittieren"** oder per NFC-Tag.
+      card_mod:
+        style: |
+          ha-card {
+            background-color: rgba(255, 0, 0, 0.2);
+            border: 2px solid red;
+          }
 
-  # Status section with all attributes
+  # Status section
   - type: entities
     title: Alarm-Status
     show_header_toggle: false
@@ -22,7 +28,6 @@ cards:
     entities:
       - entity: alarm_control_panel.ha_alarm_pro
         name: Alarmanlage
-        secondary_info: last-changed
       - type: attribute
         entity: alarm_control_panel.ha_alarm_pro
         attribute: entry_delay_active
@@ -30,31 +35,11 @@ cards:
         icon: mdi:timer-sand
       - type: attribute
         entity: alarm_control_panel.ha_alarm_pro
-        attribute: entry_delay_seconds
-        name: Restzeit Eintrittsverzögerung
-        icon: mdi:timer-outline
-      - type: attribute
-        entity: alarm_control_panel.ha_alarm_pro
-        attribute: last_entry_sensor
-        name: Letzter Eingangssensor
-        icon: mdi:door-open
-      - type: attribute
-        entity: alarm_control_panel.ha_alarm_pro
         attribute: last_trigger_source
-        name: Letzter Auslöser
-        icon: mdi:alert-decagram
-      - type: attribute
-        entity: alarm_control_panel.ha_alarm_pro
-        attribute: last_disarm_tag
-        name: Letzter NFC-Tag
-        icon: mdi:nfc
-      - type: attribute
-        entity: alarm_control_panel.ha_alarm_pro
-        attribute: last_tag_action
-        name: Letzte Tag-Aktion
-        icon: mdi:shield-key
+        name: Letzte Auslösung
+        icon: mdi:alert-circle
 
-  # Control buttons - Row 1
+  # Control buttons
   - type: horizontal-stack
     cards:
       - type: button
@@ -65,6 +50,8 @@ cards:
           service: alarm_control_panel.alarm_arm_away
           target:
             entity_id: alarm_control_panel.ha_alarm_pro
+        hold_action:
+          action: more-info
         entity: alarm_control_panel.ha_alarm_pro
         show_state: false
         
@@ -76,10 +63,11 @@ cards:
           service: alarm_control_panel.alarm_arm_home
           target:
             entity_id: alarm_control_panel.ha_alarm_pro
+        hold_action:
+          action: more-info
         entity: alarm_control_panel.ha_alarm_pro
         show_state: false
 
-  # Control buttons - Row 2
   - type: horizontal-stack
     cards:
       - type: button
@@ -90,6 +78,8 @@ cards:
           service: alarm_control_panel.alarm_disarm
           target:
             entity_id: alarm_control_panel.ha_alarm_pro
+        hold_action:
+          action: more-info
         entity: alarm_control_panel.ha_alarm_pro
         show_state: false
         
@@ -101,6 +91,8 @@ cards:
           service: ha_alarm_pro.test_alarm
           target:
             entity_id: alarm_control_panel.ha_alarm_pro
+        hold_action:
+          action: more-info
         entity: alarm_control_panel.ha_alarm_pro
         show_state: false
 
@@ -112,6 +104,8 @@ cards:
           service: alarm_control_panel.alarm_disarm
           target:
             entity_id: alarm_control_panel.ha_alarm_pro
+        hold_action:
+          action: more-info
         entity: alarm_control_panel.ha_alarm_pro
         show_state: false
         
@@ -123,33 +117,23 @@ cards:
           service: ha_alarm_pro.test_alarm_sound
           target:
             entity_id: alarm_control_panel.ha_alarm_pro
+        hold_action:
+          action: more-info
         entity: alarm_control_panel.ha_alarm_pro
         show_state: false
 
-  # Sensors and lights section
-  # NOTE: This section will be dynamically populated with configured entities
-  # Placeholder entities shown here - replace with your actual sensors and lights
+  # Sensors and lights section (dynamically populated)
   - type: entities
     title: Sensoren & Indikatoren
     show_header_toggle: false
     state_color: true
-    entities:
-      # Entry sensors will be listed here
-      - entity: binary_sensor.example_door_sensor
-        name: Tür/Vibration 1
-      - entity: binary_sensor.example_window_sensor
-        name: Tür/Vibration 2
-      - type: divider
-      # Indicator lights will be listed here
-      - entity: light.example_indicator
-        name: Flur-Indikator
+    entities: []
+    # This will be populated dynamically based on configuration
 
   # Logbook section
   - type: logbook
-    title: Alarm-Historie (6 Stunden)
+    title: Alarm-Historie
     hours_to_show: 6
     entities:
       - alarm_control_panel.ha_alarm_pro
-      # Configured sensors will be added here automatically
-      - binary_sensor.example_door_sensor
-      - binary_sensor.example_window_sensor
+    # Additional entities will be added dynamically
