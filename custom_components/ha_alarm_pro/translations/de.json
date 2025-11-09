@@ -3,19 +3,19 @@
     "step": {
       "user": {
         "title": "HA Alarm Pro – Einrichtung",
-        "description": "Geräte und Zeiten auswählen. Alles kann später in den Optionen angepasst werden.",
+        "description": "Wähle Geräte und Zeitangaben. Alle Einstellungen lassen sich später unter Optionen ändern.",
         "data": {
-          "indicator_light": "Signalleuchte",
+          "indicator_light": "Statusleuchte",
           "siren_player": "Sirenen-Medienplayer",
           "siren_volume": "Sirenenlautstärke",
-          "mp3_file": "Sirenen-MP3",
+          "mp3_file": "Sirenen-MP3-Datei",
           "entry_sensors": "Eingangssensoren",
           "authorized_tags": "Autorisierte NFC-Tags",
           "allow_any_tag": "Beliebiges Tag zulassen",
-          "allow_any_when_triggered": "Beliebiges Tag bei ausgelöstem Alarm zulassen",
-          "exit_delay": "Scharfschaltverzögerung (Sekunden)",
-          "entry_delay": "Eintretensverzögerung (Sekunden)",
-          "auto_disarm_time": "Automatische Entschärfungszeit",
+          "allow_any_when_triggered": "Beliebiges Tag bei ausgelöstem Alarm akzeptieren",
+          "exit_delay": "Scharfschaltverzögerung (Sek.)",
+          "entry_delay": "Eingangsverzögerung (Sek.)",
+          "auto_disarm_time": "Uhrzeit für automatische Unscharfschaltung",
           "tag_arming_mode": "Standardmodus für Tag-Scharfschaltung"
         }
       }
@@ -25,19 +25,19 @@
     "step": {
       "init": {
         "title": "HA Alarm Pro – Optionen",
-        "description": "Einstellungen anpassen.",
+        "description": "Passe hier alle Einstellungen an.",
         "data": {
-          "indicator_light": "Signalleuchte",
+          "indicator_light": "Statusleuchte",
           "siren_player": "Sirenen-Medienplayer",
           "siren_volume": "Sirenenlautstärke",
-          "mp3_file": "Sirenen-MP3",
+          "mp3_file": "Sirenen-MP3-Datei",
           "entry_sensors": "Eingangssensoren",
           "authorized_tags": "Autorisierte NFC-Tags",
           "allow_any_tag": "Beliebiges Tag zulassen",
-          "allow_any_when_triggered": "Beliebiges Tag bei ausgelöstem Alarm zulassen",
-          "exit_delay": "Scharfschaltverzögerung (Sekunden)",
-          "entry_delay": "Eintretensverzögerung (Sekunden)",
-          "auto_disarm_time": "Automatische Entschärfungszeit",
+          "allow_any_when_triggered": "Beliebiges Tag bei ausgelöstem Alarm akzeptieren",
+          "exit_delay": "Scharfschaltverzögerung (Sek.)",
+          "entry_delay": "Eingangsverzögerung (Sek.)",
+          "auto_disarm_time": "Uhrzeit für automatische Unscharfschaltung",
           "tag_arming_mode": "Standardmodus für Tag-Scharfschaltung"
         }
       }
@@ -46,8 +46,8 @@
   "selector": {
     "tag_arming_mode": {
       "options": {
-        "arm_home": "Zuhause scharf (Stay-Modus)",
-        "arm_away": "Abwesend scharf (Away-Modus)"
+        "arm_home": "Zuhause scharf (Stay)",
+        "arm_away": "Abwesend scharf (Away)"
       }
     }
   },
