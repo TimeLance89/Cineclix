@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, Optional
+from typing import Callable, Optional, Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -22,9 +22,16 @@ from .const import (
     CONF_ACCEPT_ANY_TAG_WHEN_TRIGGERED,
     CONF_ENTRY_DELAY,
     CONF_AUTO_DISARM_TIME,
+    CONF_AUTHORIZED_TAGS,
+    CONF_TAG_ARMING_MODE,
     DEFAULT_ENTRY_DELAY,
+    DEFAULT_TAG_ARMING_MODE,
     EVENT_ENTRY_DELAY_STARTED,
     EVENT_ENTRY_DELAY_CANCELLED,
+    TAG_ACTION_EVENT,
+    TAG_ACTION_ARM_AWAY,
+    TAG_ACTION_ARM_HOME,
+    TAG_ACTION_DISARM,
 )
 
 PLATFORMS = ["alarm_control_panel"]
@@ -36,6 +43,24 @@ def _normalize_tag(value: Optional[str]) -> str:
     return str(value).lower().replace("-", "")
 
 
+def _normalize_state(value: Any) -> str:
+    if value is None:
+        return "unknown"
+    if hasattr(value, "value"):
+        return str(value.value)
+    return str(value)
+
+
+def _ensure_list(value: Any) -> list:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return value
+    if isinstance(value, (tuple, set)):
+        return [*value]
+    return [value]
+
+
 class AlarmController:
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         self.hass = hass
@@ -43,7 +68,7 @@ class AlarmController:
         self._unsubs: list[Callable[[], None]] = []
         self._pending_cancel: Optional[Callable[[], None]] = None
         self._pending_source: Optional[str] = None
-        self.state: str = "disarmed"
+        self._state: str = "disarmed"
         self.listeners_ready = False
 
     async def async_setup(self) -> None:
@@ -61,7 +86,8 @@ class AlarmController:
 
     async def _attach_listeners(self) -> None:
         cfg = self.entry.options or self.entry.data
-        sensors: list[str] = cfg.get(CONF_ENTRY_SENSORS, [])
+        sensors_raw = cfg.get(CONF_ENTRY_SENSORS) or []
+        sensors: list[str] = list(sensors_raw if isinstance(sensors_raw, list) else [sensors_raw])
 
         @callback
         def _on_sensor_event(event) -> None:
@@ -81,26 +107,47 @@ class AlarmController:
         @callback
         def _on_tag_scanned(event):
             tag_id = event.data.get("tag_id")
+            if not tag_id:
+                return
             allow_any = bool(cfg.get(CONF_ALLOW_ANY_TAG, False))
             allow_any_when_triggered = bool(
                 cfg.get(CONF_ACCEPT_ANY_TAG_WHEN_TRIGGERED, False)
             )
-            wanted = cfg.get(CONF_NFC_TAG)
             normalized_tag = _normalize_tag(tag_id)
-            normalized_target = _normalize_tag(wanted)
+            if not normalized_tag:
+                return
 
-            allowed = False
-            if allow_any and normalized_tag:
-                allowed = True
-            elif normalized_tag and normalized_target and normalized_tag == normalized_target:
-                allowed = True
-            elif allow_any_when_triggered and self.state == "triggered" and normalized_tag:
-                allowed = True
+            configured_tags = {
+                _normalize_tag(tag)
+                for tag in _ensure_list(cfg.get(CONF_AUTHORIZED_TAGS) or cfg.get(CONF_NFC_TAG))
+                if _normalize_tag(tag)
+            }
 
-            if allowed:
-                self.cancel_pending()
+            current_state = self.state
+            is_authorized = allow_any or normalized_tag in configured_tags
+            action: str | None = None
+
+            if current_state == "disarmed":
+                if is_authorized:
+                    mode = str(cfg.get(CONF_TAG_ARMING_MODE, DEFAULT_TAG_ARMING_MODE))
+                    action = (
+                        TAG_ACTION_ARM_HOME
+                        if mode == TAG_ACTION_ARM_HOME
+                        else TAG_ACTION_ARM_AWAY
+                    )
+            elif current_state in ("arming", "armed_home", "armed_away", "pending"):
+                if is_authorized:
+                    action = TAG_ACTION_DISARM
+            elif current_state == "triggered":
+                if allow_any_when_triggered or is_authorized:
+                    action = TAG_ACTION_DISARM
+
+            if action:
+                if action == TAG_ACTION_DISARM:
+                    self.cancel_pending()
                 self.hass.bus.async_fire(
-                    f"{DOMAIN}_disarm_request", {"tag_id": tag_id}
+                    TAG_ACTION_EVENT,
+                    {"tag_id": tag_id, "action": action},
                 )
 
         self._unsubs.append(self.hass.bus.async_listen("tag_scanned", _on_tag_scanned))
@@ -163,6 +210,15 @@ class AlarmController:
         self._pending_source = None
 
 
+    @property
+    def state(self) -> str:
+        return self._state
+
+    @state.setter
+    def state(self, value: Any) -> None:
+        self._state = _normalize_state(value)
+
+
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     hass.data.setdefault(DOMAIN, {})
     return True
@@ -188,3 +244,41 @@ async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
     ctrl: AlarmController = hass.data[DOMAIN][entry.entry_id]
     await ctrl.async_unload()
     await ctrl.async_setup()
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    version = entry.version
+    data = dict(entry.data)
+    options = dict(entry.options)
+    migrated = False
+
+    def _migrate(container: dict) -> bool:
+        updated = False
+        if container is None:
+            return False
+        if CONF_AUTHORIZED_TAGS not in container:
+            legacy_tag = container.pop(CONF_NFC_TAG, None)
+            tags_list = _ensure_list(legacy_tag)
+            container[CONF_AUTHORIZED_TAGS] = tags_list
+            updated = True
+        else:
+            container[CONF_AUTHORIZED_TAGS] = _ensure_list(
+                container.get(CONF_AUTHORIZED_TAGS)
+            )
+        if CONF_TAG_ARMING_MODE not in container:
+            container[CONF_TAG_ARMING_MODE] = DEFAULT_TAG_ARMING_MODE
+            updated = True
+        return updated
+
+    if version < 2:
+        if _migrate(data):
+            migrated = True
+        if _migrate(options):
+            migrated = True
+        entry.version = 2
+        migrated = True
+
+    if migrated:
+        hass.config_entries.async_update_entry(entry, data=data, options=options)
+
+    return True

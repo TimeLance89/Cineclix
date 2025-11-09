@@ -2,20 +2,55 @@
   "config": {
     "step": {
       "user": {
-        "title": "HA Alarm Pro \u2013 Einrichtung",
-        "description": "W\u00e4hle Ger\u00e4te und Zeiten. Alles kann sp\u00e4ter in den Optionen ge\u00e4ndert werden."
+        "title": "HA Alarm Pro – Einrichtung",
+        "description": "Geräte und Zeiten auswählen. Alles kann später in den Optionen angepasst werden.",
+        "data": {
+          "indicator_light": "Signalleuchte",
+          "siren_player": "Sirenen-Medienplayer",
+          "siren_volume": "Sirenenlautstärke",
+          "mp3_file": "Sirenen-MP3",
+          "entry_sensors": "Eingangssensoren",
+          "authorized_tags": "Autorisierte NFC-Tags",
+          "allow_any_tag": "Beliebiges Tag zulassen",
+          "allow_any_when_triggered": "Beliebiges Tag bei ausgelöstem Alarm zulassen",
+          "exit_delay": "Scharfschaltverzögerung (Sekunden)",
+          "entry_delay": "Eintretensverzögerung (Sekunden)",
+          "auto_disarm_time": "Automatische Entschärfungszeit",
+          "tag_arming_mode": "Standardmodus für Tag-Scharfschaltung"
+        }
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "HA Alarm Pro \u2013 Optionen",
-        "description": "Einstellungen anpassen."
+        "title": "HA Alarm Pro – Optionen",
+        "description": "Einstellungen anpassen.",
+        "data": {
+          "indicator_light": "Signalleuchte",
+          "siren_player": "Sirenen-Medienplayer",
+          "siren_volume": "Sirenenlautstärke",
+          "mp3_file": "Sirenen-MP3",
+          "entry_sensors": "Eingangssensoren",
+          "authorized_tags": "Autorisierte NFC-Tags",
+          "allow_any_tag": "Beliebiges Tag zulassen",
+          "allow_any_when_triggered": "Beliebiges Tag bei ausgelöstem Alarm zulassen",
+          "exit_delay": "Scharfschaltverzögerung (Sekunden)",
+          "entry_delay": "Eintretensverzögerung (Sekunden)",
+          "auto_disarm_time": "Automatische Entschärfungszeit",
+          "tag_arming_mode": "Standardmodus für Tag-Scharfschaltung"
+        }
       }
     }
   },
-  "selector": {},
+  "selector": {
+    "tag_arming_mode": {
+      "options": {
+        "arm_home": "Zuhause scharf (Stay-Modus)",
+        "arm_away": "Abwesend scharf (Away-Modus)"
+      }
+    }
+  },
   "entity": {
     "alarm_control_panel": {
       "name": "HA Alarm Pro"
