@@ -61,7 +61,17 @@ def _load_tags(hass: HomeAssistant) -> list[tuple[str, str]]:
     try:
         with open(tags_file, "r", encoding="utf-8") as file:
             data = json.load(file)
-            for item in data.get("data", []):
+            items: list[dict[str, Any]] = []
+            raw_data = data.get("data")
+            if isinstance(raw_data, dict):
+                if isinstance(raw_data.get("items"), list):
+                    items = raw_data.get("items", [])
+                elif isinstance(raw_data.get("tags"), list):
+                    items = raw_data.get("tags", [])
+            elif isinstance(raw_data, list):
+                items = raw_data
+
+            for item in items:
                 tag_id = item.get("id")
                 name = item.get("name") or tag_id
                 if tag_id:
@@ -112,7 +122,8 @@ def _build_schema(
         }
     )
 
-    schema_dict[vol.Required(CONF_ENTRY_SENSORS, default=data.get(CONF_ENTRY_SENSORS))] = selector.selector(
+    entry_sensors_default = _ensure_list(data.get(CONF_ENTRY_SENSORS))
+    schema_dict[vol.Required(CONF_ENTRY_SENSORS, default=entry_sensors_default)] = selector.selector(
         {"entity": {"domain": "binary_sensor", "multiple": True}}
     )
 
@@ -146,9 +157,13 @@ def _build_schema(
     schema_dict[vol.Required(CONF_ENTRY_DELAY, default=data.get(CONF_ENTRY_DELAY, DEFAULT_ENTRY_DELAY))] = selector.selector(
         {"number": {"min": 0, "max": 300, "mode": "box"}}
     )
-    schema_dict[vol.Optional(CONF_AUTO_DISARM_TIME, default=data.get(CONF_AUTO_DISARM_TIME))] = selector.selector(
-        {"time": {}}
-    )
+    auto_time = data.get(CONF_AUTO_DISARM_TIME)
+    if auto_time is None or auto_time == "":
+        schema_dict[vol.Optional(CONF_AUTO_DISARM_TIME)] = selector.selector({"time": {}})
+    else:
+        schema_dict[vol.Optional(CONF_AUTO_DISARM_TIME, default=auto_time)] = selector.selector(
+            {"time": {}}
+        )
     schema_dict[vol.Required(CONF_TAG_ARMING_MODE, default=data.get(CONF_TAG_ARMING_MODE, DEFAULT_TAG_ARMING_MODE))] = selector.selector(
         {
             "select": {
