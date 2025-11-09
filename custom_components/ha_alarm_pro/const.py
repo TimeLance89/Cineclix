@@ -19,7 +19,6 @@ CONF_ENTRY_DELAY = "entry_delay"
 CONF_AUTO_DISARM_TIME = "auto_disarm_time"
 CONF_AUTHORIZED_TAGS = "authorized_tags"
 CONF_TAG_ARMING_MODE = "tag_arming_mode"
-SUPPORTED_AUDIO_EXTENSIONS = (".mp3", ".wav", ".ogg", ".flac", ".m4a")
 
 DEFAULT_EXIT_DELAY = 30
 DEFAULT_ENTRY_DELAY = 30
