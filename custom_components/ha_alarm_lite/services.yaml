@@ -1,0 +1,49 @@
+test_indicator:
+  name: Test Indicator
+  description: Blink the indicator light for testing.
+  fields:
+    times:
+      description: Number of blinks
+      example: 2
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 10
+          mode: box
+    color:
+      description: Color name (e.g., yellow, blue, red)
+      example: yellow
+      required: false
+      selector:
+        text:
+
+test_siren:
+  name: Test Siren/MP3
+  description: Play the configured MP3 once or multiple times.
+  fields:
+    times:
+      description: How many times to play
+      example: 1
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 5
+          mode: box
+
+arm_exit_delay:
+  name: Arm (Exit Delay)
+  description: Start exit delay and arm away afterwards.
+
+disarm:
+  name: Disarm
+  description: Disarm the alarm immediately.
+
+trigger_alarm:
+  name: Trigger
+  description: Trigger the alarm immediately.
+
+health_check:
+  name: Health Check
+  description: Runs health checks and creates a persistent notification with the result.

@@ -1,0 +1,8 @@
+{
+  "name": "HA Alarm Lite (Integration)",
+  "render_readme": true,
+  "domains": [
+    "ha_alarm_lite"
+  ],
+  "homeassistant": "2024.6.0"
+}

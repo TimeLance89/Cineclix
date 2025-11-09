@@ -1,0 +1,26 @@
+{
+  "title": "HA Alarm Lite",
+  "config": {
+    "step": {
+      "user": {
+        "title": "HA Alarm Lite – Einrichtung",
+        "description": "Wähle Geräte und Parameter für dein Alarmsystem."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "HA Alarm Lite – Optionen",
+        "description": "Tipp: Scanne jetzt deinen NFC-Tag – das Feld wird automatisch mit dem letzten Scan vorbelegt."
+      }
+    }
+  },
+  "entity": {
+    "alarm_control_panel": {
+      "panel": {
+        "name": "Alarmanlage"
+      }
+    }
+  }
+}
