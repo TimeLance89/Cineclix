@@ -41,7 +41,7 @@ def _scan_mp3_paths(hass: HomeAssistant) -> list[str]:
                     for f in files:
                         if f.lower().endswith(".mp3"):
                             full = os.path.join(root, f)
-                            rel = prefix + os.path.relpath(full, base).replace("\", "/")
+                            rel = prefix + os.path.relpath(full, base).replace("\\", "/")
                             res.append(rel)
     except Exception:
         pass
