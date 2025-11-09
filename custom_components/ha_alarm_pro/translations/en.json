@@ -3,18 +3,18 @@
     "step": {
       "user": {
         "title": "HA Alarm Pro — Setup",
-        "description": "Select devices and times. Everything can be changed later in Options.",
+        "description": "Select devices and timings. Everything can be adjusted later in Options.",
         "data": {
           "indicator_light": "Indicator light",
           "siren_player": "Siren media player",
           "siren_volume": "Siren volume",
-          "mp3_file": "Siren MP3",
+          "mp3_file": "Siren MP3 file",
           "entry_sensors": "Entry sensors",
           "authorized_tags": "Authorized NFC tags",
           "allow_any_tag": "Allow any tag",
           "allow_any_when_triggered": "Allow any tag when triggered",
-          "exit_delay": "Exit delay (seconds)",
-          "entry_delay": "Entry delay (seconds)",
+          "exit_delay": "Exit delay (s)",
+          "entry_delay": "Entry delay (s)",
           "auto_disarm_time": "Automatic disarm time",
           "tag_arming_mode": "Default tag arming mode"
         }
@@ -25,18 +25,18 @@
     "step": {
       "init": {
         "title": "HA Alarm Pro — Options",
-        "description": "Adjust settings.",
+        "description": "Fine-tune the integration settings.",
         "data": {
           "indicator_light": "Indicator light",
           "siren_player": "Siren media player",
           "siren_volume": "Siren volume",
-          "mp3_file": "Siren MP3",
+          "mp3_file": "Siren MP3 file",
           "entry_sensors": "Entry sensors",
           "authorized_tags": "Authorized NFC tags",
           "allow_any_tag": "Allow any tag",
           "allow_any_when_triggered": "Allow any tag when triggered",
-          "exit_delay": "Exit delay (seconds)",
-          "entry_delay": "Entry delay (seconds)",
+          "exit_delay": "Exit delay (s)",
+          "entry_delay": "Entry delay (s)",
           "auto_disarm_time": "Automatic disarm time",
           "tag_arming_mode": "Default tag arming mode"
         }
