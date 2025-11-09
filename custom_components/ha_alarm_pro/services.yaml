@@ -1,2 +1,12 @@
-
-# Reserved for future services (e.g., health_check)
+test_alarm_sound:
+  name: Test Alarm Sound
+  description: Spielt den konfigurierten Alarmton zur Überprüfung ab
+  fields:
+    entity_id:
+      name: Alarm Entity
+      description: Die Alarm-Entität, deren Alarmton getestet werden soll
+      required: true
+      selector:
+        entity:
+          domain: alarm_control_panel
+          integration: ha_alarm_pro

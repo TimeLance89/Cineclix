@@ -42,12 +42,14 @@ def _scan_mp3_paths(hass: HomeAssistant) -> list[str]:
     res: list[str] = []
     media_path = hass.config.path("media")
     www_path = hass.config.path("www")
+    # Supported audio formats
+    audio_extensions = (".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aac")
     try:
         for base, prefix in [(media_path, "/media/"), (www_path, "/local/")]:
             if os.path.isdir(base):
                 for root, _, files in os.walk(base):
                     for filename in files:
-                        if filename.lower().endswith(".mp3"):
+                        if filename.lower().endswith(audio_extensions):
                             full_path = os.path.join(root, filename)
                             rel_path = (
                                 prefix
@@ -102,8 +104,10 @@ def _build_schema(
 ) -> vol.Schema:
     schema_dict: dict[Any, Any] = {}
 
-    schema_dict[vol.Optional(CONF_INDICATOR_LIGHT, default=data.get(CONF_INDICATOR_LIGHT))] = selector.selector(
-        {"entity": {"domain": "light"}}
+    # Support multiple lights
+    indicator_lights_default = _ensure_list(data.get(CONF_INDICATOR_LIGHT))
+    schema_dict[vol.Optional(CONF_INDICATOR_LIGHT, default=indicator_lights_default)] = selector.selector(
+        {"entity": {"domain": "light", "multiple": True}}
     )
     schema_dict[vol.Optional(CONF_SIREN_PLAYER, default=data.get(CONF_SIREN_PLAYER))] = selector.selector(
         {"entity": {"domain": "media_player"}}
@@ -115,7 +119,7 @@ def _build_schema(
     mp3_options = [
         {"label": "Kein Alarmton / No alarm sound", "value": ""}
     ] + [
-        {"label": option.split("/")[-1], "value": option} for option in mp3s
+        {"label": f"{option.split('/')[-1]} ({option})", "value": option} for option in mp3s
     ]
 
     def _mp3_selector():

@@ -32,6 +32,7 @@ from .const import (
     TAG_ACTION_ARM_AWAY,
     TAG_ACTION_ARM_HOME,
     TAG_ACTION_DISARM,
+    SERVICE_TEST_ALARM_SOUND,
 )
 
 PLATFORMS = ["alarm_control_panel"]
@@ -229,6 +230,28 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = controller
     await controller.async_setup()
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    
+    # Register service for testing alarm sound
+    async def handle_test_alarm_sound(call):
+        """Handle the test_alarm_sound service call."""
+        entity_id = call.data.get("entity_id")
+        if not entity_id:
+            return
+        
+        # Get the alarm entity
+        entity = hass.states.get(entity_id)
+        if not entity:
+            return
+        
+        # Fire event to trigger sound test
+        hass.bus.async_fire(f"{DOMAIN}_test_sound", {"entity_id": entity_id})
+    
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_TEST_ALARM_SOUND,
+        handle_test_alarm_sound,
+    )
+    
     return True
 
 

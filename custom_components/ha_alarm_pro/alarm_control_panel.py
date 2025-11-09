@@ -114,6 +114,9 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         self._unsubs.append(
             self.hass.bus.async_listen(TAG_ACTION_EVENT, self._handle_tag_action)
         )
+        self._unsubs.append(
+            self.hass.bus.async_listen(f"{DOMAIN}_test_sound", self._handle_test_sound)
+        )
 
         # Ensure controller knows the initial state
         self._controller.state = self._state
@@ -159,14 +162,23 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
             except Exception:
                 pass
 
+    def _get_lights(self) -> list[str]:
+        """Get list of configured indicator lights."""
+        lights = self._cfg.get(CONF_INDICATOR_LIGHT)
+        if not lights:
+            return []
+        if isinstance(lights, list):
+            return [light for light in lights if light]
+        return [lights] if lights else []
+
     async def _flash_indicator(
         self, flashes: int = 2, color: str | None = None, interval: float = 0.3
     ) -> None:
-        light = self._cfg.get(CONF_INDICATOR_LIGHT)
-        if not light:
+        lights = self._get_lights()
+        if not lights:
             return
         self._stop_indicator_loop()
-        data_on: dict[str, Any] = {"entity_id": light, "brightness_pct": 100}
+        data_on: dict[str, Any] = {"entity_id": lights, "brightness_pct": 100}
         if color:
             data_on["color_name"] = color
         for _ in range(flashes):
@@ -175,21 +187,21 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
             )
             await asyncio.sleep(interval)
             await self.hass.services.async_call(
-                "light", "turn_off", {"entity_id": light}, blocking=True
+                "light", "turn_off", {"entity_id": lights}, blocking=True
             )
             await asyncio.sleep(interval)
 
     def _start_indicator_loop(
         self, color: str | None = None, on_time: float = 0.6, off_time: float = 0.4
     ) -> None:
-        light = self._cfg.get(CONF_INDICATOR_LIGHT)
-        if not light:
+        lights = self._get_lights()
+        if not lights:
             return
         self._stop_indicator_loop()
 
         async def _loop() -> None:
             try:
-                data_on: dict[str, Any] = {"entity_id": light, "brightness_pct": 100}
+                data_on: dict[str, Any] = {"entity_id": lights, "brightness_pct": 100}
                 if color:
                     data_on["color_name"] = color
                 while True:
@@ -198,14 +210,14 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
                     )
                     await asyncio.sleep(on_time)
                     await self.hass.services.async_call(
-                        "light", "turn_off", {"entity_id": light}, blocking=True
+                        "light", "turn_off", {"entity_id": lights}, blocking=True
                     )
                     await asyncio.sleep(off_time)
             except asyncio.CancelledError:  # pragma: no cover - best effort clean up
                 pass
             finally:
                 await self.hass.services.async_call(
-                    "light", "turn_off", {"entity_id": light}, blocking=False
+                    "light", "turn_off", {"entity_id": lights}, blocking=False
                 )
 
         self._indicator_task = self.hass.loop.create_task(_loop())
@@ -214,11 +226,11 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         if self._indicator_task:
             self._indicator_task.cancel()
             self._indicator_task = None
-        light = self._cfg.get(CONF_INDICATOR_LIGHT)
-        if light:
+        lights = self._get_lights()
+        if lights:
             self.hass.async_create_task(
                 self.hass.services.async_call(
-                    "light", "turn_off", {"entity_id": light}, blocking=False
+                    "light", "turn_off", {"entity_id": lights}, blocking=False
                 )
             )
 
@@ -449,6 +461,13 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         else:
             self.async_write_ha_state()
         self._pre_pending_state = None
+
+    @callback
+    async def _handle_test_sound(self, event) -> None:
+        """Handle test sound event to play the configured alarm sound."""
+        entity_id = event.data.get("entity_id")
+        if entity_id and entity_id == self.entity_id:
+            await self._play_siren()
 
     async def async_will_remove_from_hass(self) -> None:
         self._stop_indicator_loop()
