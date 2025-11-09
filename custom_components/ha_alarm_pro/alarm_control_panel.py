@@ -1,8 +1,7 @@
 
 from __future__ import annotations
 
-import os
-from typing import Any
+from typing import TYPE_CHECKING
 
 from homeassistant.components.alarm_control_panel import (
     AlarmControlPanelEntity,
@@ -18,7 +17,6 @@ from homeassistant.const import (
     STATE_ALARM_ARMED_HOME,
     STATE_ALARM_ARMING,
     STATE_ALARM_DISARMED,
-    STATE_ALARM_PENDING,
     STATE_ALARM_TRIGGERED,
 )
 
@@ -28,12 +26,11 @@ from .const import (
     CONF_SIREN_PLAYER,
     CONF_SIREN_VOLUME,
     CONF_MP3_FILE,
-    CONF_ENTRY_SENSORS,
-    CONF_NFC_TAG,
-    CONF_ALLOW_ANY_TAG,
     CONF_EXIT_DELAY,
-    CONF_ENTRY_DELAY,
 )
+
+if TYPE_CHECKING:
+    from . import AlarmController
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities):
@@ -57,11 +54,15 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         self._unsubs: list = []
 
         self._cfg = entry.options or entry.data
+        self._controller: AlarmController = hass.data[DOMAIN][entry.entry_id]
 
         # listeners for custom bus events from controller
         self._unsubs.append(self.hass.bus.async_listen(f"{DOMAIN}_trigger", self._handle_trigger))
         self._unsubs.append(self.hass.bus.async_listen(f"{DOMAIN}_disarm_request", self._handle_disarm_request))
         self._unsubs.append(self.hass.bus.async_listen(f"{DOMAIN}_auto_disarm", self._handle_auto_disarm))
+
+        # Ensure controller knows the initial state
+        self._controller.state = self._state
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -75,6 +76,17 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         last = await self.async_get_last_state()
         if last:
             self._state = last.state or STATE_ALARM_DISARMED
+            self._controller.state = self._state
+
+        self.async_on_remove(self.entry.add_update_listener(self._handle_entry_update))
+
+    async def _handle_entry_update(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
+        self._cfg = entry.options or entry.data
+
+    def _set_state(self, new_state: str) -> None:
+        self._state = new_state
+        self._controller.state = new_state
+        self.async_write_ha_state()
 
     async def _blink_indicator(self, times: int = 2) -> None:
         light = self._cfg.get(CONF_INDICATOR_LIGHT)
@@ -117,35 +129,36 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         )
 
     async def async_alarm_arm_home(self, code: str | None = None) -> None:
-        self._state = STATE_ALARM_ARMING
-        self.async_write_ha_state()
+        self._set_state(STATE_ALARM_ARMING)
         await self._blink_indicator(2)
         delay = int(self._cfg.get(CONF_EXIT_DELAY, 30))
         await self.hass.async_add_executor_job(lambda: None)
+
         async def _finish(now):
-            self._state = STATE_ALARM_ARMED_HOME
-            self.async_write_ha_state()
+            self._set_state(STATE_ALARM_ARMED_HOME)
+
         from homeassistant.helpers.event import async_call_later
+
         async_call_later(self.hass, delay, _finish)
 
     async def async_alarm_arm_away(self, code: str | None = None) -> None:
         await self.async_alarm_arm_home(code)
-        self._state = STATE_ALARM_ARMING
-        self.async_write_ha_state()
+        self._set_state(STATE_ALARM_ARMING)
+
         from homeassistant.helpers.event import async_call_later
+
         delay = int(self._cfg.get(CONF_EXIT_DELAY, 30))
+
         async def _finish(now):
-            self._state = STATE_ALARM_ARMED_AWAY
-            self.async_write_ha_state()
+            self._set_state(STATE_ALARM_ARMED_AWAY)
+
         async_call_later(self.hass, delay, _finish)
 
     async def async_alarm_disarm(self, code: str | None = None) -> None:
-        self._state = STATE_ALARM_DISARMED
-        self.async_write_ha_state()
+        self._set_state(STATE_ALARM_DISARMED)
 
     async def async_alarm_trigger(self, code: str | None = None) -> None:
-        self._state = STATE_ALARM_TRIGGERED
-        self.async_write_ha_state()
+        self._set_state(STATE_ALARM_TRIGGERED)
         await self._play_siren()
 
     @callback
