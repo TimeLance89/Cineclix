@@ -1,4 +1,5 @@
-
+# Beispiel-Layout für das Lovelace-Dashboard von HA Alarm Pro.
+# Passe die Platzhalter-Entitäten (z. B. binary_sensor.tuer_vorne) an deine Geräte an.
 type: vertical-stack
 cards:
   - type: conditional
@@ -9,13 +10,45 @@ cards:
       type: markdown
       content: |
         ## 🔴 ALARM AUSGELÖST
-        Quittiere mit **Unscharf** (NFC oder Button).
+        Quittiere per **Unscharf**-Taste, NFC-Tag oder Sprachbefehl.
   - type: entities
     title: Status
     show_header_toggle: false
+    state_color: true
     entities:
       - entity: alarm_control_panel.ha_alarm_pro
-        name: Alarm
+        name: Alarmzentrale
+        secondary_info: last-changed
+      - type: attribute
+        entity: alarm_control_panel.ha_alarm_pro
+        attribute: entry_delay_active
+        name: Eintrittsverzögerung aktiv
+        icon: mdi:timer-sand
+      - type: attribute
+        entity: alarm_control_panel.ha_alarm_pro
+        attribute: entry_delay_seconds
+        name: Restlauf Eintrittsverzögerung
+        icon: mdi:timer-outline
+      - type: attribute
+        entity: alarm_control_panel.ha_alarm_pro
+        attribute: last_entry_sensor
+        name: Letzter Eingangssensor
+        icon: mdi:door-open
+      - type: attribute
+        entity: alarm_control_panel.ha_alarm_pro
+        attribute: last_trigger_source
+        name: Letzter Auslöser
+        icon: mdi:alert-decagram
+      - type: attribute
+        entity: alarm_control_panel.ha_alarm_pro
+        attribute: last_disarm_tag
+        name: Letzter NFC-Tag
+        icon: mdi:nfc
+      - type: attribute
+        entity: alarm_control_panel.ha_alarm_pro
+        attribute: last_tag_action
+        name: Letzte Tag-Aktion
+        icon: mdi:shield-key
   - type: horizontal-stack
     cards:
       - type: button
@@ -42,3 +75,31 @@ cards:
           service: alarm_control_panel.alarm_disarm
           target:
             entity_id: alarm_control_panel.ha_alarm_pro
+      - type: button
+        name: Alarm auslösen
+        icon: mdi:alarm-light
+        tap_action:
+          action: call-service
+          service: alarm_control_panel.alarm_trigger
+          target:
+            entity_id: alarm_control_panel.ha_alarm_pro
+  - type: entities
+    title: Sensoren & Indikator
+    show_header_toggle: false
+    state_color: true
+    entities:
+      - entity: binary_sensor.tuer_vorne
+        name: Tür / Fenster 1
+      - entity: binary_sensor.tuer_hinten
+        name: Tür / Fenster 2
+      - type: divider
+      - entity: light.flur_alarmindikator
+        name: Signalleuchte
+  - type: logbook
+    title: Ereignisse (6h)
+    hours_to_show: 6
+    entities:
+      - alarm_control_panel.ha_alarm_pro
+      - binary_sensor.tuer_vorne
+      - binary_sensor.tuer_hinten
+      - light.flur_alarmindikator

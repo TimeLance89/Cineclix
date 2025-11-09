@@ -22,7 +22,7 @@
 4. During setup, pick devices, MP3, tags, and timers. All settings remain editable via the Options flow.
 
 ### Dashboard
-Add a Manual card and paste the YAML from `custom_components/ha_alarm_pro/dashboard/panel.yaml` to replicate the reference UI.
+Add a Manual card and paste the YAML from `custom_components/ha_alarm_pro/dashboard/panel.yaml` to replicate the reference UI. The example shows a triggered alarm banner, quick-action buttons (arm home/away, disarm, trigger), key attributes such as entry delay state or last NFC tag, plus a logbook and placeholders for your entry sensors and indicator light. Replace the placeholder entity IDs (`binary_sensor.tuer_vorne`, `light.flur_alarmindikator`, …) with the devices from your setup.
 
 ---
 
@@ -48,4 +48,4 @@ Add a Manual card and paste the YAML from `custom_components/ha_alarm_pro/dashbo
 4. Während der Einrichtung Geräte, MP3-Datei, Tags und Zeitparameter wählen; alle Einstellungen lassen sich später im Optionsdialog ändern.
 
 ### Dashboard
-Füge eine manuelle Karte hinzu und kopiere den YAML-Code aus `custom_components/ha_alarm_pro/dashboard/panel.yaml`, um die Beispieloberfläche zu übernehmen.
+Füge eine manuelle Karte hinzu und kopiere den YAML-Code aus `custom_components/ha_alarm_pro/dashboard/panel.yaml`, um die Beispieloberfläche zu übernehmen. Das Beispiel enthält einen Alarm-Hinweis, Schnellbedienungstasten (Zuhause/Abwesend scharf, Unscharf, Testalarm), wichtige Attribute wie die Eintrittsverzögerung oder den letzten NFC-Tag sowie ein Logbuch. Ersetze die Platzhalter-Entitäten (`binary_sensor.tuer_vorne`, `light.flur_alarmindikator`, …) durch die Geräte deiner Installation.
