@@ -3,19 +3,9 @@
   "config": {
     "step": {
       "user": {
-        "title": "HA Alarm Lite \u2013 Setup",
-        "description": "Pick your devices and delays. You can change all values later in Options.",
+        "title": "Setup",
         "data": {
-          "indicator_light": "Indicator light",
-          "siren_player": "Siren / Media player",
-          "siren_volume": "Siren volume",
-          "mp3_source": "MP3 file",
-          "entry_sensors": "Entry sensors",
-          "nfc_tag_id": "NFC tag",
-          "exit_delay": "Exit delay (s)",
-          "entry_delay": "Entry delay (s)",
-          "accept_any_when_triggered": "Allow any tag to disarm when triggered",
-          "auto_disarm_time": "Auto disarm time"
+          "name": "Name"
         }
       }
     }
@@ -23,27 +13,19 @@
   "options": {
     "step": {
       "init": {
-        "title": "HA Alarm Lite \u2013 Options",
-        "description": "Adjust settings. Tip: Dropdown lists MP3 files under /media and /config/www; Tag list comes from HA Tag Manager.",
+        "title": "Options",
         "data": {
-          "indicator_light": "Indicator light",
-          "siren_player": "Siren / Media player",
-          "siren_volume": "Siren volume",
-          "mp3_source": "MP3 file",
+          "indicator_entity": "Indicator light",
+          "siren_entity": "Siren / media player",
+          "siren_volume": "Siren volume (0-1)",
+          "mp3_path": "MP3 file",
           "entry_sensors": "Entry sensors",
-          "nfc_tag_id": "NFC tag",
+          "nfc_tag": "NFC tag",
           "exit_delay": "Exit delay (s)",
           "entry_delay": "Entry delay (s)",
-          "accept_any_when_triggered": "Allow any tag to disarm when triggered",
-          "auto_disarm_time": "Auto disarm time"
+          "any_tag_can_disarm": "Any tag may disarm",
+          "auto_disarm_time": "Auto-disarm time"
         }
-      }
-    }
-  },
-  "entity": {
-    "alarm_control_panel": {
-      "panel": {
-        "name": "Alarm system"
       }
     }
   }

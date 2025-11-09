@@ -1,16 +1,13 @@
 {
   "domain": "ha_alarm_lite",
   "name": "HA Alarm Lite",
-  "version": "0.5.3",
-  "documentation": "https://github.com/TimeLance89/Cineclix#readme",
+  "version": "0.5.4",
+  "documentation": "https://github.com/TimeLance89/Cineclix",
   "issue_tracker": "https://github.com/TimeLance89/Cineclix/issues",
-  "requirements": [],
-  "codeowners": [
-    "@steffen-ha"
-  ],
   "config_flow": true,
   "iot_class": "local_push",
-  "loggers": [
-    "custom_components.ha_alarm_lite"
-  ]
+  "codeowners": [
+    "@TimeLance89"
+  ],
+  "requirements": []
 }

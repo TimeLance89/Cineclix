@@ -3,19 +3,9 @@
   "config": {
     "step": {
       "user": {
-        "title": "HA Alarm Lite \u2013 Einrichtung",
-        "description": "W\u00e4hle Ger\u00e4te und Zeiten. Alles kann sp\u00e4ter in den Optionen ge\u00e4ndert werden.",
+        "title": "Einrichtung",
         "data": {
-          "indicator_light": "Indikator-Licht",
-          "siren_player": "Sirene / Media Player",
-          "siren_volume": "Sirenen-Lautst\u00e4rke",
-          "mp3_source": "MP3-Datei",
-          "entry_sensors": "Eingangssensoren",
-          "nfc_tag_id": "NFC-Tag",
-          "exit_delay": "Exit-Delay (s)",
-          "entry_delay": "Entry-Delay (s)",
-          "accept_any_when_triggered": "Beliebiger Tag darf im Alarm entsch\u00e4rfen",
-          "auto_disarm_time": "Automatische Unscharfschaltung um"
+          "name": "Name"
         }
       }
     }
@@ -23,27 +13,19 @@
   "options": {
     "step": {
       "init": {
-        "title": "HA Alarm Lite \u2013 Optionen",
-        "description": "Einstellungen anpassen. Hinweis: Dropdown listet MP3-Dateien unter /media und /config/www; Tags kommen aus dem HA Tag-Manager.",
+        "title": "Optionen",
         "data": {
-          "indicator_light": "Indikator-Licht",
-          "siren_player": "Sirene / Media Player",
-          "siren_volume": "Sirenen-Lautst\u00e4rke",
-          "mp3_source": "MP3-Datei",
+          "indicator_entity": "Indikator-Licht",
+          "siren_entity": "Sirene / Media Player",
+          "siren_volume": "Sirenen-Lautstärke (0-1)",
+          "mp3_path": "MP3-Datei",
           "entry_sensors": "Eingangssensoren",
-          "nfc_tag_id": "NFC-Tag",
+          "nfc_tag": "NFC-Tag",
           "exit_delay": "Exit-Delay (s)",
           "entry_delay": "Entry-Delay (s)",
-          "accept_any_when_triggered": "Beliebiger Tag darf im Alarm entsch\u00e4rfen",
+          "any_tag_can_disarm": "Beliebiger Tag darf entschärfen",
           "auto_disarm_time": "Automatische Unscharfschaltung um"
         }
-      }
-    }
-  },
-  "entity": {
-    "alarm_control_panel": {
-      "panel": {
-        "name": "Alarmanlage"
       }
     }
   }
