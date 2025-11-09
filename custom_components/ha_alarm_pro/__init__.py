@@ -12,6 +12,9 @@ from homeassistant.helpers.event import (
 )
 from homeassistant.const import STATE_ON
 
+# Preload platforms to avoid blocking imports during setup
+from . import alarm_control_panel  # noqa: F401
+
 from .const import (
     DOMAIN,
     CONF_ENTRY_SENSORS,
