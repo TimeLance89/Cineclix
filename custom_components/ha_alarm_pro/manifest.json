@@ -1,7 +1,7 @@
 {
   "domain": "ha_alarm_pro",
   "name": "HA Alarm Pro",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "documentation": "https://github.com/TimeLance89/ha-alarm-pro",
   "requirements": [],
   "codeowners": [

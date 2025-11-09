@@ -16,6 +16,9 @@ from .const import (
     CONF_SIREN_PLAYER,
     CONF_SIREN_VOLUME,
     CONF_MP3_FILE,
+    CONF_ENTRY_DELAY_SOUND,
+    CONF_EXIT_DELAY_SOUND,
+    CONF_CHIME_VOLUME,
     CONF_ENTRY_SENSORS,
     CONF_NFC_TAG,
     CONF_ALLOW_ANY_TAG,
@@ -28,6 +31,7 @@ from .const import (
     DEFAULT_ENTRY_DELAY,
     DEFAULT_EXIT_DELAY,
     DEFAULT_VOLUME,
+    DEFAULT_CHIME_VOLUME,
     DEFAULT_TAG_ARMING_MODE,
     TAG_ACTION_ARM_HOME,
     TAG_ACTION_ARM_AWAY,
@@ -113,13 +117,23 @@ def _build_schema(
     ] + [
         {"label": option.split("/")[-1], "value": option} for option in mp3s
     ]
-    schema_dict[vol.Optional(CONF_MP3_FILE, default=data.get(CONF_MP3_FILE, ""))] = selector.selector(
-        {
-            "select": {
-                "options": mp3_options,
-                "custom_value": False,
+
+    def _mp3_selector():
+        return selector.selector(
+            {
+                "select": {
+                    "options": mp3_options,
+                    "custom_value": True,
+                    "sort": False,
+                }
             }
-        }
+        )
+
+    schema_dict[vol.Optional(CONF_MP3_FILE, default=data.get(CONF_MP3_FILE, ""))] = _mp3_selector()
+    schema_dict[vol.Optional(CONF_EXIT_DELAY_SOUND, default=data.get(CONF_EXIT_DELAY_SOUND, ""))] = _mp3_selector()
+    schema_dict[vol.Optional(CONF_ENTRY_DELAY_SOUND, default=data.get(CONF_ENTRY_DELAY_SOUND, ""))] = _mp3_selector()
+    schema_dict[vol.Required(CONF_CHIME_VOLUME, default=data.get(CONF_CHIME_VOLUME, DEFAULT_CHIME_VOLUME))] = selector.selector(
+        {"number": {"min": 0, "max": 1, "step": 0.05, "mode": "slider"}}
     )
 
     entry_sensors_default = _ensure_list(data.get(CONF_ENTRY_SENSORS))
