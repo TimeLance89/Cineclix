@@ -4,9 +4,11 @@
     "step": {
       "user": {
         "title": "Einrichtung",
-        "data": {
-          "name": "Name"
-        }
+        "description": "W\u00e4hle deine Ger\u00e4te und Standardwerte. Alles kann sp\u00e4ter unter **Optionen** ge\u00e4ndert werden."
+      },
+      "finish": {
+        "title": "Fertig",
+        "description": "Installation abgeschlossen. Ein optionales Lovelace-Panel liegt unter `/custom_components/ha_alarm_lite/dashboard/panel.yaml`. F\u00fcge in deinem Dashboard eine **Manuelle Karte** hinzu und f\u00fcge das YAML ein."
       }
     }
   },
@@ -14,18 +16,7 @@
     "step": {
       "init": {
         "title": "Optionen",
-        "data": {
-          "indicator_entity": "Indikator-Licht",
-          "siren_entity": "Sirene / Media Player",
-          "siren_volume": "Sirenen-Lautstärke (0-1)",
-          "mp3_path": "MP3-Datei",
-          "entry_sensors": "Eingangssensoren",
-          "nfc_tag": "NFC-Tag",
-          "exit_delay": "Exit-Delay (s)",
-          "entry_delay": "Entry-Delay (s)",
-          "any_tag_can_disarm": "Beliebiger Tag darf entschärfen",
-          "auto_disarm_time": "Automatische Unscharfschaltung um"
-        }
+        "description": "MP3-Dropdown listet Dateien in `/media` und `/config/www`. Tags stammen aus dem HA Tag-Manager."
       }
     }
   }

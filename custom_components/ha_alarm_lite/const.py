@@ -1,4 +1,12 @@
-from __future__ import annotations
-
 DOMAIN = "ha_alarm_lite"
-ATTR_OPTIONS = "options"
+
+CONF_INDICATOR_LIGHT = "indicator_light"
+CONF_SIREN_PLAYER = "siren_player"
+CONF_SIREN_VOLUME = "siren_volume"
+CONF_MP3_FILE = "mp3_file"
+CONF_ENTRY_SENSORS = "entry_sensors"
+CONF_NFC_TAG = "nfc_tag"
+CONF_EXIT_DELAY = "exit_delay"
+CONF_ENTRY_DELAY = "entry_delay"
+CONF_ALLOW_ANY_TAG = "allow_any_tag"
+CONF_AUTO_DISARM_TIME = "auto_disarm_time"

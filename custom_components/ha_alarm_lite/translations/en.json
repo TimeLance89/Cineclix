@@ -3,47 +3,20 @@
   "config": {
     "step": {
       "user": {
-        "title": "HA Alarm Lite \u2013 Setup",
-        "description": "Pick your devices and delays. You can change all values later in Options.",
-        "data": {
-          "indicator_light": "Indicator light",
-          "siren_player": "Siren / Media player",
-          "siren_volume": "Siren volume",
-          "mp3_source": "MP3 file",
-          "entry_sensors": "Entry sensors",
-          "nfc_tag_id": "NFC tag",
-          "exit_delay": "Exit delay (s)",
-          "entry_delay": "Entry delay (s)",
-          "accept_any_when_triggered": "Allow any tag to disarm when triggered",
-          "auto_disarm_time": "Auto disarm time"
-        }
+        "title": "Setup",
+        "description": "Select your devices and defaults. You can change everything later in **Options**."
+      },
+      "finish": {
+        "title": "Done",
+        "description": "Installation complete. Optional Lovelace panel is included in the integration folder under `/custom_components/ha_alarm_lite/dashboard/panel.yaml`. Add a **Manual card** and paste the YAML."
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "HA Alarm Lite \u2013 Options",
-        "description": "Adjust settings. Tip: Dropdown lists MP3 files under /media and /config/www; Tag list comes from HA Tag Manager.",
-        "data": {
-          "indicator_light": "Indicator light",
-          "siren_player": "Siren / Media player",
-          "siren_volume": "Siren volume",
-          "mp3_source": "MP3 file",
-          "entry_sensors": "Entry sensors",
-          "nfc_tag_id": "NFC tag",
-          "exit_delay": "Exit delay (s)",
-          "entry_delay": "Entry delay (s)",
-          "accept_any_when_triggered": "Allow any tag to disarm when triggered",
-          "auto_disarm_time": "Auto disarm time"
-        }
-      }
-    }
-  },
-  "entity": {
-    "alarm_control_panel": {
-      "panel": {
-        "name": "Alarm system"
+        "title": "Options",
+        "description": "MP3 dropdown lists files in `/media` and `/config/www`. Tags are read from the HA Tag Manager."
       }
     }
   }
