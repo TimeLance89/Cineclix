@@ -57,7 +57,7 @@ def _build_alarm_warning() -> dict[str, Any]:
         ],
         "card": {
             "type": "markdown",
-            "content": "## 🔴 ALARM AUSGELÖST\nQuittiere den Alarm mit **„Alarm quittieren"** oder per NFC-Tag."
+            "content": "## 🔴 ALARM AUSGELÖST\nQuittiere den Alarm mit **\"Alarm quittieren\"** oder per NFC-Tag."
         }
     }
 
