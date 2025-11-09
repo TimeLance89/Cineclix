@@ -1,51 +1,30 @@
-# HA Alarm Lite (v0.4.1)
+# HA Alarm Lite
 
-**Custom Integration** für Home Assistant – leicht einrichtbares, robustes Alarmsystem.
+HA Alarm Lite is a small Home Assistant integration that turns a few sensors and an NFC tag into a reliable alarm system.
+It arms with an exit delay, blinks a light for feedback, plays a local MP3 on a media player when triggered, and disarms by NFC or service call.
+It restores state on restart, ships a simple dashboard, and includes diagnostics and a health check.
 
-## Neu in v0.4.1 (2025-11-09)
-- **MIT-Lizenz** hinzugefügt
-- **GitHub Actions** für **HACS-Validation** & **hassfest** (CI)
-- README erweitert (HACS/Release-Anleitung)
+## What it does
+- Arm (with exit delay) / Entry delay / Trigger
+- Disarm by NFC tag or service
+- Light feedback (blink patterns)
+- Play a local MP3 on any `media_player`
+- Health check + diagnostics
+- Ready-made dashboard
 
-## Highlights
-- Lock-basierte **State-Machine** (keine Race-Conditions)
-- **RestoreEntity** (zustandssicher bei Neustarts)
-- **Health-Checks** + Service `ha_alarm_lite.health_check`
-- **Diagnostics** (exportierbar)
-- **Onboarding-Dashboard** mit Selbsttests
-- NFC-Tag-Feld im Options-Flow wird mit **letztem Scan** vorbefüllt
+## Setup (step by step)
+1. Install via HACS (custom repository) and restart Home Assistant.
+2. Add the integration: **Settings → Devices & Services → Add Integration → HA Alarm Lite**.
+3. Select:
+   - **Indicator light** – lamp that blinks for feedback
+   - **Siren / Media player** – where the MP3 is played
+   - **MP3 file** – pick a local `.mp3` (file picker)
+   - **Entry sensors** – door/vibration/motion binary sensors
+   - **NFC tag** – choose from your registered tags
+   - **Exit delay / Entry delay** – seconds
+   - **Auto disarm time** – optional daily time to disarm
+4. Open the included dashboard “Alarm” and run the self-tests: *Test Indicator*, *Test Siren*, *Arm (Exit Delay)*, *Disarm*, *Trigger*.
 
-## Installation (HACS – Custom Repository)
-1. Dieses Repo **öffentlich** machen und URL merken.
-2. In Home Assistant: **HACS → Integrationen → Custom repositories**  
-   - URL: `https://github.com/<DEIN-USER>/ha-alarm-lite`  
-   - Category: **Integration** → Add
-3. In HACS nach **HA Alarm Lite** suchen → **Installieren** → **HA neu starten**.
-4. **Integration hinzufügen** und Optionen setzen (Indicator-Light, Siren-Player, MP3, Sensoren, Tag, Delays).
-
-## Struktur
-```
-hacs.json
-LICENSE
-README.md
-.github/workflows/hacs.yml
-custom_components/ha_alarm_lite/
-  ├── manifest.json
-  ├── __init__.py
-  ├── const.py
-  ├── alarm_control_panel.py
-  ├── config_flow.py
-  ├── diagnostics.py
-  ├── services.yaml
-  └── dashboard/
-      └── alarm_dashboard.yaml
-```
-
-## Schnellstart
-- MP3 nach `/config/www/...`, z. B. `www/growzelt/alarm_active.mp3`  
-- In den Optionen als `media-source://media_source/local/growzelt/alarm_active.mp3` eintragen.
-- Entry-Sensoren wählen (z. B. Tür/Vibration), NFC-Tag scannen → in Optionen übernehmen.
-
-## Releases & Tags
-- Version in `manifest.json` bumpen (z. B. `0.4.1`).
-- **Git-Tag** `v0.4.1` setzen und veröffentlichen, damit HACS Updates anzeigt.
+## Notes
+- The MP3 picker accepts files from `/media` or `/config/www` and converts them automatically to `media-source://`.
+- The NFC selector lists all tags known to Home Assistant.

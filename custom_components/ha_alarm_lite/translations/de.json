@@ -3,16 +3,40 @@
   "config": {
     "step": {
       "user": {
-        "title": "HA Alarm Lite – Einrichtung",
-        "description": "Wähle Geräte und Parameter für dein Alarmsystem."
+        "title": "HA Alarm Lite \u2013 Einrichtung",
+        "description": "W\u00e4hle Ger\u00e4te und Zeiten. Alles kann sp\u00e4ter in den Optionen ge\u00e4ndert werden.",
+        "data": {
+          "indicator_light": "Indikator-Licht",
+          "siren_player": "Sirene / Media Player",
+          "siren_volume": "Sirenen-Lautst\u00e4rke",
+          "mp3_source": "MP3-Datei",
+          "entry_sensors": "Eingangssensoren",
+          "nfc_tag_id": "NFC-Tag",
+          "exit_delay": "Exit-Delay (s)",
+          "entry_delay": "Entry-Delay (s)",
+          "accept_any_when_triggered": "Beliebiger Tag darf im Alarm entsch\u00e4rfen",
+          "auto_disarm_time": "Automatische Unscharfschaltung um"
+        }
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "HA Alarm Lite – Optionen",
-        "description": "Tipp: Scanne jetzt deinen NFC-Tag – das Feld wird automatisch mit dem letzten Scan vorbelegt."
+        "title": "HA Alarm Lite \u2013 Optionen",
+        "description": "Einstellungen anpassen. Tipp: Lokale MP3 w\u00e4hlen.",
+        "data": {
+          "indicator_light": "Indikator-Licht",
+          "siren_player": "Sirene / Media Player",
+          "siren_volume": "Sirenen-Lautst\u00e4rke",
+          "mp3_source": "MP3-Datei",
+          "entry_sensors": "Eingangssensoren",
+          "nfc_tag_id": "NFC-Tag",
+          "exit_delay": "Exit-Delay (s)",
+          "entry_delay": "Entry-Delay (s)",
+          "accept_any_when_triggered": "Beliebiger Tag darf im Alarm entsch\u00e4rfen",
+          "auto_disarm_time": "Automatische Unscharfschaltung um"
+        }
       }
     }
   },

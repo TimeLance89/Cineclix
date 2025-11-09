@@ -3,23 +3,47 @@
   "config": {
     "step": {
       "user": {
-        "title": "HA Alarm Lite – Einrichtung",
-        "description": "Wähle Geräte und Parameter für dein Alarmsystem."
+        "title": "HA Alarm Lite \u2013 Setup",
+        "description": "Pick your devices and delays. You can change all values later in Options.",
+        "data": {
+          "indicator_light": "Indicator light",
+          "siren_player": "Siren / Media player",
+          "siren_volume": "Siren volume",
+          "mp3_source": "MP3 file",
+          "entry_sensors": "Entry sensors",
+          "nfc_tag_id": "NFC tag",
+          "exit_delay": "Exit delay (s)",
+          "entry_delay": "Entry delay (s)",
+          "accept_any_when_triggered": "Allow any tag to disarm when triggered",
+          "auto_disarm_time": "Auto disarm time"
+        }
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "HA Alarm Lite – Optionen",
-        "description": "Tipp: Scanne jetzt deinen NFC-Tag – das Feld wird automatisch mit dem letzten Scan vorbelegt."
+        "title": "HA Alarm Lite \u2013 Options",
+        "description": "Adjust settings. Tip: Use a local MP3 and pick it here.",
+        "data": {
+          "indicator_light": "Indicator light",
+          "siren_player": "Siren / Media player",
+          "siren_volume": "Siren volume",
+          "mp3_source": "MP3 file",
+          "entry_sensors": "Entry sensors",
+          "nfc_tag_id": "NFC tag",
+          "exit_delay": "Exit delay (s)",
+          "entry_delay": "Entry delay (s)",
+          "accept_any_when_triggered": "Allow any tag to disarm when triggered",
+          "auto_disarm_time": "Auto disarm time"
+        }
       }
     }
   },
   "entity": {
     "alarm_control_panel": {
       "panel": {
-        "name": "Alarmanlage"
+        "name": "Alarm system"
       }
     }
   }
