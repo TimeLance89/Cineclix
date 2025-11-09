@@ -12,13 +12,23 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.typing import StateType
-from homeassistant.const import (
-    STATE_ALARM_ARMED_AWAY,
-    STATE_ALARM_ARMED_HOME,
-    STATE_ALARM_ARMING,
-    STATE_ALARM_DISARMED,
-    STATE_ALARM_TRIGGERED,
-)
+
+try:
+    from homeassistant.components.alarm_control_panel import AlarmControlPanelState
+except ImportError:  # pragma: no cover - backwards compatibility with older HA
+    from homeassistant.const import (  # type: ignore[no-redef]
+        STATE_ALARM_ARMED_AWAY,
+        STATE_ALARM_ARMED_HOME,
+        STATE_ALARM_ARMING,
+        STATE_ALARM_DISARMED,
+        STATE_ALARM_TRIGGERED,
+    )
+else:
+    STATE_ALARM_ARMED_AWAY = AlarmControlPanelState.ARMED_AWAY
+    STATE_ALARM_ARMED_HOME = AlarmControlPanelState.ARMED_HOME
+    STATE_ALARM_ARMING = AlarmControlPanelState.ARMING
+    STATE_ALARM_DISARMED = AlarmControlPanelState.DISARMED
+    STATE_ALARM_TRIGGERED = AlarmControlPanelState.TRIGGERED
 
 from .const import (
     DOMAIN,
