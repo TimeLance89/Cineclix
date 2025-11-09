@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-import mimetypes
 from typing import TYPE_CHECKING, Any, Callable, Optional
 
-import voluptuous as vol
 from homeassistant.components.alarm_control_panel import (
     AlarmControlPanelEntity,
     AlarmControlPanelEntityFeature,
@@ -12,7 +10,6 @@ from homeassistant.components.alarm_control_panel import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.helpers import entity_platform
 from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.typing import StateType
@@ -63,21 +60,6 @@ if TYPE_CHECKING:
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities
 ):
-    platform = entity_platform.async_get_current_platform()
-    domain_data = hass.data.setdefault(DOMAIN, {})
-    if not domain_data.get("_entity_services_registered"):
-        platform.async_register_entity_service(
-            "play_selected_tone",
-            {
-                vol.Optional("media_path"): str,
-                vol.Optional("volume"): vol.All(
-                    vol.Coerce(float), vol.Range(min=0.0, max=1.0)
-                ),
-            },
-            "async_play_selected_tone",
-        )
-        domain_data["_entity_services_registered"] = True
-
     async_add_entities([HaAlarmProEntity(hass, entry)])
 
 
@@ -177,24 +159,14 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
             except Exception:
                 pass
 
-    def _indicator_lights(self) -> list[str]:
-        lights = self._cfg.get(CONF_INDICATOR_LIGHT)
-        if not lights:
-            return []
-        if isinstance(lights, str):
-            return [lights]
-        if isinstance(lights, (list, tuple, set)):
-            return [str(item) for item in lights if item]
-        return [str(lights)]
-
     async def _flash_indicator(
         self, flashes: int = 2, color: str | None = None, interval: float = 0.3
     ) -> None:
-        lights = self._indicator_lights()
-        if not lights:
+        light = self._cfg.get(CONF_INDICATOR_LIGHT)
+        if not light:
             return
         self._stop_indicator_loop()
-        data_on: dict[str, Any] = {"entity_id": lights, "brightness_pct": 100}
+        data_on: dict[str, Any] = {"entity_id": light, "brightness_pct": 100}
         if color:
             data_on["color_name"] = color
         for _ in range(flashes):
@@ -203,21 +175,21 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
             )
             await asyncio.sleep(interval)
             await self.hass.services.async_call(
-                "light", "turn_off", {"entity_id": lights}, blocking=True
+                "light", "turn_off", {"entity_id": light}, blocking=True
             )
             await asyncio.sleep(interval)
 
     def _start_indicator_loop(
         self, color: str | None = None, on_time: float = 0.6, off_time: float = 0.4
     ) -> None:
-        lights = self._indicator_lights()
-        if not lights:
+        light = self._cfg.get(CONF_INDICATOR_LIGHT)
+        if not light:
             return
         self._stop_indicator_loop()
 
         async def _loop() -> None:
             try:
-                data_on: dict[str, Any] = {"entity_id": lights, "brightness_pct": 100}
+                data_on: dict[str, Any] = {"entity_id": light, "brightness_pct": 100}
                 if color:
                     data_on["color_name"] = color
                 while True:
@@ -226,14 +198,14 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
                     )
                     await asyncio.sleep(on_time)
                     await self.hass.services.async_call(
-                        "light", "turn_off", {"entity_id": lights}, blocking=True
+                        "light", "turn_off", {"entity_id": light}, blocking=True
                     )
                     await asyncio.sleep(off_time)
             except asyncio.CancelledError:  # pragma: no cover - best effort clean up
                 pass
             finally:
                 await self.hass.services.async_call(
-                    "light", "turn_off", {"entity_id": lights}, blocking=False
+                    "light", "turn_off", {"entity_id": light}, blocking=False
                 )
 
         self._indicator_task = self.hass.loop.create_task(_loop())
@@ -242,11 +214,11 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         if self._indicator_task:
             self._indicator_task.cancel()
             self._indicator_task = None
-        lights = self._indicator_lights()
-        if lights:
+        light = self._cfg.get(CONF_INDICATOR_LIGHT)
+        if light:
             self.hass.async_create_task(
                 self.hass.services.async_call(
-                    "light", "turn_off", {"entity_id": lights}, blocking=False
+                    "light", "turn_off", {"entity_id": light}, blocking=False
                 )
             )
 
@@ -256,11 +228,8 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
             return "", ""
         if mp3.startswith("media-source://"):
             return mp3, "music"
-        media_type, _ = mimetypes.guess_type(mp3)
-        if media_type and media_type.startswith("audio/"):
-            return mp3, media_type
-        if media_type:
-            return mp3, media_type
+        if mp3.startswith("/local/") or mp3.startswith("/media/"):
+            return mp3, "music"
         return mp3, "music"
 
     def _stop_delay_audio(self) -> None:
@@ -325,7 +294,9 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
             {
                 "entity_id": player,
                 "media_content_id": media_content_id,
-                "media_content_type": media_type if media_type else "music",
+                "media_content_type": "audio/mp3"
+                if media_type == "music"
+                else media_type,
             },
             blocking=False,
         )
@@ -345,16 +316,6 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         await self.hass.services.async_call(
             "media_player", "media_stop", {"entity_id": player}, blocking=False
         )
-
-    async def async_play_selected_tone(
-        self, media_path: str | None = None, volume: float | None = None
-    ) -> None:
-        media = media_path if media_path is not None else self._cfg.get(CONF_MP3_FILE)
-        if not media:
-            return
-        if volume is None:
-            volume = self._cfg.get(CONF_SIREN_VOLUME, 1)
-        await self._play_media(media, volume=volume)
 
     async def _begin_arming(self, target_state: str) -> None:
         self._controller.cancel_pending()

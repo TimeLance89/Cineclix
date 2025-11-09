@@ -35,11 +35,10 @@ from .const import (
     DEFAULT_TAG_ARMING_MODE,
     TAG_ACTION_ARM_HOME,
     TAG_ACTION_ARM_AWAY,
-    SUPPORTED_AUDIO_EXTENSIONS,
 )
 
 
-def _scan_audio_paths(hass: HomeAssistant) -> list[str]:
+def _scan_mp3_paths(hass: HomeAssistant) -> list[str]:
     res: list[str] = []
     media_path = hass.config.path("media")
     www_path = hass.config.path("www")
@@ -48,8 +47,7 @@ def _scan_audio_paths(hass: HomeAssistant) -> list[str]:
             if os.path.isdir(base):
                 for root, _, files in os.walk(base):
                     for filename in files:
-                        lowered = filename.lower()
-                        if lowered.endswith(SUPPORTED_AUDIO_EXTENSIONS):
+                        if filename.lower().endswith(".mp3"):
                             full_path = os.path.join(root, filename)
                             rel_path = (
                                 prefix
@@ -99,17 +97,14 @@ def _ensure_list(value: Any) -> list[str]:
 
 def _build_schema(
     data: dict[str, Any],
-    audio_files: list[str],
+    mp3s: list[str],
     tags: list[tuple[str, str]],
 ) -> vol.Schema:
     schema_dict: dict[Any, Any] = {}
 
-    indicator_default = data.get(CONF_INDICATOR_LIGHT)
-    if indicator_default:
-        indicator_default = _ensure_list(indicator_default)
-    schema_dict[
-        vol.Optional(CONF_INDICATOR_LIGHT, default=indicator_default)
-    ] = selector.selector({"entity": {"domain": "light", "multiple": True}})
+    schema_dict[vol.Optional(CONF_INDICATOR_LIGHT, default=data.get(CONF_INDICATOR_LIGHT))] = selector.selector(
+        {"entity": {"domain": "light"}}
+    )
     schema_dict[vol.Optional(CONF_SIREN_PLAYER, default=data.get(CONF_SIREN_PLAYER))] = selector.selector(
         {"entity": {"domain": "media_player"}}
     )
@@ -117,26 +112,26 @@ def _build_schema(
         {"number": {"min": 0, "max": 1, "step": 0.05, "mode": "slider"}}
     )
 
-    audio_options = [
+    mp3_options = [
         {"label": "Kein Alarmton / No alarm sound", "value": ""}
     ] + [
-        {"label": option.split("/")[-1], "value": option} for option in audio_files
+        {"label": option.split("/")[-1], "value": option} for option in mp3s
     ]
 
-    def _audio_selector():
+    def _mp3_selector():
         return selector.selector(
             {
                 "select": {
-                    "options": audio_options,
+                    "options": mp3_options,
                     "custom_value": True,
                     "sort": False,
                 }
             }
         )
 
-    schema_dict[vol.Optional(CONF_MP3_FILE, default=data.get(CONF_MP3_FILE, ""))] = _audio_selector()
-    schema_dict[vol.Optional(CONF_EXIT_DELAY_SOUND, default=data.get(CONF_EXIT_DELAY_SOUND, ""))] = _audio_selector()
-    schema_dict[vol.Optional(CONF_ENTRY_DELAY_SOUND, default=data.get(CONF_ENTRY_DELAY_SOUND, ""))] = _audio_selector()
+    schema_dict[vol.Optional(CONF_MP3_FILE, default=data.get(CONF_MP3_FILE, ""))] = _mp3_selector()
+    schema_dict[vol.Optional(CONF_EXIT_DELAY_SOUND, default=data.get(CONF_EXIT_DELAY_SOUND, ""))] = _mp3_selector()
+    schema_dict[vol.Optional(CONF_ENTRY_DELAY_SOUND, default=data.get(CONF_ENTRY_DELAY_SOUND, ""))] = _mp3_selector()
     schema_dict[vol.Required(CONF_CHIME_VOLUME, default=data.get(CONF_CHIME_VOLUME, DEFAULT_CHIME_VOLUME))] = selector.selector(
         {"number": {"min": 0, "max": 1, "step": 0.05, "mode": "slider"}}
     )
@@ -208,21 +203,12 @@ class HaAlarmProFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if isinstance(tags_value, str):
                 user_input[CONF_AUTHORIZED_TAGS] = [tags_value] if tags_value else []
             user_input.pop(CONF_NFC_TAG, None)
-            lights_value = user_input.get(CONF_INDICATOR_LIGHT)
-            if isinstance(lights_value, str):
-                user_input[CONF_INDICATOR_LIGHT] = [
-                    lights_value
-                ] if lights_value else []
-            elif lights_value is None:
-                user_input[CONF_INDICATOR_LIGHT] = []
             return self.async_create_entry(title="HA Alarm Pro", data=user_input)
 
-        audio_files = await self.hass.async_add_executor_job(
-            _scan_audio_paths, self.hass
-        )
+        mp3s = await self.hass.async_add_executor_job(_scan_mp3_paths, self.hass)
         tags = await self.hass.async_add_executor_job(_load_tags, self.hass)
 
-        schema = _build_schema({}, audio_files, tags)
+        schema = _build_schema({}, mp3s, tags)
         return self.async_show_form(step_id="user", data_schema=schema)
 
     @staticmethod
@@ -242,20 +228,11 @@ class HaAlarmProOptionsFlow(config_entries.OptionsFlow):
             if isinstance(tags_value, str):
                 user_input[CONF_AUTHORIZED_TAGS] = [tags_value] if tags_value else []
             user_input.pop(CONF_NFC_TAG, None)
-            lights_value = user_input.get(CONF_INDICATOR_LIGHT)
-            if isinstance(lights_value, str):
-                user_input[CONF_INDICATOR_LIGHT] = [
-                    lights_value
-                ] if lights_value else []
-            elif lights_value is None:
-                user_input[CONF_INDICATOR_LIGHT] = []
             return self.async_create_entry(title="", data=user_input)
 
-        audio_files = await self.hass.async_add_executor_job(
-            _scan_audio_paths, self.hass
-        )
+        mp3s = await self.hass.async_add_executor_job(_scan_mp3_paths, self.hass)
         tags = await self.hass.async_add_executor_job(_load_tags, self.hass)
 
         data = {**self.entry.data, **self.entry.options}
-        schema = _build_schema(data, audio_files, tags)
+        schema = _build_schema(data, mp3s, tags)
         return self.async_show_form(step_id="init", data_schema=schema)

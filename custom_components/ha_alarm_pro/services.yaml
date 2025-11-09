@@ -1,18 +1,2 @@
 
-play_selected_tone:
-  name: Play configured tone
-  description: Start playback of the configured siren tone (or a supplied audio file) on the associated media player.
-  fields:
-    entity_id:
-      description: The HA Alarm Pro entity that should play the tone.
-      example: alarm_control_panel.ha_alarm_pro
-    media_path:
-      name: Audio path
-      description: Optional override for the audio file to play. Accepts entries from /media, /local or a media-source URL.
-      example: /media/alarms/custom_alarm.wav
-      required: false
-    volume:
-      name: Volume
-      description: Optional volume level between 0 and 1 used for playback.
-      example: 0.8
-      required: false
+# Reserved for future services (e.g., health_check)

@@ -5,7 +5,7 @@
 ### Highlights
 - Single `alarm_control_panel` entity with entry/exit delays and indicator light feedback.
 - NFC tag workflow redesigned: authorized tags can arm (with selectable default mode) or disarm the alarm, including during pending/triggered states.
-- Optional siren playback through a media player with curated audio suggestions from Home Assistant's `/media` and `/config/www` folders (manual paths are also supported for advanced setups).
+- Optional siren playback through a media player with curated MP3 suggestions from Home Assistant's `/media` and `/config/www` folders (manual paths are also supported for advanced setups).
 - Intelligent audio cues: define dedicated entry/exit chimes with adaptive countdown pacing and their own volume level so occupants instantly know how much time is left.
 - Automatic disarm scheduling and optional acceptance of any tag (or any tag while triggered).
 - Lovelace dashboard snippet available in `dashboard/panel.yaml`.
@@ -31,7 +31,7 @@ Add a Manual card and paste the YAML from `custom_components/ha_alarm_pro/dashbo
 ### Highlights
 - Eine einzelne `alarm_control_panel`-Entität mit Ein-/Austrittsverzögerung und optionaler Signalleuchte.
 - Neu aufgebauter NFC-Ablauf: Autorisierte Tags schalten die Anlage scharf (mit wählbarem Standardmodus) oder entschärfen sie – auch während Pending- und Alarmzuständen.
-- Optionale Sirene über einen Medienplayer; alle vorhandenen Audiodateien aus `/media` und `/config/www` werden automatisch vorgeschlagen – bei Bedarf kann dennoch ein eigener Pfad hinterlegt werden.
+- Optionale Sirene über einen Medienplayer; alle vorhandenen MP3-Dateien aus `/media` und `/config/www` werden automatisch vorgeschlagen – bei Bedarf kann dennoch ein eigener Pfad hinterlegt werden.
 - Clevere akustische Hinweise: Separate Signaltöne für Ein- und Austrittsverzögerung mit dynamischer Taktung und eigener Lautstärke machen den Restlauf der Verzögerung hörbar.
 - Zeitgesteuerte Entschärfung sowie optionales Zulassen beliebiger Tags (auch nur im Alarmfall).
 - Lovelace-Dashboard-Snippet in `dashboard/panel.yaml` enthalten.
