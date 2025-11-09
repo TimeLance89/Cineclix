@@ -3,17 +3,23 @@
   "config": {
     "step": {
       "user": {
-        "title": "HA Alarm Pro \u2014 Setup",
-        "description": "Choose devices and timers. You can change these later in Options."
+        "title": "Setup",
+        "description": "Choose devices and options. You can change everything later in Options."
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "HA Alarm Pro \u2014 Options",
-        "description": "Adjust settings. MP3 dropdown lists files under /media and /config/www. Tags are read from the Tag Manager."
+        "title": "Options",
+        "description": "Adjust settings for HA Alarm Pro."
       }
+    }
+  },
+  "selector": {},
+  "entity": {
+    "alarm_control_panel": {
+      "name": "HA Alarm Pro"
     }
   }
 }

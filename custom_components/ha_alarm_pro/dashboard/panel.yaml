@@ -3,30 +3,37 @@ type: vertical-stack
 cards:
   - type: conditional
     conditions:
-      - entity: alarm_control_panel.ha_alarm_pro_alarm
+      - entity: alarm_control_panel.ha_alarm_pro
         state: triggered
     card:
       type: markdown
       content: |
-        ## 🔴 Alarm ausgelöst
-        Entschärfe per NFC oder Button.
+        ## 🔴 ALARM AUSGELÖST
+        Quittiere mit **Unscharf** (NFC oder Button).
   - type: entities
     title: Status
+    show_header_toggle: false
     entities:
-      - entity: alarm_control_panel.ha_alarm_pro_alarm
+      - entity: alarm_control_panel.ha_alarm_pro
         name: Alarm
-      - entity: light.placeholder
-        name: Indikator (Beispiel)
   - type: horizontal-stack
     cards:
       - type: button
-        name: Scharf (Arm)
+        name: Scharf (Home)
+        icon: mdi:shield-home
+        tap_action:
+          action: call-service
+          service: alarm_control_panel.alarm_arm_home
+          target:
+            entity_id: alarm_control_panel.ha_alarm_pro
+      - type: button
+        name: Scharf (Away)
         icon: mdi:shield-check
         tap_action:
           action: call-service
           service: alarm_control_panel.alarm_arm_away
           target:
-            entity_id: alarm_control_panel.ha_alarm_pro_alarm
+            entity_id: alarm_control_panel.ha_alarm_pro
       - type: button
         name: Unscharf
         icon: mdi:shield-off
@@ -34,4 +41,4 @@ cards:
           action: call-service
           service: alarm_control_panel.alarm_disarm
           target:
-            entity_id: alarm_control_panel.ha_alarm_pro_alarm
+            entity_id: alarm_control_panel.ha_alarm_pro

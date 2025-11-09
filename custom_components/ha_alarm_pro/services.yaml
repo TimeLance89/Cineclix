@@ -1,5 +1,2 @@
 
-health_check:
-  name: Health Check
-  description: Returns OK if the HA Alarm Pro controller is active.
-  fields: {}
+# Reserved for future services (e.g., health_check)

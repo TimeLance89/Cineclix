@@ -1,10 +1,9 @@
 {
-  "title": "HA Alarm Pro",
   "config": {
     "step": {
       "user": {
         "title": "HA Alarm Pro \u2013 Einrichtung",
-        "description": "W\u00e4hle Ger\u00e4te und Zeiten. Alles kann sp\u00e4ter unter Optionen ge\u00e4ndert werden."
+        "description": "W\u00e4hle Ger\u00e4te und Zeiten. Alles kann sp\u00e4ter in den Optionen ge\u00e4ndert werden."
       }
     }
   },
@@ -12,20 +11,15 @@
     "step": {
       "init": {
         "title": "HA Alarm Pro \u2013 Optionen",
-        "description": "MP3-Dropdown durchsucht /media und /config/www. NFC-Tags stammen aus dem Tag-Manager."
+        "description": "Einstellungen anpassen."
       }
     }
   },
-  "selector": {
-    "indicator_light": "Indikator-Licht",
-    "media_player": "Sirene / Media Player",
-    "volume": "Sirenen-Lautst\u00e4rke",
-    "mp3_file": "MP3-Datei",
-    "entry_sensors": "Eingangssensoren",
-    "exit_delay": "Exit-Delay (s)",
-    "entry_delay": "Entry-Delay (s)",
-    "allow_any_tag": "Beliebiger Tag darf entsch\u00e4rfen",
-    "nfc_tag": "NFC-Tag",
-    "auto_disarm_time": "Automatische Unscharfschaltung um"
-  }
+  "selector": {},
+  "entity": {
+    "alarm_control_panel": {
+      "name": "HA Alarm Pro"
+    }
+  },
+  "state": {}
 }
