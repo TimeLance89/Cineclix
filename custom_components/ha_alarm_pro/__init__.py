@@ -1,7 +1,6 @@
-
 from __future__ import annotations
 
-from typing import Callable
+from typing import Callable, Optional
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -20,11 +19,21 @@ from .const import (
     CONF_ENTRY_SENSORS,
     CONF_NFC_TAG,
     CONF_ALLOW_ANY_TAG,
+    CONF_ACCEPT_ANY_TAG_WHEN_TRIGGERED,
     CONF_ENTRY_DELAY,
     CONF_AUTO_DISARM_TIME,
+    DEFAULT_ENTRY_DELAY,
+    EVENT_ENTRY_DELAY_STARTED,
+    EVENT_ENTRY_DELAY_CANCELLED,
 )
 
 PLATFORMS = ["alarm_control_panel"]
+
+
+def _normalize_tag(value: Optional[str]) -> str:
+    if not value:
+        return ""
+    return str(value).lower().replace("-", "")
 
 
 class AlarmController:
@@ -32,6 +41,8 @@ class AlarmController:
         self.hass = hass
         self.entry = entry
         self._unsubs: list[Callable[[], None]] = []
+        self._pending_cancel: Optional[Callable[[], None]] = None
+        self._pending_source: Optional[str] = None
         self.state: str = "disarmed"
         self.listeners_ready = False
 
@@ -40,9 +51,10 @@ class AlarmController:
         self.listeners_ready = True
 
     async def async_unload(self) -> None:
-        for u in self._unsubs:
+        self.cancel_pending()
+        for unsub in self._unsubs:
             try:
-                u()
+                unsub()
             except Exception:
                 pass
         self._unsubs.clear()
@@ -53,44 +65,102 @@ class AlarmController:
 
         @callback
         def _on_sensor_event(event) -> None:
-            # A sensor turned on -> start entry delay or trigger if already armed_away
             to_state = event.data.get("new_state")
             if not to_state:
                 return
             if to_state.state != STATE_ON:
                 return
             if self.state in ("armed_away", "armed_home"):
-                entry_delay = int(cfg.get(CONF_ENTRY_DELAY, 30))
-                # Schedule trigger
-                async def delayed_trigger(now):
-                    if self.state in ("armed_away", "armed_home"):
-                        self.hass.bus.async_fire(f"{DOMAIN}_trigger", {"source": to_state.entity_id})
-                self._unsubs.append(async_call_later(self.hass, entry_delay, delayed_trigger))
+                self._start_entry_delay(cfg, to_state.entity_id)
 
         if sensors:
-            self._unsubs.append(async_track_state_change_event(self.hass, sensors, _on_sensor_event))
+            self._unsubs.append(
+                async_track_state_change_event(self.hass, sensors, _on_sensor_event)
+            )
 
-        # Tag scanned -> disarm if matches
         @callback
         def _on_tag_scanned(event):
             tag_id = event.data.get("tag_id")
             allow_any = bool(cfg.get(CONF_ALLOW_ANY_TAG, False))
+            allow_any_when_triggered = bool(
+                cfg.get(CONF_ACCEPT_ANY_TAG_WHEN_TRIGGERED, False)
+            )
             wanted = cfg.get(CONF_NFC_TAG)
-            if allow_any or (wanted and wanted == tag_id):
-                self.hass.bus.async_fire(f"{DOMAIN}_disarm_request", {"tag_id": tag_id})
+            normalized_tag = _normalize_tag(tag_id)
+            normalized_target = _normalize_tag(wanted)
+
+            allowed = False
+            if allow_any and normalized_tag:
+                allowed = True
+            elif normalized_tag and normalized_target and normalized_tag == normalized_target:
+                allowed = True
+            elif allow_any_when_triggered and self.state == "triggered" and normalized_tag:
+                allowed = True
+
+            if allowed:
+                self.cancel_pending()
+                self.hass.bus.async_fire(
+                    f"{DOMAIN}_disarm_request", {"tag_id": tag_id}
+                )
 
         self._unsubs.append(self.hass.bus.async_listen("tag_scanned", _on_tag_scanned))
 
-        # Auto disarm at a time
         auto = cfg.get(CONF_AUTO_DISARM_TIME)
         if auto:
             try:
                 hh, mm, ss = [int(x) for x in auto.split(":")]
+
                 def _cb(hass_time):
                     self.hass.bus.async_fire(f"{DOMAIN}_auto_disarm", {})
-                self._unsubs.append(async_track_time_change(self.hass, _cb, hour=hh, minute=mm, second=ss))
+
+                self._unsubs.append(
+                    async_track_time_change(
+                        self.hass, _cb, hour=hh, minute=mm, second=ss
+                    )
+                )
             except Exception:
                 pass
+
+    def _start_entry_delay(self, cfg: dict, sensor_entity: str) -> None:
+        entry_delay = int(cfg.get(CONF_ENTRY_DELAY, DEFAULT_ENTRY_DELAY))
+        if entry_delay <= 0:
+            self.hass.bus.async_fire(f"{DOMAIN}_trigger", {"source": sensor_entity})
+            return
+
+        self.cancel_pending(notify=False)
+        self._pending_source = sensor_entity
+        self.hass.bus.async_fire(
+            EVENT_ENTRY_DELAY_STARTED,
+            {"source": sensor_entity, "delay": entry_delay},
+        )
+
+        def _finish(now) -> None:
+            self._pending_cancel = None
+            source = sensor_entity
+            if self.state in ("armed_away", "armed_home"):
+                self.hass.bus.async_fire(f"{DOMAIN}_trigger", {"source": source})
+
+        self._pending_cancel = async_call_later(self.hass, entry_delay, _finish)
+
+    def cancel_pending(self, notify: bool = True) -> None:
+        if self._pending_cancel:
+            cancel = self._pending_cancel
+            self._pending_cancel = None
+            try:
+                cancel()
+            except Exception:
+                pass
+            if notify:
+                self.hass.bus.async_fire(
+                    EVENT_ENTRY_DELAY_CANCELLED,
+                    {"source": self._pending_source},
+                )
+        elif notify and self._pending_source:
+            self.hass.bus.async_fire(
+                EVENT_ENTRY_DELAY_CANCELLED,
+                {"source": self._pending_source},
+            )
+        self._pending_source = None
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:

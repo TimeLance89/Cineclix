@@ -1,13 +1,13 @@
 
-# HA Alarm Pro (v0.1.0)
+# HA Alarm Pro (v0.2.0)
 
 A simple-but-solid custom alarm for Home Assistant:
 - One **alarm_control_panel** entity
 - Entry/exit delays
-- Any number of entry sensors (binary_sensor)
-- Optional indicator light blink
+- Any number of entry sensors (binary_sensor) with entry delay handling
+- Optional indicator light blink for arming, entry delay and alarm state
 - Optional siren via media_player + MP3 (from `/media` or `/config/www`)
-- NFC tag disarm (from HA Tag Manager) or allow any tag
+- NFC tag disarm (from HA Tag Manager) or allow any tag (including "any tag while triggered")
 - Optional auto disarm at a specific time
 - Lovelace panel snippet included in `dashboard/panel.yaml`
 

@@ -20,6 +20,7 @@ from .const import (
     CONF_ENTRY_SENSORS,
     CONF_NFC_TAG,
     CONF_ALLOW_ANY_TAG,
+    CONF_ACCEPT_ANY_TAG_WHEN_TRIGGERED,
     CONF_EXIT_DELAY,
     CONF_ENTRY_DELAY,
     CONF_AUTO_DISARM_TIME,
@@ -47,10 +48,10 @@ def _scan_mp3_paths(hass: HomeAssistant) -> list[str]:
         pass
     return sorted(res)
 
-def _load_tags(hass: HomeAssistant) -> list[tuple[str,str]]:
+def _load_tags(hass: HomeAssistant) -> list[tuple[str, str]]:
     # returns list of (id, name_or_id)
     tags_file = hass.config.path(".storage", "tag")
-    out: list[tuple[str,str]] = []
+    out: list[tuple[str, str]] = []
     try:
         with open(tags_file, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -82,7 +83,14 @@ class HaAlarmProFlow(config_entries.ConfigFlow, domain=DOMAIN):
         mp3_key = vol.Optional(CONF_MP3_FILE)
         mp3_selector_config: dict[str, Any] = {"text": {}}
         if mp3s:
-            mp3_selector_config = {"select": {"options": mp3s, "custom_value": True}}
+            mp3_selector_config = {
+                "select": {
+                    "options": [
+                        {"label": option.split("/")[-1], "value": option} for option in mp3s
+                    ],
+                    "custom_value": True,
+                }
+            }
         else:
             mp3_key = vol.Optional(CONF_MP3_FILE, default="")
         schema_dict[mp3_key] = selector.selector(mp3_selector_config)
@@ -92,12 +100,21 @@ class HaAlarmProFlow(config_entries.ConfigFlow, domain=DOMAIN):
         tag_key = vol.Optional(CONF_NFC_TAG)
         tag_selector_config: dict[str, Any] = {"text": {}}
         if tags:
-            tag_selector_config = {"select": {"options": [t[0] for t in tags], "custom_value": True}}
+            tag_selector_config = {
+                "select": {
+                    "options": [
+                        {"label": f"{name} ({tid})" if name != tid else tid, "value": tid}
+                        for tid, name in tags
+                    ],
+                    "custom_value": True,
+                }
+            }
         else:
             tag_key = vol.Optional(CONF_NFC_TAG, default="")
         schema_dict[tag_key] = selector.selector(tag_selector_config)
 
         schema_dict[vol.Required(CONF_ALLOW_ANY_TAG, default=False)] = selector.selector({"boolean": {}})
+        schema_dict[vol.Required(CONF_ACCEPT_ANY_TAG_WHEN_TRIGGERED, default=False)] = selector.selector({"boolean": {}})
         schema_dict[vol.Required(CONF_EXIT_DELAY, default=DEFAULT_EXIT_DELAY)] = selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}})
         schema_dict[vol.Required(CONF_ENTRY_DELAY, default=DEFAULT_ENTRY_DELAY)] = selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}})
         schema_dict[vol.Optional(CONF_AUTO_DISARM_TIME)] = selector.selector({"time": {}})
@@ -133,7 +150,14 @@ class HaAlarmProOptionsFlow(config_entries.OptionsFlow):
         mp3_key = vol.Optional(CONF_MP3_FILE, default=mp3_default)
         mp3_selector_config = {"text": {}}
         if mp3s:
-            mp3_selector_config = {"select": {"options": mp3s, "custom_value": True}}
+            mp3_selector_config = {
+                "select": {
+                    "options": [
+                        {"label": option.split("/")[-1], "value": option} for option in mp3s
+                    ],
+                    "custom_value": True,
+                }
+            }
         schema_dict[mp3_key] = selector.selector(mp3_selector_config)
 
         schema_dict[vol.Optional(CONF_ENTRY_SENSORS, default=data.get(CONF_ENTRY_SENSORS))] = selector.selector({"entity": {"domain": "binary_sensor", "multiple": True}})
@@ -142,10 +166,19 @@ class HaAlarmProOptionsFlow(config_entries.OptionsFlow):
         tag_key = vol.Optional(CONF_NFC_TAG, default=tag_default)
         tag_selector_config = {"text": {}}
         if tags:
-            tag_selector_config = {"select": {"options": [t[0] for t in tags], "custom_value": True}}
+            tag_selector_config = {
+                "select": {
+                    "options": [
+                        {"label": f"{name} ({tid})" if name != tid else tid, "value": tid}
+                        for tid, name in tags
+                    ],
+                    "custom_value": True,
+                }
+            }
         schema_dict[tag_key] = selector.selector(tag_selector_config)
 
         schema_dict[vol.Optional(CONF_ALLOW_ANY_TAG, default=data.get(CONF_ALLOW_ANY_TAG, False))] = selector.selector({"boolean": {}})
+        schema_dict[vol.Optional(CONF_ACCEPT_ANY_TAG_WHEN_TRIGGERED, default=data.get(CONF_ACCEPT_ANY_TAG_WHEN_TRIGGERED, False))] = selector.selector({"boolean": {}})
         schema_dict[vol.Optional(CONF_EXIT_DELAY, default=data.get(CONF_EXIT_DELAY, DEFAULT_EXIT_DELAY))] = selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}})
         schema_dict[vol.Optional(CONF_ENTRY_DELAY, default=data.get(CONF_ENTRY_DELAY, DEFAULT_ENTRY_DELAY))] = selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}})
         schema_dict[vol.Optional(CONF_AUTO_DISARM_TIME, default=data.get(CONF_AUTO_DISARM_TIME))] = selector.selector({"time": {}})
