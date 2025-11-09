@@ -17,6 +17,7 @@ from . import alarm_control_panel  # noqa: F401
 from .const import (
     DOMAIN,
     CONF_ENTRY_SENSORS,
+    CONF_INDICATOR_LIGHT,
     CONF_NFC_TAG,
     CONF_ALLOW_ANY_TAG,
     CONF_ACCEPT_ANY_TAG_WHEN_TRIGGERED,
@@ -256,6 +257,11 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         updated = False
         if container is None:
             return False
+        if container.get(CONF_INDICATOR_LIGHT) is not None:
+            indicator_list = _ensure_list(container.get(CONF_INDICATOR_LIGHT))
+            if container.get(CONF_INDICATOR_LIGHT) != indicator_list:
+                container[CONF_INDICATOR_LIGHT] = indicator_list
+                updated = True
         if CONF_AUTHORIZED_TAGS not in container:
             legacy_tag = container.pop(CONF_NFC_TAG, None)
             tags_list = _ensure_list(legacy_tag)
