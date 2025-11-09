@@ -40,7 +40,11 @@ from .const import (
     CONF_SIREN_VOLUME,
     CONF_MP3_FILE,
     CONF_EXIT_DELAY,
+    CONF_EXIT_DELAY_SOUND,
+    CONF_ENTRY_DELAY_SOUND,
+    CONF_CHIME_VOLUME,
     DEFAULT_EXIT_DELAY,
+    DEFAULT_CHIME_VOLUME,
     EVENT_ENTRY_DELAY_STARTED,
     EVENT_ENTRY_DELAY_CANCELLED,
     TAG_ACTION_EVENT,
@@ -77,6 +81,7 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         self._cfg = entry.options or entry.data
         self._controller: AlarmController = hass.data[DOMAIN][entry.entry_id]
         self._indicator_task: Optional[asyncio.Task] = None
+        self._delay_audio_task: Optional[asyncio.Task] = None
         self._arming_cancel: Optional[Callable[[], None]] = None
         self._pre_pending_state: Optional[str] = None
         self._attrs: dict[str, Any] = {
@@ -227,19 +232,62 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
             return mp3, "music"
         return mp3, "music"
 
-    async def _play_siren(self) -> None:
-        player = self._cfg.get(CONF_SIREN_PLAYER)
-        mp3 = self._cfg.get(CONF_MP3_FILE)
-        volume = self._cfg.get(CONF_SIREN_VOLUME, 1)
-        if not player or not mp3:
+    def _stop_delay_audio(self) -> None:
+        if self._delay_audio_task:
+            self._delay_audio_task.cancel()
+            self._delay_audio_task = None
+
+    def _start_delay_audio(self, sound: str | None, duration: int, kind: str) -> None:
+        self._stop_delay_audio()
+        if not sound:
             return
-        await self.hass.services.async_call(
-            "media_player",
-            "volume_set",
-            {"entity_id": player, "volume_level": volume},
-            blocking=True,
-        )
-        media_content_id, media_type = self._resolve_media(mp3)
+        if duration <= 0:
+            return
+        player = self._cfg.get(CONF_SIREN_PLAYER)
+        if not player:
+            return
+
+        chime_volume = self._cfg.get(CONF_CHIME_VOLUME, DEFAULT_CHIME_VOLUME)
+
+        async def _loop() -> None:
+            remaining = max(int(duration), 0)
+            first = True
+            try:
+                while remaining > 0:
+                    await self._play_media(sound, volume=chime_volume if first else None)
+                    first = False
+                    if remaining <= 5:
+                        wait = 1
+                    elif remaining <= 15:
+                        wait = 1 if kind == "entry" else 2
+                    elif remaining <= 30:
+                        wait = 2 if kind == "entry" else 3
+                    else:
+                        wait = 5
+                    wait = max(1, min(wait, remaining))
+                    await asyncio.sleep(wait)
+                    remaining -= wait
+            except asyncio.CancelledError:  # pragma: no cover - best effort clean up
+                pass
+
+        self._delay_audio_task = self.hass.loop.create_task(_loop())
+
+    async def _play_media(self, media: str, *, volume: float | None = None) -> None:
+        player = self._cfg.get(CONF_SIREN_PLAYER)
+        if not player or not media:
+            return
+        if volume is not None:
+            try:
+                level = max(0.0, min(float(volume), 1.0))
+            except (TypeError, ValueError):
+                level = DEFAULT_CHIME_VOLUME
+            await self.hass.services.async_call(
+                "media_player",
+                "volume_set",
+                {"entity_id": player, "volume_level": level},
+                blocking=True,
+            )
+        media_content_id, media_type = self._resolve_media(media)
         await self.hass.services.async_call(
             "media_player",
             "play_media",
@@ -253,6 +301,14 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
             blocking=False,
         )
 
+    async def _play_siren(self) -> None:
+        player = self._cfg.get(CONF_SIREN_PLAYER)
+        mp3 = self._cfg.get(CONF_MP3_FILE)
+        volume = self._cfg.get(CONF_SIREN_VOLUME, 1)
+        if not player or not mp3:
+            return
+        await self._play_media(mp3, volume=volume)
+
     async def _stop_siren(self) -> None:
         player = self._cfg.get(CONF_SIREN_PLAYER)
         if not player:
@@ -264,6 +320,7 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
     async def _begin_arming(self, target_state: str) -> None:
         self._controller.cancel_pending()
         self._stop_indicator_loop()
+        self._stop_delay_audio()
         self._cancel_arming_timer()
         self._pre_pending_state = None
         self._attrs["entry_delay_active"] = False
@@ -272,12 +329,16 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         await self._flash_indicator(2, color="yellow")
         delay = int(self._cfg.get(CONF_EXIT_DELAY, DEFAULT_EXIT_DELAY))
         if delay <= 0:
+            self._stop_delay_audio()
             self._set_state(target_state)
             return
+
+        self._start_delay_audio(self._cfg.get(CONF_EXIT_DELAY_SOUND), delay, "exit")
 
         def _finish(now) -> None:
             self._arming_cancel = None
             if self._state == STATE_ALARM_ARMING:
+                self._stop_delay_audio()
                 self._set_state(target_state)
 
         self._arming_cancel = async_call_later(self.hass, delay, _finish)
@@ -292,6 +353,7 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         self._controller.cancel_pending()
         self._stop_indicator_loop()
         self._cancel_arming_timer()
+        self._stop_delay_audio()
         await self._stop_siren()
         self._attrs["entry_delay_active"] = False
         self._attrs.pop("entry_delay_seconds", None)
@@ -302,6 +364,7 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         if self._state == STATE_ALARM_TRIGGERED:
             return
         self._stop_indicator_loop()
+        self._stop_delay_audio()
         self._attrs["entry_delay_active"] = False
         self._attrs.pop("entry_delay_seconds", None)
         self._pre_pending_state = None
@@ -364,6 +427,12 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         self._attrs["entry_delay_active"] = True
         if delay is not None:
             self._attrs["entry_delay_seconds"] = delay
+            try:
+                self._start_delay_audio(
+                    self._cfg.get(CONF_ENTRY_DELAY_SOUND), int(delay), "entry"
+                )
+            except (TypeError, ValueError):
+                pass
         if source:
             self._attrs["last_entry_sensor"] = source
         self._set_state(STATE_ALARM_PENDING)
@@ -374,6 +443,7 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         self._attrs["entry_delay_active"] = False
         self._attrs.pop("entry_delay_seconds", None)
         self._stop_indicator_loop()
+        self._stop_delay_audio()
         if self._state == STATE_ALARM_PENDING and self._pre_pending_state:
             self._set_state(self._pre_pending_state)
         else:
@@ -382,6 +452,7 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
 
     async def async_will_remove_from_hass(self) -> None:
         self._stop_indicator_loop()
+        self._stop_delay_audio()
         self._cancel_arming_timer()
         for unsubscribe in self._unsubs:
             try:
