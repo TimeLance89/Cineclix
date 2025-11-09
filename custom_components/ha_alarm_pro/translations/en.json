@@ -1,0 +1,31 @@
+{
+  "title": "HA Alarm Pro",
+  "config": {
+    "step": {
+      "user": {
+        "title": "HA Alarm Pro \u2014 Setup",
+        "description": "Select devices and time values. You can change everything later in Options."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "HA Alarm Pro \u2014 Options",
+        "description": "Adjust settings. MP3 dropdown scans /media and /config/www; NFC tags come from the Tag Manager."
+      }
+    }
+  },
+  "selector": {
+    "indicator_light": "Indicator light",
+    "media_player": "Siren / Media Player",
+    "volume": "Siren volume",
+    "mp3_file": "MP3 file",
+    "entry_sensors": "Entry sensors",
+    "exit_delay": "Exit delay (s)",
+    "entry_delay": "Entry delay (s)",
+    "allow_any_tag": "Any tag may disarm",
+    "nfc_tag": "NFC tag",
+    "auto_disarm_time": "Automatic disarm at"
+  }
+}
