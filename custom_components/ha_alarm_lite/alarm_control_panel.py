@@ -13,6 +13,35 @@ from homeassistant.helpers.entity import DeviceInfo
 from .const import DOMAIN, DATA_CTRL
 
 
+# --- HA Alarm Lite: tolerant media normalization (v0.5.2) ---
+def _normalize_media(uri: str | None) -> str | None:
+    """Return a media-source compatible URI or None.
+    Accepts:
+      - media-source://... (passes through)
+      - /media/... or media/...
+      - /local/... or local/...   (/config/www)
+      - http(s)://... (passes through)
+    """
+    if not uri:
+        return None
+    u = str(uri).strip()
+    if u.startswith("media-source://"):
+        return u
+    if u.startswith("/media/"):
+        return "media-source://media_source" + u
+    if u.startswith("media/"):
+        return "media-source://media_source/" + u
+    if u.startswith("/local/"):
+        return "media-source://media_source" + u
+    if u.startswith("local/"):
+        return "media-source://media_source/" + u
+    if u.startswith("http://") or u.startswith("https://"):
+        return u
+    # Unknown pattern → be graceful: no siren instead of setup failure
+    return None
+# --- end normalization helper ---
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities):
     data = hass.data[DOMAIN][entry.entry_id]
     ctrl = data[DATA_CTRL]

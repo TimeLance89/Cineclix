@@ -1,7 +1,7 @@
 {
   "domain": "ha_alarm_lite",
   "name": "HA Alarm Lite",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "documentation": "https://github.com/TimeLance89/Cineclix#readme",
   "issue_tracker": "https://github.com/TimeLance89/Cineclix/issues",
   "requirements": [],

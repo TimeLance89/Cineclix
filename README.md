@@ -56,3 +56,7 @@ If you prefer a compact panel like in the examples, include:
 Then replace the placeholders:
 - `[[sensor_1]]`, `[[sensor_2]]` → your entry sensors
 - `[[indicator_light]]` → your indicator light
+
+## v0.5.2
+- Fix: MP3 path handling is lenient (accepts `media/...`, `/media/...`, `local/...`, `/local/...`, full `media-source://` and `http(s)://`).
+- If an unknown format is given, setup no longer fails; siren playback is simply skipped.
