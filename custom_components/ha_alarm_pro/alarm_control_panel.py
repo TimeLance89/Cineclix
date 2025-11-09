@@ -43,6 +43,10 @@ from .const import (
     DEFAULT_EXIT_DELAY,
     EVENT_ENTRY_DELAY_STARTED,
     EVENT_ENTRY_DELAY_CANCELLED,
+    TAG_ACTION_EVENT,
+    TAG_ACTION_ARM_AWAY,
+    TAG_ACTION_ARM_HOME,
+    TAG_ACTION_DISARM,
 )
 
 if TYPE_CHECKING:
@@ -75,7 +79,10 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         self._indicator_task: Optional[asyncio.Task] = None
         self._arming_cancel: Optional[Callable[[], None]] = None
         self._pre_pending_state: Optional[str] = None
-        self._attrs: dict[str, Any] = {"entry_delay_active": False}
+        self._attrs: dict[str, Any] = {
+            "entry_delay_active": False,
+            "last_tag_action": None,
+        }
 
         # listeners for custom bus events from controller
         self._unsubs.append(
@@ -98,6 +105,9 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
             self.hass.bus.async_listen(
                 EVENT_ENTRY_DELAY_CANCELLED, self._handle_entry_delay_cancelled
             )
+        )
+        self._unsubs.append(
+            self.hass.bus.async_listen(TAG_ACTION_EVENT, self._handle_tag_action)
         )
 
         # Ensure controller knows the initial state
@@ -316,12 +326,30 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         tag = event.data.get("tag_id")
         if tag:
             self._attrs["last_disarm_tag"] = tag
+        self._attrs["last_tag_action"] = TAG_ACTION_DISARM
         await self.async_alarm_disarm()
 
     @callback
     async def _handle_auto_disarm(self, event) -> None:
         self._attrs["last_disarm_tag"] = "auto"
+        self._attrs["last_tag_action"] = "auto_disarm"
         await self.async_alarm_disarm()
+
+    @callback
+    async def _handle_tag_action(self, event) -> None:
+        action = event.data.get("action")
+        tag = event.data.get("tag_id")
+        if tag:
+            self._attrs["last_disarm_tag"] = tag
+        if action == TAG_ACTION_DISARM:
+            self._attrs["last_tag_action"] = TAG_ACTION_DISARM
+            await self.async_alarm_disarm()
+        elif action == TAG_ACTION_ARM_HOME:
+            self._attrs["last_tag_action"] = TAG_ACTION_ARM_HOME
+            await self.async_alarm_arm_home()
+        elif action == TAG_ACTION_ARM_AWAY:
+            self._attrs["last_tag_action"] = TAG_ACTION_ARM_AWAY
+            await self.async_alarm_arm_away()
 
     @callback
     def _handle_entry_delay_started(self, event) -> None:
