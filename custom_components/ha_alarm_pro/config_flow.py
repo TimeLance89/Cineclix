@@ -74,20 +74,35 @@ class HaAlarmProFlow(config_entries.ConfigFlow, domain=DOMAIN):
         mp3s = await self.hass.async_add_executor_job(_scan_mp3_paths, self.hass)
         tags = await self.hass.async_add_executor_job(_load_tags, self.hass)
 
-        schema = vol.Schema(
-            {
-                vol.Optional(CONF_INDICATOR_LIGHT): selector.selector({"entity": {"domain": "light"}}),
-                vol.Optional(CONF_SIREN_PLAYER): selector.selector({"entity": {"domain": "media_player"}}),
-                vol.Required(CONF_SIREN_VOLUME, default=DEFAULT_VOLUME): selector.selector({"number": {"min": 0, "max": 1, "step": 0.05, "mode": "slider"}}),
-                vol.Optional(CONF_MP3_FILE): selector.selector({"select": {"options": mp3s}}) if mp3s else vol.Optional(CONF_MP3_FILE, default=""),
-                vol.Required(CONF_ENTRY_SENSORS): selector.selector({"entity": {"domain": "binary_sensor", "multiple": True}}),
-                vol.Optional(CONF_NFC_TAG): selector.selector({"select": {"options": [t[0] for t in tags]}}) if tags else vol.Optional(CONF_NFC_TAG, default=""),
-                vol.Required(CONF_ALLOW_ANY_TAG, default=False): selector.selector({"boolean": {}}),
-                vol.Required(CONF_EXIT_DELAY, default=DEFAULT_EXIT_DELAY): selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}}),
-                vol.Required(CONF_ENTRY_DELAY, default=DEFAULT_ENTRY_DELAY): selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}}),
-                vol.Optional(CONF_AUTO_DISARM_TIME): selector.selector({"time": {}}),
-            }
-        )
+        schema_dict: dict[Any, Any] = {}
+        schema_dict[vol.Optional(CONF_INDICATOR_LIGHT)] = selector.selector({"entity": {"domain": "light"}})
+        schema_dict[vol.Optional(CONF_SIREN_PLAYER)] = selector.selector({"entity": {"domain": "media_player"}})
+        schema_dict[vol.Required(CONF_SIREN_VOLUME, default=DEFAULT_VOLUME)] = selector.selector({"number": {"min": 0, "max": 1, "step": 0.05, "mode": "slider"}})
+
+        mp3_key = vol.Optional(CONF_MP3_FILE)
+        mp3_selector_config: dict[str, Any] = {"text": {}}
+        if mp3s:
+            mp3_selector_config = {"select": {"options": mp3s, "custom_value": True}}
+        else:
+            mp3_key = vol.Optional(CONF_MP3_FILE, default="")
+        schema_dict[mp3_key] = selector.selector(mp3_selector_config)
+
+        schema_dict[vol.Required(CONF_ENTRY_SENSORS)] = selector.selector({"entity": {"domain": "binary_sensor", "multiple": True}})
+
+        tag_key = vol.Optional(CONF_NFC_TAG)
+        tag_selector_config: dict[str, Any] = {"text": {}}
+        if tags:
+            tag_selector_config = {"select": {"options": [t[0] for t in tags], "custom_value": True}}
+        else:
+            tag_key = vol.Optional(CONF_NFC_TAG, default="")
+        schema_dict[tag_key] = selector.selector(tag_selector_config)
+
+        schema_dict[vol.Required(CONF_ALLOW_ANY_TAG, default=False)] = selector.selector({"boolean": {}})
+        schema_dict[vol.Required(CONF_EXIT_DELAY, default=DEFAULT_EXIT_DELAY)] = selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}})
+        schema_dict[vol.Required(CONF_ENTRY_DELAY, default=DEFAULT_ENTRY_DELAY)] = selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}})
+        schema_dict[vol.Optional(CONF_AUTO_DISARM_TIME)] = selector.selector({"time": {}})
+
+        schema = vol.Schema(schema_dict)
         return self.async_show_form(step_id="user", data_schema=schema)
 
     @staticmethod
@@ -109,18 +124,31 @@ class HaAlarmProOptionsFlow(config_entries.OptionsFlow):
 
         data = {**self.entry.data, **self.entry.options}
 
-        schema = vol.Schema(
-            {
-                vol.Optional(CONF_INDICATOR_LIGHT, default=data.get(CONF_INDICATOR_LIGHT)): selector.selector({"entity": {"domain": "light"}}),
-                vol.Optional(CONF_SIREN_PLAYER, default=data.get(CONF_SIREN_PLAYER)): selector.selector({"entity": {"domain": "media_player"}}),
-                vol.Required(CONF_SIREN_VOLUME, default=data.get(CONF_SIREN_VOLUME, DEFAULT_VOLUME)): selector.selector({"number": {"min": 0, "max": 1, "step": 0.05, "mode": "slider"}}),
-                vol.Optional(CONF_MP3_FILE, default=data.get(CONF_MP3_FILE)): selector.selector({"select": {"options": mp3s}}) if mp3s else vol.Optional(CONF_MP3_FILE, default=data.get(CONF_MP3_FILE, "")),
-                vol.Optional(CONF_ENTRY_SENSORS, default=data.get(CONF_ENTRY_SENSORS)): selector.selector({"entity": {"domain": "binary_sensor", "multiple": True}}),
-                vol.Optional(CONF_NFC_TAG, default=data.get(CONF_NFC_TAG)): selector.selector({"select": {"options": [t[0] for t in tags]}}) if tags else vol.Optional(CONF_NFC_TAG, default=data.get(CONF_NFC_TAG, "")),
-                vol.Optional(CONF_ALLOW_ANY_TAG, default=data.get(CONF_ALLOW_ANY_TAG, False)): selector.selector({"boolean": {}}),
-                vol.Optional(CONF_EXIT_DELAY, default=data.get(CONF_EXIT_DELAY, DEFAULT_EXIT_DELAY)): selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}}),
-                vol.Optional(CONF_ENTRY_DELAY, default=data.get(CONF_ENTRY_DELAY, DEFAULT_ENTRY_DELAY)): selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}}),
-                vol.Optional(CONF_AUTO_DISARM_TIME, default=data.get(CONF_AUTO_DISARM_TIME)): selector.selector({"time": {}}),
-            }
-        )
+        schema_dict: dict[Any, Any] = {}
+        schema_dict[vol.Optional(CONF_INDICATOR_LIGHT, default=data.get(CONF_INDICATOR_LIGHT))] = selector.selector({"entity": {"domain": "light"}})
+        schema_dict[vol.Optional(CONF_SIREN_PLAYER, default=data.get(CONF_SIREN_PLAYER))] = selector.selector({"entity": {"domain": "media_player"}})
+        schema_dict[vol.Required(CONF_SIREN_VOLUME, default=data.get(CONF_SIREN_VOLUME, DEFAULT_VOLUME))] = selector.selector({"number": {"min": 0, "max": 1, "step": 0.05, "mode": "slider"}})
+
+        mp3_default = data.get(CONF_MP3_FILE, "")
+        mp3_key = vol.Optional(CONF_MP3_FILE, default=mp3_default)
+        mp3_selector_config = {"text": {}}
+        if mp3s:
+            mp3_selector_config = {"select": {"options": mp3s, "custom_value": True}}
+        schema_dict[mp3_key] = selector.selector(mp3_selector_config)
+
+        schema_dict[vol.Optional(CONF_ENTRY_SENSORS, default=data.get(CONF_ENTRY_SENSORS))] = selector.selector({"entity": {"domain": "binary_sensor", "multiple": True}})
+
+        tag_default = data.get(CONF_NFC_TAG, "")
+        tag_key = vol.Optional(CONF_NFC_TAG, default=tag_default)
+        tag_selector_config = {"text": {}}
+        if tags:
+            tag_selector_config = {"select": {"options": [t[0] for t in tags], "custom_value": True}}
+        schema_dict[tag_key] = selector.selector(tag_selector_config)
+
+        schema_dict[vol.Optional(CONF_ALLOW_ANY_TAG, default=data.get(CONF_ALLOW_ANY_TAG, False))] = selector.selector({"boolean": {}})
+        schema_dict[vol.Optional(CONF_EXIT_DELAY, default=data.get(CONF_EXIT_DELAY, DEFAULT_EXIT_DELAY))] = selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}})
+        schema_dict[vol.Optional(CONF_ENTRY_DELAY, default=data.get(CONF_ENTRY_DELAY, DEFAULT_ENTRY_DELAY))] = selector.selector({"number": {"min": 0, "max": 300, "mode": "box"}})
+        schema_dict[vol.Optional(CONF_AUTO_DISARM_TIME, default=data.get(CONF_AUTO_DISARM_TIME))] = selector.selector({"time": {}})
+
+        schema = vol.Schema(schema_dict)
         return self.async_show_form(step_id="init", data_schema=schema)
