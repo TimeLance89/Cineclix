@@ -65,7 +65,6 @@ def _mp3_select(hass) -> selector.SelectSelector:
                 try:
                     rel = os.path.relpath(full, root).replace("\\", "/")
                 except ValueError:
-                    # if relpath fails due to different drive on Windows, skip
                     continue
                 if label_root == "www":
                     uri = f"media-source://media_source/local/{rel}"
@@ -91,12 +90,10 @@ async def _tag_select(hass) -> selector.SelectSelector:
     """Create a dropdown with tags from Tag manager (+ custom input)."""
     options: List[selector.SelectOptionDict] = []
     try:
-        # HA API for Tag manager
         from homeassistant.components.tag import async_get_manager  # type: ignore
         manager = await async_get_manager(hass)
         tags = await manager.async_list()
         for t in tags:
-            # t can be dict or object depending on version
             tag_id = t.get("id") if isinstance(t, dict) else getattr(t, "id", None)
             tag_id = tag_id or (t.get("tag_id") if isinstance(t, dict) else getattr(t, "tag_id", None))
             name = (t.get("name") if isinstance(t, dict) else getattr(t, "name", None)) or tag_id
@@ -105,7 +102,6 @@ async def _tag_select(hass) -> selector.SelectSelector:
             label = f"{name} ({tag_id})" if name and name != tag_id else tag_id
             options.append(selector.SelectOptionDict(value=tag_id, label=label))
     except Exception:
-        # Silent fallback: empty list -> still allows custom value
         pass
 
     return selector.SelectSelector(

@@ -24,7 +24,7 @@
     "step": {
       "init": {
         "title": "HA Alarm Lite \u2013 Options",
-        "description": "Adjust settings. Tip: Use a local MP3. The dropdown lists files discovered under /media and /config/www.",
+        "description": "Adjust settings. Tip: Dropdown lists MP3 files under /media and /config/www; Tag list comes from HA Tag Manager.",
         "data": {
           "indicator_light": "Indicator light",
           "siren_player": "Siren / Media player",

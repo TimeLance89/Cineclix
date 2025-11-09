@@ -1,0 +1,75 @@
+# Lovelace view: HA Alarm Lite
+title: Alarm
+path: alarm
+icon: mdi:shield-home
+cards:
+  - type: vertical-stack
+    cards:
+      - type: markdown
+        content: |
+          # HA Alarm Lite
+          **Status & Control** – Arm with exit delay, disarm by tag or panel, trigger test.  
+          Tips: use the buttons below for quick actions.
+      - type: alarm-panel
+        entity: alarm_control_panel.ha_alarm_lite
+        states:
+          - arm_away
+          - arm_home
+      - type: grid
+        columns: 4
+        square: false
+        cards:
+          - type: button
+            name: Arm (Exit)
+            icon: mdi:shield-check
+            tap_action:
+              action: call-service
+              service: alarm_control_panel.alarm_arm_away
+              target:
+                entity_id: alarm_control_panel.ha_alarm_lite
+          - type: button
+            name: Disarm
+            icon: mdi:shield-off
+            tap_action:
+              action: call-service
+              service: alarm_control_panel.alarm_disarm
+              target:
+                entity_id: alarm_control_panel.ha_alarm_lite
+          - type: button
+            name: Trigger test
+            icon: mdi:alarm-bell
+            tap_action:
+              action: call-service
+              service: alarm_control_panel.alarm_trigger
+              target:
+                entity_id: alarm_control_panel.ha_alarm_lite
+          - type: button
+            name: Ack alarm
+            icon: mdi:bell-cancel
+            tap_action:
+              action: call-service
+              service: ha_alarm_lite.ack_alarm
+      - type: entities
+        title: Sensors & Devices
+        entities:
+          - entity: alarm_control_panel.ha_alarm_lite
+            name: Alarm
+          - entity: '[[indicator_light]]'
+            name: Indicator light (set in Options)
+          - entity: '[[siren_player]]'
+            name: Siren / Media player (set in Options)
+        footer:
+          type: buttons
+          entities:
+            - entity: script.none
+              name: Test Siren
+              icon: mdi:volume-high
+              tap_action:
+                action: call-service
+                service: ha_alarm_lite.test_siren
+            - entity: script.none
+              name: Test Light
+              icon: mdi:lightbulb-on
+              tap_action:
+                action: call-service
+                service: ha_alarm_lite.test_indicator

@@ -1,31 +1,58 @@
-# HA Alarm Lite
+# HA Alarm Lite (v0.5.0)
 
-HA Alarm Lite is a small Home Assistant integration that turns a few sensors and an NFC tag into a reliable alarm system.
-It arms with an exit delay, blinks a light for feedback, plays a local MP3 on a media player when triggered, and disarms by NFC or service call.
-It restores state on restart, ships a simple dashboard, and includes diagnostics and a health check.
+Small custom integration for Home Assistant that gives you a simple, robust alarm system with NFC disarm, exit/entry delays, light feedback and a local MP3 siren.
 
-## What it does
-- Arm (with exit delay) / Entry delay / Trigger
-- Disarm by NFC tag or service
-- Light feedback (blink patterns)
-- Play a local MP3 on any `media_player`
+## Features
+- Arm (exit delay), Entry delay, Trigger
+- Disarm by NFC tag or from the panel
+- Indicator light blink patterns (arming/armed/alarm)
+- Play local MP3 on your media player
+- Auto disarm at a daily time
 - Health check + diagnostics
-- Ready-made dashboard
+- Ready-made dashboard view
 
-## Setup (step by step)
-1. Install via HACS (custom repository) and restart Home Assistant.
-2. Add the integration: **Settings → Devices & Services → Add Integration → HA Alarm Lite**.
-3. Select:
-   - **Indicator light** – lamp that blinks for feedback
-   - **Siren / Media player** – where the MP3 is played
-   - **MP3 file** – pick a local `.mp3` from `/media` or `/config/www`
-   - **Entry sensors** – door/vibration/motion binary sensors
-   - **NFC tag** – choose from your registered tags
-   - **Exit delay / Entry delay** – seconds
-   - **Auto disarm time** – optional daily time to disarm
-4. Open the included dashboard “Alarm” and run the self-tests: *Test Indicator*, *Test Siren*, *Arm (Exit Delay)*, *Disarm*, *Trigger*.
+## Install (HACS custom repository)
+1. Make this repo public and add it to HACS → Custom repositories (type **Integration**).
+2. Install **HA Alarm Lite** and restart Home Assistant.
+3. Go to **Settings → Devices & Services → Add Integration → HA Alarm Lite** and complete the setup.
 
-## Notes
-- The MP3 selector scans `/media` and `/config/www` for `.mp3` files and fills a dropdown.
-  You can still paste a custom `media-source://…` URI.
-- The Tag selector lists all tags known to Home Assistant. You can still paste a raw tag id.
+### Setup tips
+- **MP3 file**: picker lists files discovered under `/media` and `/config/www` (converted to `media-source://` automatically).
+- **NFC tag**: dropdown shows tags from the HA Tag Manager (scan a tag once to register it).
+
+## Dashboard
+A prebuilt Lovelace view is included:
+
+**File:** `custom_components/ha_alarm_lite/dashboard/ha_alarm_lite_dashboard.yaml`
+
+Add to your dashboard:
+1. Open your Dashboard → **Edit** → **Raw configuration editor**.
+2. Add under `views:`:
+   ```yaml
+   - !include /config/custom_components/ha_alarm_lite/dashboard/ha_alarm_lite_dashboard.yaml
+   ```
+3. Save.  
+4. Replace placeholders in the *Sensors & Devices* card (or just edit via UI):
+   - Replace `[[indicator_light]]` with your indicator light entity id.
+   - Replace `[[siren_player]]` with your media_player entity id.
+
+## Services
+- `ha_alarm_lite.health_check`
+- `ha_alarm_lite.test_indicator`
+- `ha_alarm_lite.test_siren`
+- `ha_alarm_lite.ack_alarm`
+
+## Entity
+- `alarm_control_panel.ha_alarm_lite`
+
+MIT licensed.
+
+
+### Panel-Style View
+If you prefer a compact panel like in the examples, include:
+```yaml
+- !include /config/custom_components/ha_alarm_lite/dashboard/ha_alarm_lite_panel.yaml
+```
+Then replace the placeholders:
+- `[[sensor_1]]`, `[[sensor_2]]` → your entry sensors
+- `[[indicator_light]]` → your indicator light

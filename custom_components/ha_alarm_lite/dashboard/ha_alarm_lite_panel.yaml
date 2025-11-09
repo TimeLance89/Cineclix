@@ -1,0 +1,74 @@
+# Lovelace view: HA Alarm Lite – Panel
+title: Alarm
+path: alarm-lite
+icon: mdi:shield-lock
+cards:
+  - type: vertical-stack
+    cards:
+      - type: conditional
+        conditions:
+          - entity: alarm_control_panel.ha_alarm_lite
+            state: triggered
+        card:
+          type: markdown
+          content: |
+            ## 🔴 ALARM AUSGELÖST
+            Quittiere den Alarm über **„Alarm quittieren“** oder entschärfe per NFC.
+      - type: entities
+        title: Status
+        show_header_toggle: false
+        state_color: true
+        entities:
+          - entity: alarm_control_panel.ha_alarm_lite
+            name: Alarm
+      - type: horizontal-stack
+        cards:
+          - type: button
+            name: Scharf (Exit)
+            icon: mdi:shield-check
+            tap_action:
+              action: call-service
+              service: alarm_control_panel.alarm_arm_away
+              target:
+                entity_id: alarm_control_panel.ha_alarm_lite
+          - type: button
+            name: Unscharf
+            icon: mdi:shield-off
+            tap_action:
+              action: call-service
+              service: alarm_control_panel.alarm_disarm
+              target:
+                entity_id: alarm_control_panel.ha_alarm_lite
+          - type: button
+            name: Alarm testen
+            icon: mdi:alarm-light
+            tap_action:
+              action: call-service
+              service: alarm_control_panel.alarm_trigger
+              target:
+                entity_id: alarm_control_panel.ha_alarm_lite
+          - type: button
+            name: Alarm quittieren
+            icon: mdi:bell-cancel
+            tap_action:
+              action: call-service
+              service: ha_alarm_lite.ack_alarm
+      - type: entities
+        title: Sensoren & Licht
+        show_header_toggle: false
+        state_color: true
+        entities:
+          - entity: '[[sensor_1]]'
+            name: Eingangssensor 1
+          - entity: '[[sensor_2]]'
+            name: Eingangssensor 2
+          - type: divider
+          - entity: '[[indicator_light]]'
+            name: Indikator-Licht
+      - type: logbook
+        hours_to_show: 6
+        entities:
+          - alarm_control_panel.ha_alarm_lite
+          - '[[sensor_1]]'
+          - '[[sensor_2]]'
+          - '[[indicator_light]]'
