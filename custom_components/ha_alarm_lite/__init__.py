@@ -11,6 +11,7 @@ from homeassistant.helpers.event import async_call_later, async_track_time_chang
 from homeassistant.helpers.typing import ConfigType
 
 from .const import (
+from homeassistant.helpers.event import async_track_state_change_event, async_track_time_change, async_call_later
     DOMAIN,
     DATA_CTRL,
     STORAGE_KEY,
@@ -140,7 +141,7 @@ class AlarmController:
         if self.entry_sensors:
             self._unsubs = []
             for ent in self.entry_sensors:
-                unsub = self.hass.helpers.event.async_track_state_change_event(
+                unsub = async_track_state_change_event(
                     ent, self._sensor_changed
                 )
                 self._unsubs.append(unsub)
