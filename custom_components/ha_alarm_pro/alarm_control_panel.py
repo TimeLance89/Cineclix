@@ -238,10 +238,22 @@ class HaAlarmProEntity(AlarmControlPanelEntity, RestoreEntity):
         """Return (media_content_id, media_content_type)."""
         if not mp3:
             return "", ""
+        
+        # Media-source URLs
         if mp3.startswith("media-source://"):
             return mp3, "music"
-        if mp3.startswith("/local/") or mp3.startswith("/media/"):
+        
+        # Local paths - convert to media-source if needed for better compatibility
+        if mp3.startswith("/media/"):
+            # Convert /media/path to media-source URL for better compatibility
+            media_path = mp3[7:]  # Remove /media/ prefix
+            return f"media-source://media_source/local/{media_path}", "music"
+        
+        if mp3.startswith("/local/"):
+            # /local/ paths work directly
             return mp3, "music"
+        
+        # Fallback for any other format
         return mp3, "music"
 
     def _stop_delay_audio(self) -> None:

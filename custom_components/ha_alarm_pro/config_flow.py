@@ -39,25 +39,44 @@ from .const import (
 
 
 def _scan_mp3_paths(hass: HomeAssistant) -> list[str]:
+    """Scan for audio files in media and www directories, including subdirectories."""
+    import logging
+    _LOGGER = logging.getLogger(__name__)
+    
     res: list[str] = []
     media_path = hass.config.path("media")
     www_path = hass.config.path("www")
+    
     # Supported audio formats
     audio_extensions = (".mp3", ".wav", ".ogg", ".flac", ".m4a", ".aac")
+    
+    _LOGGER.debug(f"Scanning for audio files in {media_path} and {www_path}")
+    
     try:
         for base, prefix in [(media_path, "/media/"), (www_path, "/local/")]:
-            if os.path.isdir(base):
-                for root, _, files in os.walk(base):
-                    for filename in files:
-                        if filename.lower().endswith(audio_extensions):
+            if not os.path.isdir(base):
+                _LOGGER.debug(f"Directory does not exist: {base}")
+                continue
+                
+            _LOGGER.debug(f"Scanning directory: {base}")
+            for root, dirs, files in os.walk(base):
+                for filename in files:
+                    if filename.lower().endswith(audio_extensions):
+                        try:
                             full_path = os.path.join(root, filename)
                             rel_path = (
                                 prefix
                                 + os.path.relpath(full_path, base).replace("\\", "/")
                             )
                             res.append(rel_path)
-    except Exception:
-        pass
+                            _LOGGER.debug(f"Found audio file: {rel_path}")
+                        except Exception as e:
+                            _LOGGER.warning(f"Error processing file {filename}: {e}")
+                            continue
+    except Exception as e:
+        _LOGGER.error(f"Error scanning audio files: {e}")
+    
+    _LOGGER.info(f"Found {len(res)} audio files")
     return sorted(res)
 
 
@@ -116,11 +135,19 @@ def _build_schema(
         {"number": {"min": 0, "max": 1, "step": 0.05, "mode": "slider"}}
     )
 
-    mp3_options = [
-        {"label": "Kein Alarmton / No alarm sound", "value": ""}
-    ] + [
-        {"label": f"{option.split('/')[-1]} ({option})", "value": option} for option in mp3s
-    ]
+    # Build options list with better formatting
+    mp3_options = [{"label": "Kein Alarmton / No alarm sound", "value": ""}]
+    
+    for option in mp3s:
+        filename = option.split('/')[-1]
+        # Show folder structure for files in subdirectories
+        if option.count('/') > 2:  # Has subdirectories
+            parts = option.split('/')
+            folder_path = '/'.join(parts[2:-1])  # Get path after /media/ or /local/
+            label = f"{filename} (📁 {folder_path})"
+        else:
+            label = filename
+        mp3_options.append({"label": label, "value": option})
 
     def _mp3_selector():
         return selector.selector(
