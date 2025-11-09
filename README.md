@@ -18,7 +18,7 @@ It restores state on restart, ships a simple dashboard, and includes diagnostics
 3. Select:
    - **Indicator light** – lamp that blinks for feedback
    - **Siren / Media player** – where the MP3 is played
-   - **MP3 file** – pick a local `.mp3` (file picker)
+   - **MP3 file** – pick a local `.mp3` from `/media` or `/config/www`
    - **Entry sensors** – door/vibration/motion binary sensors
    - **NFC tag** – choose from your registered tags
    - **Exit delay / Entry delay** – seconds
@@ -26,5 +26,6 @@ It restores state on restart, ships a simple dashboard, and includes diagnostics
 4. Open the included dashboard “Alarm” and run the self-tests: *Test Indicator*, *Test Siren*, *Arm (Exit Delay)*, *Disarm*, *Trigger*.
 
 ## Notes
-- The MP3 picker accepts files from `/media` or `/config/www` and converts them automatically to `media-source://`.
-- The NFC selector lists all tags known to Home Assistant.
+- The MP3 selector scans `/media` and `/config/www` for `.mp3` files and fills a dropdown.
+  You can still paste a custom `media-source://…` URI.
+- The Tag selector lists all tags known to Home Assistant. You can still paste a raw tag id.

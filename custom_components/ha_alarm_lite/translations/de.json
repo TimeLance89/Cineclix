@@ -24,7 +24,7 @@
     "step": {
       "init": {
         "title": "HA Alarm Lite \u2013 Optionen",
-        "description": "Einstellungen anpassen. Tipp: Lokale MP3 w\u00e4hlen.",
+        "description": "Einstellungen anpassen. Hinweis: Dropdown listet Dateien unter /media und /config/www.",
         "data": {
           "indicator_light": "Indikator-Licht",
           "siren_player": "Sirene / Media Player",
