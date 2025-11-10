@@ -41,6 +41,13 @@ und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 - Media Player muss `media_player.play_media` Service unterstützen
 - Benachrichtigungen erfordern konfigurierte Notify-Services
 
+## [1.0.3] - 2025-11-10
+
+### Behoben
+- AttributeError bei `async_listen_state` behoben
+- Verwendung von `async_track_state_change_event` für Sensor State Tracking
+- Event-Handler Signatur für State Change Events korrigiert
+
 ## [1.0.2] - 2025-11-10
 
 ### Hinzugefügt

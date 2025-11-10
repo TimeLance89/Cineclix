@@ -11,7 +11,11 @@ from homeassistant.components.alarm_control_panel import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.event import async_track_time_interval, async_track_point_in_time
+from homeassistant.helpers.event import (
+    async_track_time_interval,
+    async_track_point_in_time,
+    async_track_state_change_event,
+)
 from homeassistant.util import dt as dt_util
 from homeassistant.const import CONF_NAME
 from homeassistant.components.alarm_control_panel.const import (
@@ -103,7 +107,9 @@ class NFCAlarmPanel(AlarmControlPanelEntity):
         
         # Listen for trigger sensor state changes
         for sensor in self._trigger_sensors:
-            self.hass.bus.async_listen_state(sensor, self._handle_sensor_triggered)
+            async_track_state_change_event(
+                self.hass, sensor, self._handle_sensor_triggered
+            )
         
         # Setup auto disarm if enabled
         if self._enable_auto_disarm and self._auto_disarm_time:
@@ -266,15 +272,18 @@ class NFCAlarmPanel(AlarmControlPanelEntity):
         )
 
     @callback
-    async def _handle_sensor_triggered(self, entity_id, old_state, new_state):
+    async def _handle_sensor_triggered(self, event):
         """Handle trigger sensor state change."""
+        new_state = event.data.get("new_state")
+        old_state = event.data.get("old_state")
+        
         if new_state is None or new_state.state != "on":
             return
         
         if self._state != AlarmControlPanelState.ARMED_AWAY:
             return
         
-        _LOGGER.info(f"Trigger sensor activated: {entity_id}")
+        _LOGGER.info(f"Trigger sensor activated: {new_state.entity_id}")
         
         # Start entry delay
         self._state = AlarmControlPanelState.PENDING
