@@ -1,0 +1,63 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "NFC Alarmsystem - Grundkonfiguration",
+        "description": "Konfigurieren Sie die Basis-Einstellungen für Ihr Alarmsystem.",
+        "data": {
+          "name": "Name des Alarmsystems",
+          "indicator_lights": "Indikator-Lichter (mehrere möglich)",
+          "trigger_sensors": "Auslöser-Sensoren (mehrere möglich)",
+          "exit_delay": "Austrittsverzögerung (Sekunden)",
+          "entry_delay": "Eintrittsverzögerung (Sekunden)"
+        }
+      },
+      "nfc_tags": {
+        "title": "NFC-Tag Konfiguration",
+        "description": "Konfigurieren Sie die NFC-Tags zum Scharf-/Unscharfschalten.",
+        "data": {
+          "use_single_tag": "Ein Tag für Scharf und Unscharf verwenden",
+          "arm_tag": "NFC-Tag ID zum Scharfschalten",
+          "disarm_tag": "NFC-Tag ID zum Unscharfschalten (nur wenn separate Tags)"
+        }
+      },
+      "media": {
+        "title": "Medien & Sirene",
+        "description": "Konfigurieren Sie optionale Sirenen-Ausgabe.",
+        "data": {
+          "enable_siren": "Sirene aktivieren",
+          "media_player": "Media Player für Sirene",
+          "siren_file": "Pfad zur Sirenen-Datei (z.B. media-source://media_source/local/siren.mp3)"
+        }
+      },
+      "notifications": {
+        "title": "Benachrichtigungen & Automatisierung",
+        "description": "Konfigurieren Sie optionale Benachrichtigungen und automatische Unscharfschaltung.",
+        "data": {
+          "enable_notifications": "Benachrichtigungen aktivieren",
+          "notify_service": "Benachrichtigungs-Service (z.B. notify.mobile_app_device)",
+          "enable_auto_disarm": "Automatische Unscharfschaltung aktivieren",
+          "auto_disarm_time": "Zeit für automatische Unscharfschaltung"
+        }
+      }
+    },
+    "error": {
+      "unknown": "Ein unbekannter Fehler ist aufgetreten"
+    },
+    "abort": {
+      "already_configured": "Dieses Gerät ist bereits konfiguriert"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "NFC Alarmsystem - Optionen",
+        "description": "Passen Sie die Verzögerungszeiten an.",
+        "data": {
+          "exit_delay": "Austrittsverzögerung (Sekunden)",
+          "entry_delay": "Eintrittsverzögerung (Sekunden)"
+        }
+      }
+    }
+  }
+}
