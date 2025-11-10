@@ -1,0 +1,162 @@
+# NFC Alarm System - Dashboard Konfiguration
+# Kopiere diesen Code in dein Dashboard (YAML-Modus)
+
+type: vertical-stack
+cards:
+  # Alarm-Warnung (nur bei Auslösung sichtbar)
+  - type: conditional
+    conditions:
+      - entity: alarm_control_panel.nfc_alarmsystem
+        state: triggered
+    card:
+      type: markdown
+      content: |
+        ## 🔴 ALARM AUSGELÖST
+        Quittiere den Alarm mit **„Alarm quittieren"** oder per NFC-Unscharf.
+      card_mod:
+        style: |
+          ha-card {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+            text-align: center;
+            animation: pulse 2s infinite;
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+          }
+
+  # Status-Sektion
+  - type: entities
+    title: Status
+    show_header_toggle: false
+    state_color: true
+    entities:
+      - entity: alarm_control_panel.nfc_alarmsystem
+        name: Alarm-Status
+        secondary_info: last-changed
+      - type: attribute
+        entity: alarm_control_panel.nfc_alarmsystem
+        attribute: exit_delay
+        name: Austrittsverzögerung
+        suffix: s
+      - type: attribute
+        entity: alarm_control_panel.nfc_alarmsystem
+        attribute: entry_delay
+        name: Eintrittsverzögerung
+        suffix: s
+
+  # Buttons
+  - type: horizontal-stack
+    cards:
+      - type: button
+        name: Scharf (sofort)
+        icon: mdi:shield-check
+        icon_height: 40px
+        tap_action:
+          action: call-service
+          service: alarm_control_panel.alarm_arm_away
+          target:
+            entity_id: alarm_control_panel.nfc_alarmsystem
+        hold_action:
+          action: none
+        entity: alarm_control_panel.nfc_alarmsystem
+        show_state: false
+        card_mod:
+          style: |
+            ha-card {
+              background: #2196f3;
+              color: white;
+            }
+      - type: button
+        name: Unscharf
+        icon: mdi:shield-off
+        icon_height: 40px
+        tap_action:
+          action: call-service
+          service: alarm_control_panel.alarm_disarm
+          target:
+            entity_id: alarm_control_panel.nfc_alarmsystem
+        hold_action:
+          action: none
+        entity: alarm_control_panel.nfc_alarmsystem
+        show_state: false
+        card_mod:
+          style: |
+            ha-card {
+              background: #4caf50;
+              color: white;
+            }
+
+  - type: horizontal-stack
+    cards:
+      - type: button
+        name: Alarm testen
+        icon: mdi:alarm-light
+        icon_height: 40px
+        tap_action:
+          action: call-service
+          service: alarm_control_panel.alarm_trigger
+          target:
+            entity_id: alarm_control_panel.nfc_alarmsystem
+        hold_action:
+          action: none
+        show_state: false
+        card_mod:
+          style: |
+            ha-card {
+              background: #ff9800;
+              color: white;
+            }
+      - type: button
+        name: Alarm quittieren
+        icon: mdi:bell-cancel
+        icon_height: 40px
+        tap_action:
+          action: call-service
+          service: alarm_control_panel.alarm_disarm
+          target:
+            entity_id: alarm_control_panel.nfc_alarmsystem
+        hold_action:
+          action: none
+        show_state: false
+        card_mod:
+          style: |
+            ha-card {
+              background: #9c27b0;
+              color: white;
+            }
+
+  # Sensoren & Licht
+  # WICHTIG: Ersetze die Entity-IDs mit deinen tatsächlichen Sensoren und Lichtern
+  - type: entities
+    title: Sensoren & Licht
+    show_header_toggle: false
+    state_color: true
+    entities:
+      # Beispiel-Sensoren - ANPASSEN!
+      # Ersetze diese mit deinen konfigurierten Trigger-Sensoren
+      - entity: binary_sensor.aqara_vibration_sensor_t1_belegung
+        name: Tür/Vibration 1
+      - entity: binary_sensor.aqara_vibration_sensor_t1_belegung_2
+        name: Tür/Vibration 2
+      # Weitere Sensoren hier hinzufügen...
+      
+      - type: divider
+      
+      # Beispiel-Lichter - ANPASSEN!
+      # Ersetze diese mit deinen konfigurierten Indikator-Lichtern
+      - entity: light.hue_color_lamp_3
+        name: Flur-Indikator
+      # Weitere Lichter hier hinzufügen...
+
+  # Logbook/Verlauf
+  - type: logbook
+    title: Verlauf (letzte 6 Stunden)
+    hours_to_show: 6
+    entities:
+      - alarm_control_panel.nfc_alarmsystem
+      # Füge hier deine Trigger-Sensoren hinzu
+      - binary_sensor.aqara_vibration_sensor_t1_belegung
+      - binary_sensor.aqara_vibration_sensor_t1_belegung_2
+      # Weitere Sensoren hier hinzufügen...

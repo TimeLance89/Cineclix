@@ -1,7 +1,7 @@
 {
   "domain": "nfc_alarm_system",
   "name": "NFC Alarm System",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "documentation": "https://github.com/yourusername/nfc_alarm_system",
   "issue_tracker": "https://github.com/yourusername/nfc_alarm_system/issues",
   "requirements": [],

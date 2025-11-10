@@ -41,6 +41,23 @@ und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 - Media Player muss `media_player.play_media` Service unterstützen
 - Benachrichtigungen erfordern konfigurierte Notify-Services
 
+## [1.2.0] - 2025-11-10
+
+### Hinzugefügt
+- **YAML Dashboard-Konfiguration** (funktioniert ohne Custom Card)
+  - `dashboard_simple.yaml` - Einfache Version (empfohlen)
+  - `dashboard_example.yaml` - Erweiterte Version mit card-mod
+  - Vollständige Dokumentation in DASHBOARD_YAML.md
+  - Alarm-Warnung (conditional)
+  - Status-Sektion mit Attributen
+  - 4 Buttons (Scharf, Unscharf, Test, Quittieren)
+  - Sensoren & Lichter Liste
+  - Logbook/Verlauf (6 Stunden)
+
+### Geändert
+- README.md aktualisiert mit beiden Dashboard-Optionen
+- YAML-Lösung jetzt als empfohlene Option
+
 ## [1.1.0] - 2025-11-10
 
 ### Hinzugefügt

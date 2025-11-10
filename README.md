@@ -20,17 +20,39 @@ Eine vollständige HACS-Integration für ein NFC-basiertes Alarmsystem in Home A
 - 🔵 **Blau**: Erfolgreich scharfgeschaltet
 - 🔴 **Rot**: Alarm ausgelöst (pulsierend)
 
-## Dashboard-Karte
+## Dashboard
 
-Diese Integration enthält eine **benutzerdefinierte Dashboard-Karte** mit professionellem Design:
+Diese Integration bietet **zwei Möglichkeiten** für das Dashboard:
+
+### Option 1: YAML-Konfiguration (Empfohlen)
+
+**Funktioniert sofort ohne zusätzliche Installation!**
+
+- ✅ Keine Custom Card nötig
+- ✅ Keine Ressourcen-Registrierung
+- ✅ Standard Home Assistant Komponenten
+- 📊 Status-Anzeige (Scharf/Ausgelöst)
+- 🏛️ 4 Buttons (Scharf, Unscharf, Test, Quittieren)
+- 📝 Sensoren & Lichter Liste
+- 📈 Logbook/Verlauf (6 Stunden)
+
+**Siehe [DASHBOARD_YAML.md](DASHBOARD_YAML.md) für die vollständige Anleitung.**
+
+Fertige YAML-Dateien:
+- `dashboard_simple.yaml` - Einfache Version (empfohlen)
+- `dashboard_example.yaml` - Erweiterte Version (benötigt card-mod)
+
+### Option 2: Custom Card (Erweitert)
+
+**Benötigt Ressourcen-Registrierung und Browser-Cache-Leeren.**
 
 - 🎨 Modernes Overlay-Design mit Statusanzeigen
 - 📊 Verlauf der letzten 10 Ereignisse
-- 🎛️ Interaktive Buttons (Scharfschalten, Unscharfschalten, Test)
-- 📱 Responsive Design für alle Geräte
+- 🎛️ Interaktive Buttons
+- 📱 Responsive Design
 - 🌙 Dark Mode Unterstützung
 
-**Siehe [DASHBOARD_KARTE.md](DASHBOARD_KARTE.md) für die vollständige Anleitung zur Dashboard-Karte.**
+**Siehe [DASHBOARD_KARTE.md](DASHBOARD_KARTE.md) für die Custom Card Anleitung.**
 
 ## Installation
 
