@@ -1,0 +1,6 @@
+# Services für NFC Alarm System
+# Diese Datei definiert die verfügbaren Services für die Integration
+
+# Hinweis: Die Standard Alarm Control Panel Services werden automatisch bereitgestellt:
+# - alarm_control_panel.alarm_arm_away
+# - alarm_control_panel.alarm_disarm
