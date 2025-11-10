@@ -27,7 +27,8 @@
         "data": {
           "enable_siren": "Sirene aktivieren",
           "media_player": "Media Player für Sirene",
-          "siren_file": "Pfad zur Sirenen-Datei (z.B. media-source://media_source/local/siren.mp3)"
+          "siren_file": "Pfad zur Sirenen-Datei (z.B. media-source://media_source/local/siren.mp3)",
+          "siren_volume": "Sirenen-Lautstärke (0.0 - 1.0)"
         }
       },
       "notifications": {

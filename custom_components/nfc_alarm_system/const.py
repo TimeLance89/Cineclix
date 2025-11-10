@@ -12,6 +12,7 @@ CONF_DISARM_TAG = "disarm_tag"
 CONF_MEDIA_PLAYER = "media_player"
 CONF_SIREN_FILE = "siren_file"
 CONF_ENABLE_SIREN = "enable_siren"
+CONF_SIREN_VOLUME = "siren_volume"
 CONF_EXIT_DELAY = "exit_delay"
 CONF_ENTRY_DELAY = "entry_delay"
 CONF_AUTO_DISARM_TIME = "auto_disarm_time"
@@ -23,6 +24,7 @@ CONF_ENABLE_NOTIFICATIONS = "enable_notifications"
 DEFAULT_EXIT_DELAY = 120
 DEFAULT_ENTRY_DELAY = 30
 DEFAULT_AUTO_DISARM_TIME = "06:00:00"
+DEFAULT_SIREN_VOLUME = 0.8
 
 # Color codes for indicator lights
 COLOR_GREEN = "green"

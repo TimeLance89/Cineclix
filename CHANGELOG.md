@@ -41,6 +41,23 @@ und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 - Media Player muss `media_player.play_media` Service unterstützen
 - Benachrichtigungen erfordern konfigurierte Notify-Services
 
+## [1.1.0] - 2025-11-10
+
+### Hinzugefügt
+- **Lautstärke-Einstellung** für Sirene im Config Flow (Schieberegler 0.0 - 1.0)
+- **Erweiterte Dashboard-Karte** im Stil des Benutzers:
+  - Alarm-Warnung bei Auslösung (rotes Banner)
+  - Status-Anzeige (Scharf/Ausgelöst)
+  - 4 Buttons (Scharf, Unscharf, Test, Quittieren)
+  - Sensor-Liste mit Echtzeit-Status
+  - Indikator-Lichter Anzeige
+  - Logbook/Verlauf der letzten 6 Stunden
+- Entity Attributes für Dashboard-Karte (trigger_sensors, indicator_lights, delays, volume)
+
+### Geändert
+- Dashboard-Karte komplett neu gestaltet
+- Sirenen-Lautstärke jetzt konfigurierbar (Standard: 0.8)
+
 ## [1.0.3] - 2025-11-10
 
 ### Behoben

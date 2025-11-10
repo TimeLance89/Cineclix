@@ -33,12 +33,14 @@ from .const import (
     CONF_MEDIA_PLAYER,
     CONF_SIREN_FILE,
     CONF_ENABLE_SIREN,
+    CONF_SIREN_VOLUME,
     CONF_EXIT_DELAY,
     CONF_ENTRY_DELAY,
     CONF_AUTO_DISARM_TIME,
     CONF_ENABLE_AUTO_DISARM,
     CONF_NOTIFY_SERVICE,
     CONF_ENABLE_NOTIFICATIONS,
+    DEFAULT_SIREN_VOLUME,
     COLOR_GREEN,
     COLOR_YELLOW,
     COLOR_ORANGE,
@@ -88,6 +90,7 @@ class NFCAlarmPanel(AlarmControlPanelEntity):
         self._media_player = config.get(CONF_MEDIA_PLAYER)
         self._siren_file = config.get(CONF_SIREN_FILE, "")
         self._enable_siren = config.get(CONF_ENABLE_SIREN, False)
+        self._siren_volume = config.get(CONF_SIREN_VOLUME, DEFAULT_SIREN_VOLUME)
         self._exit_delay = config.get(CONF_EXIT_DELAY, 120)
         self._entry_delay = config.get(CONF_ENTRY_DELAY, 30)
         self._auto_disarm_time = config.get(CONF_AUTO_DISARM_TIME)
@@ -329,13 +332,13 @@ class NFCAlarmPanel(AlarmControlPanelEntity):
     async def _play_siren(self):
         """Play the siren sound."""
         try:
-            # Set volume to maximum
+            # Set volume to configured level
             await self.hass.services.async_call(
                 "media_player",
                 "volume_set",
                 {
                     "entity_id": self._media_player,
-                    "volume_level": 1.0
+                    "volume_level": self._siren_volume
                 }
             )
             
@@ -493,6 +496,17 @@ class NFCAlarmPanel(AlarmControlPanelEntity):
     def state(self):
         """Return the state of the alarm."""
         return self._state
+
+    @property
+    def extra_state_attributes(self):
+        """Return entity specific state attributes."""
+        return {
+            "trigger_sensors": self._trigger_sensors,
+            "indicator_lights": self._indicator_lights,
+            "exit_delay": self._exit_delay,
+            "entry_delay": self._entry_delay,
+            "siren_volume": self._siren_volume,
+        }
 
     @property
     def device_info(self):

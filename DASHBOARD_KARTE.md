@@ -5,29 +5,36 @@ Die NFC Alarm System Integration enthält eine **benutzerdefinierte Dashboard-Ka
 ## Features der Dashboard-Karte
 
 ### 🎨 Visuelles Design
-- **Modernes Overlay-Design** mit abgerundeten Ecken
-- **Farbcodierte Statusanzeigen** (Grün, Gelb, Orange, Blau, Rot)
-- **Animierte Statusübergänge** und Puls-Effekt bei Alarm
+- **Modernes Card-Design** im Home Assistant Stil
+- **Alarm-Warnung** bei Auslösung (rotes Banner mit Puls-Animation)
+- **Farbcodierte Statusanzeigen** für Scharf/Ausgelöst
 - **Responsive Design** für Desktop, Tablet und Mobile
 - **Dark Mode Unterstützung** (automatisch)
 
-### 📊 Statusanzeigen
-- **Aktueller Zustand** mit Icon und Badge
-- **Zeit seit letzter Änderung**
-- **Austrittsverzögerung** (Exit Delay)
-- **Eintrittsverzögerung** (Entry Delay)
+##### 📊 Statusanzeigen
+- **Scharf-Status** mit Icon (Schild/Häkchen)
+- **Ausgelöst-Status** mit Icon (Sirene/Häkchen)
+- **Ja/Nein Anzeige** für jeden Status
 
-### 🎛️ Interaktive Buttons
-- **Scharfschalten** (nur wenn unscharf)
-- **Unscharfschalten** (nur wenn scharf/alarm)
-- **Test-Button** (Testnachricht senden)
+### 🏛️ Interaktive Buttons (4 Buttons)
+- **Scharf (sofort)** - Alarm sofort scharfschalten (nur wenn unscharf)
+- **Unscharf** - Alarm deaktivieren (nur wenn scharf/ausgelöst)
+- **Alarm testen** - Testalarm auslösen (immer verfügbar)
+- **Alarm quittieren** - Alarm bestätigen und deaktivieren (nur wenn ausgelöst)
 - Buttons werden automatisch aktiviert/deaktiviert je nach Status
 
-### 📈 Verlauf
-- **Letzte 10 Ereignisse** mit Zeitstempel
-- **Farbcodierte Einträge** je nach Zustand
-- **Scrollbare Liste** bei vielen Einträgen
-- **Relative Zeitangaben** (vor 5 Min., vor 2 Std., etc.)
+### 📝 Sensoren & Licht
+- **Echtzeit-Anzeige** aller konfigurierten Sensoren
+- **Status-Icons** (Rot = Aktiv, Grün = Inaktiv)
+- **Indikator-Lichter** mit An/Aus Status
+- **Automatische Aktualisierung** bei Zustandsänderungen
+
+### 📈 Logbook/Verlauf
+- **Letzte 6 Stunden** Ereignisse
+- **Alle Entities** (Alarm + Sensoren)
+- **Zeitstempel** mit relativer Anzeige
+- **Scrollbare Liste** (max. 20 Einträge)
+- **Automatisches Laden** aus Home Assistant History
 
 ## Installation der Dashboard-Karte
 

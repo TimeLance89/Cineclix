@@ -17,6 +17,7 @@ from .const import (
     CONF_MEDIA_PLAYER,
     CONF_SIREN_FILE,
     CONF_ENABLE_SIREN,
+    CONF_SIREN_VOLUME,
     CONF_EXIT_DELAY,
     CONF_ENTRY_DELAY,
     CONF_AUTO_DISARM_TIME,
@@ -26,6 +27,7 @@ from .const import (
     DEFAULT_EXIT_DELAY,
     DEFAULT_ENTRY_DELAY,
     DEFAULT_AUTO_DISARM_TIME,
+    DEFAULT_SIREN_VOLUME,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -118,6 +120,14 @@ class NFCAlarmSystemConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             vol.Optional(CONF_SIREN_FILE, default=""): selector.TextSelector(
                 selector.TextSelectorConfig(
                     multiline=False
+                )
+            ),
+            vol.Optional(CONF_SIREN_VOLUME, default=DEFAULT_SIREN_VOLUME): selector.NumberSelector(
+                selector.NumberSelectorConfig(
+                    min=0.0,
+                    max=1.0,
+                    step=0.05,
+                    mode=selector.NumberSelectorMode.SLIDER
                 )
             ),
         })
