@@ -21,7 +21,7 @@ Diese Anleitung führt Sie Schritt für Schritt durch die Installation und Einri
 3. Klicken Sie auf **Integrationen**
 4. Klicken Sie auf die **drei Punkte** (⋮) oben rechts
 5. Wählen Sie **Benutzerdefinierte Repositories**
-6. Geben Sie die Repository-URL ein: `https://github.com/yourusername/nfc_alarm_system`
+6. Geben Sie die Repository-URL ein: `https://github.com/TimeLance89/Cineclix`
 7. Wählen Sie als Kategorie: **Integration**
 8. Klicken Sie auf **Hinzufügen**
 
