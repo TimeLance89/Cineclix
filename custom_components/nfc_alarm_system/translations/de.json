@@ -2,61 +2,146 @@
   "config": {
     "step": {
       "user": {
-        "title": "NFC Alarmsystem - Grundkonfiguration",
-        "description": "Konfigurieren Sie die Basis-Einstellungen für Ihr Alarmsystem.",
+        "title": "🏠 NFC Alarmsystem - Willkommen",
+        "description": "Schritt {step}: Grundeinrichtung\n\n{info}",
         "data": {
-          "name": "Name des Alarmsystems",
-          "indicator_lights": "Indikator-Lichter (mehrere möglich)",
-          "trigger_sensors": "Auslöser-Sensoren (mehrere möglich)",
-          "exit_delay": "Austrittsverzögerung (Sekunden)",
-          "entry_delay": "Eintrittsverzögerung (Sekunden)"
+          "name": "Name des Alarmsystems"
+        },
+        "data_description": {
+          "name": "Wählen Sie einen eindeutigen Namen für Ihr Alarmsystem (z.B. 'Hausalarm Erdgeschoss')"
+        }
+      },
+      "devices": {
+        "title": "🔌 Geräte auswählen",
+        "description": "Schritt {step}: Geräte konfigurieren\n\n{info}",
+        "data": {
+          "indicator_lights": "💡 Indikator-Lichter",
+          "trigger_sensors": "🚪 Auslöser-Sensoren"
+        },
+        "data_description": {
+          "indicator_lights": "Wählen Sie ein oder mehrere RGB-Lichter für visuelle Statusanzeigen",
+          "trigger_sensors": "Wählen Sie Tür-/Fenstersensoren, die den Alarm auslösen sollen"
+        }
+      },
+      "timing": {
+        "title": "⏱️ Verzögerungszeiten",
+        "description": "Schritt {step}: Zeiteinstellungen\n\n{info}",
+        "data": {
+          "exit_delay": "⏱️ Austrittsverzögerung",
+          "entry_delay": "⏱️ Eintrittsverzögerung"
+        },
+        "data_description": {
+          "exit_delay": "Zeit in Sekunden, die Sie haben, um das Gebäude nach dem Scharfschalten zu verlassen",
+          "entry_delay": "Zeit in Sekunden, die Sie haben, um das System nach Auslösung unscharfzuschalten"
         }
       },
       "nfc_tags": {
-        "title": "NFC-Tag Konfiguration",
-        "description": "Konfigurieren Sie die NFC-Tags zum Scharf-/Unscharfschalten.",
+        "title": "🏷️ NFC-Tags konfigurieren",
+        "description": "Schritt {step}: NFC-Tag Einrichtung\n\n{info}",
         "data": {
-          "use_single_tag": "Ein Tag für Scharf und Unscharf verwenden",
-          "arm_tag": "NFC-Tag ID zum Scharfschalten",
-          "disarm_tag": "NFC-Tag ID zum Unscharfschalten (nur wenn separate Tags)"
+          "use_single_tag": "🏷️ Ein Tag für Scharf und Unscharf verwenden",
+          "arm_tag": "🔵 NFC-Tag ID zum Scharfschalten",
+          "disarm_tag": "🟢 NFC-Tag ID zum Unscharfschalten"
+        },
+        "data_description": {
+          "use_single_tag": "Aktivieren, wenn derselbe Tag zum Scharf- und Unscharfschalten verwendet werden soll",
+          "arm_tag": "Die eindeutige ID Ihres NFC-Tags (z.B. c44df694-639e-4608-a98d-35156be653b7)",
+          "disarm_tag": "Nur erforderlich, wenn Sie separate Tags verwenden möchten"
         }
       },
       "media": {
-        "title": "Medien & Sirene",
-        "description": "Konfigurieren Sie optionale Sirenen-Ausgabe.",
+        "title": "🔊 Sirene & Medien",
+        "description": "Schritt {step}: Sirenen-Konfiguration (optional)\n\n{info}",
         "data": {
-          "enable_siren": "Sirene aktivieren",
-          "media_player": "Media Player für Sirene",
-          "siren_file": "Pfad zur Sirenen-Datei (z.B. media-source://media_source/local/siren.mp3)",
-          "siren_volume": "Sirenen-Lautstärke (0.0 - 1.0)"
+          "enable_siren": "🔊 Sirene aktivieren",
+          "media_player": "📱 Media Player",
+          "siren_file": "🎵 Pfad zur Sirenen-Datei",
+          "siren_volume": "🔉 Lautstärke"
+        },
+        "data_description": {
+          "enable_siren": "Aktivieren Sie diese Option, um bei Alarm eine Audiodatei abzuspielen",
+          "media_player": "Wählen Sie den Media Player für die Sirenen-Ausgabe (z.B. Google Nest Hub, Sonos)",
+          "siren_file": "Vollständiger Pfad zur Sirenen-Audiodatei (z.B. media-source://media_source/local/siren.mp3)",
+          "siren_volume": "Lautstärke der Sirene (0.0 = stumm, 1.0 = maximale Lautstärke)"
         }
       },
       "notifications": {
-        "title": "Benachrichtigungen & Automatisierung",
-        "description": "Konfigurieren Sie optionale Benachrichtigungen und automatische Unscharfschaltung.",
+        "title": "📲 Benachrichtigungen & Automatisierung",
+        "description": "Schritt {step}: Erweiterte Funktionen (optional)\n\n{info}",
         "data": {
-          "enable_notifications": "Benachrichtigungen aktivieren",
-          "notify_service": "Benachrichtigungs-Service (z.B. notify.mobile_app_device)",
-          "enable_auto_disarm": "Automatische Unscharfschaltung aktivieren",
-          "auto_disarm_time": "Zeit für automatische Unscharfschaltung"
+          "enable_notifications": "📲 Benachrichtigungen aktivieren",
+          "notify_service": "🔔 Benachrichtigungs-Service",
+          "enable_auto_disarm": "⏰ Automatische Unscharfschaltung aktivieren",
+          "auto_disarm_time": "🕐 Zeit für automatische Unscharfschaltung"
+        },
+        "data_description": {
+          "enable_notifications": "Aktivieren, um Push-Benachrichtigungen bei Statusänderungen zu erhalten",
+          "notify_service": "Name des Benachrichtigungs-Service (z.B. notify.mobile_app_iphone_von_max)",
+          "enable_auto_disarm": "Aktivieren, um das System täglich automatisch unscharfzuschalten",
+          "auto_disarm_time": "Uhrzeit für die tägliche automatische Unscharfschaltung (z.B. 06:00:00)"
         }
       }
     },
     "error": {
-      "unknown": "Ein unbekannter Fehler ist aufgetreten"
+      "unknown": "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+      "name_required": "Bitte geben Sie einen Namen für das Alarmsystem ein.",
+      "no_lights": "Bitte wählen Sie mindestens ein Indikator-Licht aus.",
+      "no_sensors": "Bitte wählen Sie mindestens einen Auslöser-Sensor aus.",
+      "arm_tag_required": "Bitte geben Sie eine NFC-Tag ID zum Scharfschalten ein.",
+      "disarm_tag_required": "Bei separaten Tags ist eine Unscharf-Tag ID erforderlich.",
+      "media_player_required": "Bitte wählen Sie einen Media Player aus, wenn die Sirene aktiviert ist.",
+      "siren_file_required": "Bitte geben Sie den Pfad zur Sirenen-Datei ein.",
+      "notify_service_required": "Bitte geben Sie einen Benachrichtigungs-Service an.",
+      "auto_disarm_time_required": "Bitte geben Sie eine Zeit für die automatische Unscharfschaltung an."
     },
     "abort": {
-      "already_configured": "Dieses Gerät ist bereits konfiguriert"
+      "already_configured": "Dieses Alarmsystem ist bereits konfiguriert. Bitte verwenden Sie die Optionen, um Einstellungen zu ändern."
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "NFC Alarmsystem - Optionen",
-        "description": "Passen Sie die Verzögerungszeiten an.",
+        "title": "⚙️ NFC Alarmsystem - Einstellungen",
+        "description": "{info}",
         "data": {
-          "exit_delay": "Austrittsverzögerung (Sekunden)",
-          "entry_delay": "Eintrittsverzögerung (Sekunden)"
+          "option": "Wählen Sie eine Einstellung"
+        }
+      },
+      "timing": {
+        "title": "⏱️ Verzögerungszeiten anpassen",
+        "description": "{info}",
+        "data": {
+          "exit_delay": "⏱️ Austrittsverzögerung (Sekunden)",
+          "entry_delay": "⏱️ Eintrittsverzögerung (Sekunden)"
+        }
+      },
+      "nfc_tags": {
+        "title": "🏷️ NFC-Tags aktualisieren",
+        "description": "{info}",
+        "data": {
+          "use_single_tag": "Ein Tag für beide verwenden",
+          "arm_tag": "Scharf-Tag ID",
+          "disarm_tag": "Unscharf-Tag ID (optional)"
+        }
+      },
+      "media": {
+        "title": "🔊 Sirenen-Einstellungen",
+        "description": "{info}",
+        "data": {
+          "enable_siren": "Sirene aktivieren",
+          "media_player": "Media Player",
+          "siren_file": "Sirenen-Datei Pfad",
+          "siren_volume": "Lautstärke"
+        }
+      },
+      "notifications": {
+        "title": "📲 Benachrichtigungs-Einstellungen",
+        "description": "{info}",
+        "data": {
+          "enable_notifications": "Benachrichtigungen aktivieren",
+          "notify_service": "Benachrichtigungs-Service",
+          "enable_auto_disarm": "Auto-Unscharfschaltung aktivieren",
+          "auto_disarm_time": "Unscharfschaltungs-Zeit"
         }
       }
     }
