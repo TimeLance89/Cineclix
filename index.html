@@ -38,6 +38,64 @@
     <div class="hero__cards" id="summary-cards"></div>
   </section>
 
+  <section class="menu-board" aria-label="Module-Shortcuts">
+    <div class="menu-board__header">
+      <p class="eyebrow">Module</p>
+      <h2>Springe direkt zum passenden Bereich</h2>
+      <p class="muted">Jede App-Kachel öffnet den jeweiligen Bereich – so bleibt die Navigation klar getrennt.</p>
+    </div>
+    <div class="menu-grid" id="menu-grid">
+      <button class="menu-card" data-target="dashboard">
+        <div>
+          <p class="eyebrow">Übersicht</p>
+          <h3>Dashboard</h3>
+          <p class="muted">Schnellüberblick & Widgets</p>
+        </div>
+        <span class="menu-card__pill">Live</span>
+      </button>
+      <button class="menu-card" data-target="calendar">
+        <div>
+          <p class="eyebrow">Termine</p>
+          <h3>Kalender</h3>
+          <p class="muted">Monatsraster & Tagesdetails</p>
+        </div>
+        <span class="menu-card__pill">Konfliktcheck</span>
+      </button>
+      <button class="menu-card" data-target="tasks">
+        <div>
+          <p class="eyebrow">Aufgaben</p>
+          <h3>Chores</h3>
+          <p class="muted">Filterbar nach Priorität</p>
+        </div>
+        <span class="menu-card__pill">Priorisiert</span>
+      </button>
+      <button class="menu-card" data-target="shopping">
+        <div>
+          <p class="eyebrow">Einkauf</p>
+          <h3>Listen</h3>
+          <p class="muted">Pro Laden gebündelt</p>
+        </div>
+        <span class="menu-card__pill">Realtime</span>
+      </button>
+      <button class="menu-card" data-target="finance">
+        <div>
+          <p class="eyebrow">Budget</p>
+          <h3>Finanzen</h3>
+          <p class="muted">Saldo & Kategorien</p>
+        </div>
+        <span class="menu-card__pill">Ausgleich</span>
+      </button>
+      <button class="menu-card" data-target="messages">
+        <div>
+          <p class="eyebrow">Board</p>
+          <h3>Nachrichten</h3>
+          <p class="muted">Gepinnte Updates</p>
+        </div>
+        <span class="menu-card__pill">E2E vorbereitet</span>
+      </button>
+    </div>
+  </section>
+
   <main class="layout">
     <section class="panel" id="quick-actions">
       <div class="panel__header">
@@ -65,8 +123,36 @@
         <input type="date" name="date" required>
         <input type="time" name="time" required>
         <input type="text" name="people" placeholder="Personen (Komma)" required>
+        <select name="type">
+          <option value="Familie">Familie</option>
+          <option value="Schule">Schule</option>
+          <option value="Gesundheit">Gesundheit</option>
+          <option value="Freizeit">Freizeit</option>
+        </select>
         <button class="btn btn-primary" type="submit">Termin anlegen</button>
       </form>
+      <div class="calendar-layout">
+        <div class="calendar-shell">
+          <div class="calendar-header">
+            <button class="btn btn-ghost" id="prev-month">←</button>
+            <div>
+              <h3 id="calendar-month"></h3>
+              <p class="muted" id="calendar-meta"></p>
+            </div>
+            <button class="btn btn-ghost" id="next-month">→</button>
+          </div>
+          <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+        <div class="day-detail" id="day-detail">
+          <div class="day-detail__header">
+            <p class="eyebrow">Tagesplan</p>
+            <h3 id="day-label">Wähle ein Datum</h3>
+            <p class="muted">Alle Termine des gewählten Tages erscheinen hier.</p>
+          </div>
+          <div class="day-events" id="day-events"></div>
+          <div class="calendar-summary" id="calendar-summary"></div>
+        </div>
+      </div>
       <div class="grid" id="event-grid"></div>
     </section>
 
@@ -79,6 +165,14 @@
             <p class="muted">Zuweisen, kommentieren, wiederkehrend planen.</p>
           </div>
           <div class="chip chip-success">Priorisiert</div>
+        </div>
+        <div class="filter-row" id="task-filters" role="group" aria-label="Task-Filter">
+          <button class="chip chip-toggle is-active" data-filter="all">Alle</button>
+          <button class="chip chip-toggle" data-filter="hoch">Hoch</button>
+          <button class="chip chip-toggle" data-filter="mittel">Mittel</button>
+          <button class="chip chip-toggle" data-filter="niedrig">Niedrig</button>
+          <button class="chip chip-toggle" data-filter="offen">Offen</button>
+          <button class="chip chip-toggle" data-filter="done">Erledigt</button>
         </div>
         <form class="inline-form" id="task-form">
           <input type="text" name="title" placeholder="Aufgabe" required>
@@ -174,6 +268,6 @@
     <p>LifeHub – digitales Alltags-Cockpit. Beta-Entwicklung für geteilte Kalender, To-Dos, Einkaufslisten, Chat und Haushaltsbuch.</p>
   </footer>
 
-  <script src="app.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
