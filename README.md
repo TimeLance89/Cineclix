@@ -1,6 +1,6 @@
 # Arc Raiders: Browser-Koop-Prototyp
 
-Ein textbasiertes Koop-Loot-Spiel im Browser, inspiriert von der Stimmung und dem Loop von **Arc Raiders**. Das Spiel läuft rein clientseitig in HTML/JS und bietet gemeinsames Spielen über mehrere Tabs/Fenster derselben Domain (per `BroadcastChannel`) sowie einfache Session-Links für asynchrone Runden.
+Ein textbasiertes Koop-Loot-Spiel im Browser, inspiriert von der Stimmung und dem Loop von **Arc Raiders**. Das Spiel läuft rein clientseitig in HTML/JS und bietet gemeinsames Spielen über mehrere Tabs/Fenster derselben Domain (per `BroadcastChannel`) sowie einfache Session-Links für asynchrone Runden. Zusätzlich kann eine LAN-Synchronisation über einen kleinen Python-Server aktiviert werden.
 
 ## Konzeptüberblick
 - **Setting:** Widerstandstrupp gegen einfallende Maschinen („Arcs“). Klare Bedrohungslagen, wechselnde Wetter- und Signalbedingungen.
@@ -17,9 +17,17 @@ Ein textbasiertes Koop-Loot-Spiel im Browser, inspiriert von der Stimmung und de
   - **Session-Link:** Aktuellen Status als Link kopieren; andere Spieler können diesen einfügen, um dieselbe Session zu laden.
 
 ## Spiel starten
+**Variante ohne LAN (lokal im Browser):**
+
 1. `python -m http.server 8000` im Repo-Root starten.
 2. Im Browser `http://localhost:8000` öffnen.
 3. Squad aufstellen, Bedrohungen ziehen und Aktionen ausführen. Über „Status teilen“ kann der aktuelle Zustand synchronisiert werden.
+
+**Variante mit LAN-Sync:**
+
+1. Server starten: `python server.py --host 0.0.0.0 --port 8000` (öffnet API + statische Dateien für andere Geräte im LAN).
+2. Im Browser (z. B. `http://<deine-lan-ip>:8000`) das Spiel öffnen.
+3. Im Panel „LAN-Sync“ die Server-Adresse bestätigen. Der State wird alle paar Sekunden mit dem Server ausgetauscht; Spieler in demselben Netz sehen denselben Raid-Status.
 
 ## Steuerung & Hinweise
 - Aktionen würfeln intern mit simplen Erfolgswahrscheinlichkeiten; Ergebnisse werden im Log dokumentiert.

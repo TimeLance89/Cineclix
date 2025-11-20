@@ -120,6 +120,25 @@
 
   <main>
     <section class="panel">
+      <h2>LAN-Sync</h2>
+      <div class="grid">
+        <div class="stack">
+          <label for="lanEndpoint">Server-Adresse (LAN)</label>
+          <input id="lanEndpoint" placeholder="http://192.168.0.23:8000/api/session" />
+        </div>
+        <div class="stack">
+          <label>Status</label>
+          <div class="box" id="lanStatus">Offline – Browser-Only</div>
+        </div>
+      </div>
+      <div class="inline-buttons" style="margin-top: 10px;">
+        <button id="lanToggleBtn">LAN-Sync aktivieren</button>
+        <button id="lanSyncNowBtn" class="secondary">Jetzt synchronisieren</button>
+      </div>
+      <p class="muted small" style="margin-top: 8px;">LAN-Modus tauscht den Raid-Status alle paar Sekunden mit dem Python-Server aus – perfekt für Koop im selben Netz.</p>
+    </section>
+
+    <section class="panel">
       <h2>Session & Synchronisation</h2>
       <div class="grid">
         <div class="stack">
@@ -141,7 +160,7 @@
     </section>
 
     <section class="panel">
-      <h2>Squad</h2>
+      <h2>Squad – Widerstandszelle</h2>
       <div class="grid">
         <div class="stack">
           <label>Name</label>
@@ -227,10 +246,12 @@
 
     const lootTable = [
       { rarity: 'Legendär', name: 'Meteor Core', bonus: '+2 Hack & Unterdrücken', className: 'loot-legendary' },
+      { rarity: 'Legendär', name: 'Arc Spire-Kern', bonus: '+3 Hack, +2 Scout', className: 'loot-legendary' },
       { rarity: 'Episch', name: 'VFX-Arc Bow', bonus: '+2 Scout & Moral', className: 'loot-epic' },
       { rarity: 'Episch', name: 'Signal Jammer', bonus: '+2 Hack', className: 'loot-epic' },
       { rarity: 'Selten', name: 'Rail Core Ammo', bonus: '+1 Unterdrücken', className: 'loot-rare' },
       { rarity: 'Selten', name: 'Thermal Scope', bonus: '+1 Scout', className: 'loot-rare' },
+      { rarity: 'Selten', name: 'Reclaimer Drone', bonus: '+1 Hack & Supplies', className: 'loot-rare' },
       { rarity: 'Gewöhnlich', name: 'Medkit', bonus: '+1 Versorgung', className: 'loot-common' },
       { rarity: 'Gewöhnlich', name: 'Batteriepack', bonus: '+1 Hack', className: 'loot-common' },
     ];
@@ -244,6 +265,9 @@
       { name: 'EMP-Minefield', tier: 3, effect: 'Hack & Scout erschwert, Druck +1' },
       { name: 'Orbitaler Suchschein', tier: 2, effect: 'Sicht offenbart Squad, Druck +1' },
       { name: 'Kettenhund-Drohnen', tier: 1, effect: 'Nahkampfbedrohung, Moral -3' },
+      { name: 'Arc Spire-Laser', tier: 3, effect: 'Orbitalschlag lädt, Druck +2' },
+      { name: 'Raider Drop Pod', tier: 2, effect: 'Frische Arcs landen, Moral -4' },
+      { name: 'Hunter-Seeker Schwarm', tier: 4, effect: 'Jagd auf Signalquellen, Druck +3' },
     ];
 
     const baseState = () => ({
@@ -256,10 +280,18 @@
       threats: [],
       log: [],
       lootLog: [],
+      updatedAt: Date.now(),
     });
 
     let state = loadState();
     render();
+
+    let lanSyncEnabled = false;
+    let lanEndpoint = `${location.origin}/api/session`;
+    const lanStatus = document.getElementById('lanStatus');
+    const lanToggleBtn = document.getElementById('lanToggleBtn');
+
+    document.getElementById('lanEndpoint').value = lanEndpoint;
 
     channel.onmessage = (event) => {
       if (event.data?.type === 'sync' && event.data.sessionId === state.sessionId) {
@@ -278,6 +310,8 @@
     document.getElementById('loadSessionBtn').addEventListener('click', loadFromLinkField);
     document.getElementById('clearStateBtn').addEventListener('click', resetLocal);
     document.getElementById('scoutWeakBtn').addEventListener('click', () => performAction('scout'));
+    document.getElementById('lanToggleBtn').addEventListener('click', toggleLanSync);
+    document.getElementById('lanSyncNowBtn').addEventListener('click', syncNow);
 
     function loadState() {
       const stored = localStorage.getItem(storageKey);
@@ -291,8 +325,10 @@
     }
 
     function persist(broadcast = true) {
+      state.updatedAt = Date.now();
       localStorage.setItem(storageKey, JSON.stringify(state));
       if (broadcast) channel.postMessage({ type: 'sync', sessionId: state.sessionId, payload: state });
+      if (lanSyncEnabled) pushStateToServer();
     }
 
     function newSession() {
@@ -342,7 +378,7 @@
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `<div class="stat-line"><strong>${p.name}</strong><span class="tag">${p.role}</span></div>
-          <p class="muted small">${p.gear || 'Standard-Kit'}</p>
+          <p class="muted small">${p.gear || 'Standard-Kit'} – Einsatzbereit gegen Arcs</p>
           <div class="stat-line small"><span class="tag badge">${p.status}</span></div>`;
         container.appendChild(card);
       });
@@ -379,7 +415,7 @@
       threat.weakness = ['EMP', 'Schwachpunkt', 'Tarnung', 'Störsender'][Math.floor(Math.random() * 4)];
       state.threats.unshift(threat);
       adjustPressure(threat.tier - 1, `${threat.name} erscheint. Druck steigt.`);
-      logEvent(`Neue Bedrohung: ${threat.name} (Stufe ${threat.tier}).`);
+      logEvent(`Neue Bedrohung: ${threat.name} (Stufe ${threat.tier}). Arc-Signatur verstärkt.`);
       render();
     }
 
@@ -437,7 +473,7 @@
           if (total >= 70) {
             const cache = grantLoot('Selten oder besser');
             state.pressure = Math.max(0, state.pressure - 1);
-            result = `Hack erfolgreich (${total}). Cache geöffnet: ${cache}. Druck -1.`;
+            result = `Hack erfolgreich (${total}). Arc-Netzwerk angezapft: ${cache}. Druck -1.`;
           } else {
             state.supplies = Math.max(0, state.supplies - 1);
             result = `Hack gescheitert (${total}). Supplies -1.`;
@@ -500,7 +536,7 @@
     }
 
     function hint() {
-      if (state.pressure >= 6) return 'Druck hoch: Unterdrücken oder Hacken!' ;
+      if (state.pressure >= 6) return 'Druck hoch: Unterdrücken oder Hacken!';
       if (state.morale >= 100) return 'Hohe Moral: Loot-Boni aktiv.';
       if (state.supplies <= 1) return 'Supplies knapp: Versorgung sichern.';
       if (state.threats.length >= 3) return 'Zu viele Bedrohungen: Scouten & Neutralisieren.';
@@ -509,7 +545,9 @@
 
     function logEvent(text) {
       const timestamp = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-      state.log.push(`[${timestamp}] ${text}`);
+      const callouts = ['Echo meldet Arc-Funken', 'Radar: Spire-Ausschlag', 'HQ: Resist!'];
+      const tag = callouts[Math.floor(Math.random() * callouts.length)];
+      state.log.push(`[${timestamp}] ${text} (${tag})`);
     }
 
     function copyShareLink() {
@@ -541,6 +579,64 @@
       render();
       persist();
     }
+
+    function toggleLanSync() {
+      lanEndpoint = document.getElementById('lanEndpoint').value.trim() || `${location.origin}/api/session`;
+      lanSyncEnabled = !lanSyncEnabled;
+      lanToggleBtn.textContent = lanSyncEnabled ? 'LAN-Sync deaktivieren' : 'LAN-Sync aktivieren';
+      if (lanSyncEnabled) {
+        updateLanStatus('Verbunden (wartet auf Sync)');
+        syncNow();
+      } else {
+        updateLanStatus('Offline – Browser-Only');
+      }
+    }
+
+    function updateLanStatus(text) {
+      lanStatus.textContent = text;
+    }
+
+    async function pushStateToServer() {
+      try {
+        const res = await fetch(`${lanEndpoint}/${state.sessionId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ state }),
+        });
+        if (res.ok) {
+          updateLanStatus('Gesendet – wartet auf Verbündete');
+        } else {
+          updateLanStatus('Fehler beim Senden');
+        }
+      } catch (err) {
+        updateLanStatus('Server nicht erreichbar');
+      }
+    }
+
+    async function pullStateFromServer() {
+      try {
+        const res = await fetch(`${lanEndpoint}/${state.sessionId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.state && data.state.updatedAt > state.updatedAt) {
+          state = data.state;
+          render(true);
+          updateLanStatus('Synchronisiert (LAN)');
+        }
+      } catch (err) {
+        updateLanStatus('Server nicht erreichbar');
+      }
+    }
+
+    function syncNow() {
+      if (!lanSyncEnabled) return;
+      pushStateToServer();
+      pullStateFromServer();
+    }
+
+    setInterval(() => {
+      if (lanSyncEnabled) pullStateFromServer();
+    }, 5000);
   </script>
 </body>
 </html>
