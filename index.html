@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arc Raiders: Text Raid</title>
+  <style>
+    :root {
+      --bg: #0c0f15;
+      --panel: #151a23;
+      --accent: #8be7ff;
+      --accent-2: #f2c17c;
+      --danger: #ff6b6b;
+      --success: #8ed081;
+      --muted: #6b7280;
+      --text: #e5e7eb;
+      --border: #1f2937;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      padding: 20px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      background: radial-gradient(circle at 20% 20%, rgba(139,231,255,0.08), transparent 40%), var(--panel);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    h1 { margin: 0; letter-spacing: 0.04em; font-size: 24px; }
+    main { padding: 20px 24px 80px; max-width: 1200px; margin: 0 auto; display: grid; gap: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .panel h2 { margin: 0 0 8px; font-size: 18px; letter-spacing: 0.02em; }
+    .muted { color: var(--muted); font-size: 14px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); font-size: 12px; }
+    .status-line { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0; }
+    .status-line strong { letter-spacing: 0.02em; }
+    button, select {
+      background: linear-gradient(120deg, #1f2937, #111827);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.05s ease, border-color 0.2s ease;
+    }
+    button:hover { transform: translateY(-1px); border-color: var(--accent); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    form { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    input[type="text"] {
+      background: #0f1622;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 10px;
+      min-width: 200px;
+    }
+    #log { background: #0f1116; border-radius: 10px; padding: 12px; height: 260px; overflow: auto; font-family: "JetBrains Mono", monospace; border: 1px solid var(--border); }
+    #log div { margin-bottom: 6px; }
+    #log small { color: var(--muted); }
+    ul { padding-left: 20px; margin: 0 0 6px; }
+    .badge { padding: 3px 8px; border-radius: 8px; border: 1px solid var(--border); font-size: 12px; }
+    .badge.green { background: rgba(142,208,129,0.15); color: var(--success); }
+    .badge.red { background: rgba(255,107,107,0.1); color: var(--danger); }
+    .badge.gold { background: rgba(242,193,124,0.15); color: var(--accent-2); }
+    .inline-list { display: flex; gap: 6px; flex-wrap: wrap; }
+    .stack { display: grid; gap: 10px; }
+    .hero { display: grid; gap: 10px; grid-template-columns: 1.3fr 1fr; align-items: stretch; }
+    .callout { border-left: 3px solid var(--accent); padding-left: 12px; }
+    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Arc Raiders: Text Raid</h1>
+      <div class="muted">Drop, engage, loot & extract – direkt im Browser.</div>
+    </div>
+    <div class="status-line" id="sessionInfo"></div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="panel">
+        <h2>Mission Brief</h2>
+        <div class="stack">
+          <p class="callout">Automatische Session-Suche: Beim Laden wirst du sofort in ein Raid-Squad gesteckt. Aktionen sind textbasiert und laufen serverseitig, damit jede*r denselben Verlauf sieht.</p>
+          <div class="muted">Loop inspiriert von Arc Raiders: Recon → Engagement → Loot → Extraction. Moral, Supplies und Bedrohungsstufe beeinflussen Risiko und Belohnungen.</div>
+          <form id="nameForm">
+            <input type="text" id="displayName" placeholder="Rufname (optional)" />
+            <button type="submit">Session suchen & beitreten</button>
+            <span id="matchmakingState" class="muted"></span>
+          </form>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Squad-Status</h2>
+        <div id="squad"></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Session</h2>
+        <div id="session"></div>
+      </div>
+      <div class="panel">
+        <h2>Loot</h2>
+        <div id="loot"></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Aktionen</h2>
+        <form id="actionForm">
+          <select id="actionSelect">
+            <option value="scout">Scout</option>
+            <option value="strike">Strike</option>
+            <option value="hack">Hack</option>
+            <option value="loot">Loot</option>
+            <option value="rest">Rest</option>
+            <option value="extract">Extract</option>
+          </select>
+          <button type="submit">Ausführen</button>
+          <span class="muted" id="actionFeedback"></span>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Log</h2>
+        <div id="log"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Arc Raiders Flavor</h2>
+      <div class="stack">
+        <div class="inline-list">
+          <span class="pill">Drop-Ball</span>
+          <span class="pill">Signal Storm</span>
+          <span class="pill">Arc Spire</span>
+          <span class="pill">Extraction Zone</span>
+        </div>
+        <p class="muted">Bedrohungsstufen beeinflussen, wie gefährlich Arcs sind. Hohe Stufen erhöhen die Chance auf Verletzungen, drücken die Moral, aber liefern besseren Loot. Extrahiere rechtzeitig, um die Beute zu sichern.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const logBox = document.getElementById('log');
+    const squadBox = document.getElementById('squad');
+    const sessionBox = document.getElementById('session');
+    const lootBox = document.getElementById('loot');
+    const sessionInfo = document.getElementById('sessionInfo');
+    const actionFeedback = document.getElementById('actionFeedback');
+    const matchmakingState = document.getElementById('matchmakingState');
+
+    const state = {
+      sessionId: null,
+      playerId: null,
+      playerName: null,
+      connected: false,
+      offlineFallback: false,
+      poller: null,
+      snapshot: null,
+    };
+
+    function renderSquad(snapshot) {
+      if (!snapshot) return;
+      const players = Object.values(snapshot.players || {});
+      const items = players.map((p) => {
+        const hpBadge = `<span class="badge ${p.hp > 40 ? 'green' : 'red'}">HP ${p.hp}</span>`;
+        const moraleBadge = `<span class="badge ${p.morale > 40 ? 'green' : 'red'}">Moral ${p.morale}</span>`;
+        return `<div class="stack" style="border:1px solid var(--border); padding:8px; border-radius:10px;">
+          <div><strong>${p.name}</strong> <span class="pill">${p.role}</span></div>
+          <div class="inline-list">${hpBadge}${moraleBadge}<span class="badge">Loot-Bonus ${p.loot_bonus}</span></div>
+        </div>`;
+      });
+      squadBox.innerHTML = items.join('') || '<div class="muted">Noch kein Squad – join via Matchmaking.</div>';
+    }
+
+    function renderSession(snapshot) {
+      if (!snapshot) return;
+      sessionInfo.innerHTML = '';
+      const pills = [
+        `<span class="pill">Session ${snapshot.id || '—'}</span>`,
+        `<span class="pill">Threat ${snapshot.threat}</span>`,
+        `<span class="pill">Round ${snapshot.round}</span>`,
+        `<span class="pill">Moral ${snapshot.morale}</span>`,
+        `<span class="pill">Supplies ${snapshot.supplies}</span>`,
+        `<span class="pill">Status ${snapshot.status}</span>`
+      ];
+      sessionInfo.innerHTML = pills.join('');
+      sessionBox.innerHTML = `
+        <div class="stack">
+          <div class="status-line">
+            <strong>Bedrohung:</strong> Stufe ${snapshot.threat} – ${snapshot.current_encounter}
+          </div>
+          <div class="status-line"><strong>Moral:</strong> ${snapshot.morale} | <strong>Supplies:</strong> ${snapshot.supplies}</div>
+          <div class="status-line"><strong>Runde:</strong> ${snapshot.round}</div>
+          <div class="muted">Session-ID: ${snapshot.id}</div>
+        </div>`;
+    }
+
+    function renderLoot(snapshot) {
+      if (!snapshot) return;
+      const items = snapshot.loot?.slice(-8).map((loot) => `<div class="stack" style="border:1px solid var(--border); padding:8px; border-radius:10px;">
+        <div><strong>${loot.name}</strong> <span class="badge gold">${loot.rarity}</span></div>
+        <div class="muted">${loot.effect}</div>
+      </div>`);
+      lootBox.innerHTML = items?.join('') || '<div class="muted">Noch kein Loot.</div>';
+    }
+
+    function renderLog(snapshot) {
+      if (!snapshot) return;
+      logBox.innerHTML = snapshot.log
+        .slice(-60)
+        .map((line) => `<div>${line}</div>`)
+        .join('');
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function renderAll(snapshot) {
+      if (!snapshot) return;
+      renderSession(snapshot);
+      renderSquad(snapshot);
+      renderLoot(snapshot);
+      renderLog(snapshot);
+    }
+
+    async function matchmake(nameOverride) {
+      matchmakingState.textContent = 'suche Session…';
+      try {
+        const res = await fetch('/api/matchmake', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: nameOverride || state.playerName }),
+        });
+        if (!res.ok) throw new Error('Server nicht erreichbar');
+        const data = await res.json();
+        state.sessionId = data.session_id;
+        state.playerId = data.player_id;
+        state.playerName = data.player_name;
+        state.connected = true;
+        state.offlineFallback = false;
+        matchmakingState.textContent = `verbunden: Session ${data.session_id}`;
+        renderAll(data.state);
+        startPolling();
+      } catch (err) {
+        state.offlineFallback = true;
+        state.connected = false;
+        matchmakingState.textContent = 'Server nicht erreichbar – Solo-Probelauf';
+        createOfflineSandbox();
+      }
+    }
+
+    function startPolling() {
+      if (state.poller) clearInterval(state.poller);
+      state.poller = setInterval(async () => {
+        if (!state.sessionId || !state.playerId) return;
+        try {
+          const res = await fetch(`/api/state?session_id=${state.sessionId}`);
+          if (!res.ok) throw new Error('State-Fehler');
+          const data = await res.json();
+          state.snapshot = data.state;
+          renderAll(state.snapshot);
+          matchmakingState.textContent = `verbunden: Session ${state.sessionId}`;
+        } catch (err) {
+          matchmakingState.textContent = 'Verbindung verloren';
+        }
+      }, 2500);
+    }
+
+    async function sendAction(action) {
+      if (state.offlineFallback) {
+        offlineAction(action);
+        return;
+      }
+      if (!state.sessionId) return;
+      actionFeedback.textContent = '…';
+      const res = await fetch('/api/action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: state.sessionId,
+          player_id: state.playerId,
+          action,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        state.snapshot = data.state;
+        renderAll(state.snapshot);
+        actionFeedback.textContent = 'ok';
+      } else {
+        actionFeedback.textContent = 'Aktion fehlgeschlagen';
+      }
+    }
+
+    const offlineState = {
+      id: 'solo',
+      players: {},
+      loot: [],
+      log: [],
+      threat: 1,
+      morale: 100,
+      supplies: 3,
+      round: 1,
+      status: 'active',
+      current_encounter: 'Signalsuche',
+    };
+
+    function createOfflineSandbox() {
+      const pid = 'solo-player';
+      offlineState.players[pid] = { name: state.playerName || 'Solo', role: 'Scout', hp: 100, morale: 100, loot_bonus: '+1 Recon' };
+      offlineState.log.push('Solo-Probelauf aktiv. Server starten, um synchron zu spielen.');
+      renderAll(offlineState);
+    }
+
+    function offlineAction(action) {
+      const player = Object.values(offlineState.players)[0];
+      const random = Math.random();
+      let logLine = `${player.name} führt ${action} aus.`;
+      if (action === 'scout' && random > 0.5) offlineState.threat = Math.min(4, offlineState.threat + 1);
+      if (action === 'strike' && random > 0.4) offlineState.threat = Math.max(1, offlineState.threat - 1);
+      if (action === 'loot') offlineState.loot.push({ name: 'Offline-Cache', rarity: 'Rare', effect: '+1 Moral' });
+      offlineState.round += 1;
+      offlineState.log.push(logLine);
+      renderAll(offlineState);
+    }
+
+    document.getElementById('nameForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      state.playerName = document.getElementById('displayName').value.trim() || null;
+      matchmake(state.playerName);
+    });
+
+    document.getElementById('actionForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const action = document.getElementById('actionSelect').value;
+      sendAction(action);
+    });
+
+    // Auto-start matchmaking on load
+    matchmake();
+  </script>
+</body>
+</html>
