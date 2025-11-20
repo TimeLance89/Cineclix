@@ -151,11 +151,13 @@
         </div>
       </div>
       <div class="inline-buttons" style="margin-top: 12px;">
+        <button id="quickMatchBtn" class="secondary">Spiel suchen (Auto-Session)</button>
         <button id="newSessionBtn">Neue Session</button>
         <button id="copyLinkBtn" class="secondary">Status teilen (Link kopieren)</button>
         <button id="loadSessionBtn" class="secondary">Session laden</button>
         <button id="clearStateBtn" class="danger">Reset (lokal)</button>
       </div>
+      <p id="matchmakingStatus" class="muted small" style="margin-top: 8px;">Spielsuche startet automatisch eine Session mit Arc-Raid-Ziel.</p>
       <p class="muted small" style="margin-top: 8px;">Synchronisation live für Tabs/Fenster derselben Domain via BroadcastChannel. Für asynchrones Spielen Link teilen.</p>
     </section>
 
@@ -290,6 +292,8 @@
     let lanEndpoint = `${location.origin}/api/session`;
     const lanStatus = document.getElementById('lanStatus');
     const lanToggleBtn = document.getElementById('lanToggleBtn');
+    const quickMatchBtn = document.getElementById('quickMatchBtn');
+    const matchmakingStatus = document.getElementById('matchmakingStatus');
 
     document.getElementById('lanEndpoint').value = lanEndpoint;
 
@@ -306,6 +310,7 @@
     document.getElementById('advanceThreatBtn').addEventListener('click', () => adjustPressure(1, 'Bedrohungsdruck steigt.'));
     document.getElementById('resolveThreatBtn').addEventListener('click', resolveThreat);
     document.getElementById('newSessionBtn').addEventListener('click', newSession);
+    document.getElementById('quickMatchBtn').addEventListener('click', startQuickMatch);
     document.getElementById('copyLinkBtn').addEventListener('click', copyShareLink);
     document.getElementById('loadSessionBtn').addEventListener('click', loadFromLinkField);
     document.getElementById('clearStateBtn').addEventListener('click', resetLocal);
@@ -331,14 +336,43 @@
       if (lanSyncEnabled) pushStateToServer();
     }
 
-    function newSession() {
+    function newSession(nameOverride, options = {}) {
       const nameField = document.getElementById('sessionName');
-      const newName = nameField.value.trim() || 'Widerstand';
+      const newName = (nameOverride ?? nameField.value.trim()) || 'Widerstand';
       state = baseState();
       state.name = newName;
-      logEvent(`Neue Session gestartet: ${newName}`);
+      if (options.skipLog !== true) {
+        logEvent(`Neue Session gestartet: ${newName}`);
+      }
       render();
       persist();
+    }
+
+    function generateAutoSessionName() {
+      const operations = ['Vanguard', 'Echo', 'Spear', 'Pulsar', 'Nova', 'Relay', 'Bastion'];
+      const locations = ['Schlucht', 'Waldlichtung', 'Funkposten', 'Satellit', 'Spire', 'Damm', 'Refugium'];
+      const numbers = Math.floor(Math.random() * 900 + 100);
+      return `${operations[Math.floor(Math.random() * operations.length)]}-${numbers} @ ${locations[Math.floor(Math.random() * locations.length)]}`;
+    }
+
+    function startQuickMatch() {
+      const name = generateAutoSessionName();
+      matchmakingStatus.textContent = 'Suche nach Arc-Überfall ...';
+      quickMatchBtn.disabled = true;
+      quickMatchBtn.textContent = 'Suche ...';
+
+      setTimeout(() => {
+        newSession(name, { skipLog: true });
+        logEvent(`Spiel gefunden: ${name} – Squad droppt.`);
+        logEvent('Arc-Funk bricht durch: Erste Bedrohungen werden markiert.');
+        drawThreat();
+        logEvent('Runde läuft: Sammle Loot, halte Moral, sichere den Evac.');
+        render();
+        persist();
+        matchmakingStatus.textContent = `Session aktiv – ${name}`;
+        quickMatchBtn.disabled = false;
+        quickMatchBtn.textContent = 'Spiel suchen (Auto-Session)';
+      }, 800);
     }
 
     function addPlayer() {
