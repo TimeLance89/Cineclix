@@ -3,6 +3,7 @@ import json
 import os
 import random
 import threading
+import urllib.parse
 import uuid
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler
@@ -165,10 +166,15 @@ class RaidHandler(SimpleHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_GET(self):
-        if self.path.startswith("/api/state"):
-            query = self.path.split("?", 1)[-1] if "?" in self.path else ""
-            params = dict(part.split("=") for part in query.split("&") if "=" in part)
-            session_id = params.get("session_id")
+        parsed = urllib.parse.urlsplit(self.path)
+
+        if parsed.path == "/api/health":
+            self._send_json({"ok": True})
+            return
+
+        if parsed.path.startswith("/api/state"):
+            params = urllib.parse.parse_qs(parsed.query)
+            session_id = params.get("session_id", [None])[0]
             with sessions_lock:
                 session = sessions.get(session_id) if session_id else None
                 if session is None:
@@ -182,7 +188,11 @@ class RaidHandler(SimpleHTTPRequestHandler):
         if self.path == "/api/matchmake":
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length) if length else b"{}"
-            body = json.loads(raw.decode("utf-8")) if raw else {}
+            try:
+                body = json.loads(raw.decode("utf-8")) if raw else {}
+            except json.JSONDecodeError:
+                self._send_json({"error": "invalid json"}, status=HTTPStatus.BAD_REQUEST)
+                return
             name = body.get("name")
             with sessions_lock:
                 session_id, player_id, session = join_session(name)
@@ -197,7 +207,11 @@ class RaidHandler(SimpleHTTPRequestHandler):
         if self.path == "/api/action":
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length) if length else b"{}"
-            body = json.loads(raw.decode("utf-8")) if raw else {}
+            try:
+                body = json.loads(raw.decode("utf-8")) if raw else {}
+            except json.JSONDecodeError:
+                self._send_json({"error": "invalid json"}, status=HTTPStatus.BAD_REQUEST)
+                return
             session_id = body.get("session_id")
             player_id = body.get("player_id")
             action = body.get("action")
@@ -216,9 +230,14 @@ class RaidHandler(SimpleHTTPRequestHandler):
         self._send_json({"error": "unknown route"}, status=HTTPStatus.NOT_FOUND)
 
 
+class RaidTCPServer(ThreadingTCPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+
 def run_server(host: str, port: int) -> None:
     os.chdir(ROOT)
-    with ThreadingTCPServer((host, port), lambda *args, **kwargs: RaidHandler(*args, directory=str(ROOT), **kwargs)) as httpd:
+    with RaidTCPServer((host, port), lambda *args, **kwargs: RaidHandler(*args, directory=str(ROOT), **kwargs)) as httpd:
         print(f"Serving on http://{host}:{port}")
         httpd.serve_forever()
 
