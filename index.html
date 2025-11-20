@@ -49,6 +49,10 @@
     .panel h2 { margin: 0 0 8px; font-size: 18px; letter-spacing: 0.02em; }
     .muted { color: var(--muted); font-size: 14px; }
     .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.04); font-size: 12px; }
+    .pill.status { border-color: transparent; font-weight: 700; letter-spacing: 0.02em; }
+    .pill.status.ok { background: rgba(142,208,129,0.15); color: var(--success); }
+    .pill.status.warn { background: rgba(242,193,124,0.15); color: var(--accent-2); }
+    .pill.status.error { background: rgba(255,107,107,0.12); color: var(--danger); }
     .status-line { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0; }
     .status-line strong { letter-spacing: 0.02em; }
     button, select {
@@ -93,7 +97,13 @@
       <h1>Arc Raiders: Text Raid</h1>
       <div class="muted">Drop, engage, loot & extract – direkt im Browser.</div>
     </div>
-    <div class="status-line" id="sessionInfo"></div>
+    <div class="stack" style="align-items:flex-end;">
+      <div class="status-line" style="justify-content:flex-end; align-items:center;">
+        <span id="connectionStatus" class="pill status warn">Verbinde…</span>
+        <button type="button" id="reconnect">Neu verbinden</button>
+      </div>
+      <div class="status-line" id="sessionInfo"></div>
+    </div>
   </header>
 
   <main>
@@ -171,6 +181,8 @@
     const sessionInfo = document.getElementById('sessionInfo');
     const actionFeedback = document.getElementById('actionFeedback');
     const matchmakingState = document.getElementById('matchmakingState');
+    const connectionStatus = document.getElementById('connectionStatus');
+    const reconnectBtn = document.getElementById('reconnect');
 
     const state = {
       sessionId: null,
@@ -181,6 +193,12 @@
       poller: null,
       snapshot: null,
     };
+
+    function setConnectionStatus(label, mode = 'warn') {
+      connectionStatus.textContent = label;
+      connectionStatus.classList.remove('ok', 'warn', 'error');
+      connectionStatus.classList.add(mode);
+    }
 
     function renderSquad(snapshot) {
       if (!snapshot) return;
@@ -247,6 +265,7 @@
 
     async function matchmake(nameOverride) {
       matchmakingState.textContent = 'suche Session…';
+      setConnectionStatus('Verbinde…', 'warn');
       try {
         const res = await fetch('/api/matchmake', {
           method: 'POST',
@@ -261,12 +280,14 @@
         state.connected = true;
         state.offlineFallback = false;
         matchmakingState.textContent = `verbunden: Session ${data.session_id}`;
+        setConnectionStatus('Online', 'ok');
         renderAll(data.state);
         startPolling();
       } catch (err) {
         state.offlineFallback = true;
         state.connected = false;
         matchmakingState.textContent = 'Server nicht erreichbar – Solo-Probelauf';
+        setConnectionStatus('Offline (Solo)', 'error');
         createOfflineSandbox();
       }
     }
@@ -282,8 +303,10 @@
           state.snapshot = data.state;
           renderAll(state.snapshot);
           matchmakingState.textContent = `verbunden: Session ${state.sessionId}`;
+          setConnectionStatus('Online', 'ok');
         } catch (err) {
           matchmakingState.textContent = 'Verbindung verloren';
+          setConnectionStatus('Verbindung verloren', 'warn');
         }
       }, 2500);
     }
@@ -356,6 +379,10 @@
       e.preventDefault();
       const action = document.getElementById('actionSelect').value;
       sendAction(action);
+    });
+
+    reconnectBtn.addEventListener('click', () => {
+      matchmake(state.playerName);
     });
 
     // Auto-start matchmaking on load
