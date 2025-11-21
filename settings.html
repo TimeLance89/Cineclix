@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LifeHub – Einstellungen</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="settings">
+  <div class="app-shell">
+    <header class="header">
+      <button class="sidebar-toggle" aria-label="Menü öffnen">☰</button>
+      <div class="brand">
+        <div class="brand-mark">LH</div>
+        LifeHub
+      </div>
+      <div class="user-meta">
+        Hallo, Steffen
+        <div class="avatar">S</div>
+        <a href="index.html">Logout</a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <nav class="nav-section">
+        <a class="nav-link" data-link="dashboard" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" data-link="calendar" href="calendar.html">Kalender</a>
+        <a class="nav-link" data-link="tasks" href="tasks.html">Aufgaben</a>
+        <a class="nav-link" data-link="shopping" href="shopping.html">Einkauf</a>
+        <a class="nav-link" data-link="households" href="households.html">Haushalte</a>
+        <a class="nav-link" data-link="settings" href="settings.html">Einstellungen</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="page-header">
+        <h1>Einstellungen</h1>
+      </div>
+
+      <div class="section-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Profil</div>
+          </div>
+          <form>
+            <div class="form-group">
+              <label for="profileFirstName">Vorname</label>
+              <input class="input" id="profileFirstName" placeholder="Steffen" />
+            </div>
+            <div class="form-group">
+              <label for="profileLastName">Nachname</label>
+              <input class="input" id="profileLastName" placeholder="Schmidt" />
+            </div>
+            <div class="form-group">
+              <label for="profileEmail">E-Mail</label>
+              <input class="input" id="profileEmail" type="email" placeholder="steffen@example.com" />
+            </div>
+            <button type="submit" class="btn btn-primary">Profil speichern</button>
+            <p class="badge success" style="margin-top: 12px;">Profil aktualisiert</p>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Passwort ändern</div>
+          </div>
+          <form>
+            <div class="form-group">
+              <label for="currentPassword">Altes Passwort</label>
+              <input class="input" type="password" id="currentPassword" />
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Neues Passwort</label>
+              <input class="input" type="password" id="newPassword" />
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Neues Passwort wiederholen</label>
+              <input class="input" type="password" id="confirmPassword" />
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary">Passwort ändern</button>
+              <button type="button" class="btn btn-secondary">Abbrechen</button>
+            </div>
+            <p class="alert" style="margin-top: 12px;">Bitte gib ein längeres Passwort ein.</p>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LifeHub – Kalender</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="calendar">
+  <div class="app-shell">
+    <header class="header">
+      <button class="sidebar-toggle" aria-label="Menü öffnen">☰</button>
+      <div class="brand">
+        <div class="brand-mark">LH</div>
+        LifeHub
+      </div>
+      <div class="user-meta">
+        Hallo, Steffen
+        <div class="avatar">S</div>
+        <a href="index.html">Logout</a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <nav class="nav-section">
+        <a class="nav-link" data-link="dashboard" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" data-link="calendar" href="calendar.html">Kalender</a>
+        <a class="nav-link" data-link="tasks" href="tasks.html">Aufgaben</a>
+        <a class="nav-link" data-link="shopping" href="shopping.html">Einkauf</a>
+        <a class="nav-link" data-link="households" href="households.html">Haushalte</a>
+        <a class="nav-link" data-link="settings" href="settings.html">Einstellungen</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="page-header">
+        <h1>Kalender</h1>
+        <button class="btn btn-primary">Neuer Termin</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Filter</div>
+        </div>
+        <div class="filters">
+          <select class="input" style="max-width: 220px;">
+            <option>Diese Woche</option>
+            <option>Dieser Monat</option>
+          </select>
+          <input class="input" type="date" />
+          <input class="input" type="date" />
+          <button class="btn btn-secondary">Filter anwenden</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-header">
+          <div class="card-title">Terminliste</div>
+        </div>
+        <ul class="list">
+          <li class="list-item" style="grid-template-columns: 220px 1fr auto;">
+            <div>
+              <strong>Fr, 21.11. – 09:00–10:00</strong>
+              <div class="meta-sub">Woche 47</div>
+            </div>
+            <div>
+              <strong>Team Meeting</strong>
+              <div class="meta-sub">Sprint Review & Planung</div>
+            </div>
+            <div class="actions">
+              <button class="btn btn-secondary">Bearbeiten</button>
+              <button class="btn btn-danger">Löschen</button>
+            </div>
+          </li>
+          <li class="list-item" style="grid-template-columns: 220px 1fr auto;">
+            <div>
+              <strong>Sa, 23.11. – ganztägig</strong>
+              <div class="meta-sub">Familie</div>
+            </div>
+            <div>
+              <strong>Geburtstag Lisa</strong>
+              <div class="meta-sub">Picknick im Park</div>
+            </div>
+            <div class="actions">
+              <button class="btn btn-secondary">Bearbeiten</button>
+              <button class="btn btn-danger">Löschen</button>
+            </div>
+          </li>
+          <li class="empty-state">Keine weiteren Termine – leg direkt einen neuen an.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-header">
+          <div class="card-title">Neuer Termin</div>
+        </div>
+        <form class="section-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+          <div class="form-group">
+            <label for="eventTitle">Titel</label>
+            <input class="input" id="eventTitle" placeholder="z. B. Elternabend" required />
+          </div>
+          <div class="form-group">
+            <label for="eventDescription">Beschreibung</label>
+            <textarea class="input" id="eventDescription" rows="3" placeholder="Details oder Ort"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="startDate">Startdatum</label>
+            <input class="input" type="date" id="startDate" />
+          </div>
+          <div class="form-group">
+            <label for="startTime">Startzeit</label>
+            <input class="input" type="time" id="startTime" />
+          </div>
+          <div class="form-group">
+            <label for="endDate">Enddatum</label>
+            <input class="input" type="date" id="endDate" />
+          </div>
+          <div class="form-group">
+            <label for="endTime">Endzeit</label>
+            <input class="input" type="time" id="endTime" />
+          </div>
+          <div class="form-group">
+            <label><input type="checkbox" /> Ganztägig</label>
+          </div>
+          <div class="actions" style="margin-top: 8px;">
+            <button type="submit" class="btn btn-primary">Speichern</button>
+            <button type="button" class="btn btn-secondary">Abbrechen</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
