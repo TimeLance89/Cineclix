@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LifeHub – Aufgaben</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="tasks">
+  <div class="app-shell">
+    <header class="header">
+      <button class="sidebar-toggle" aria-label="Menü öffnen">☰</button>
+      <div class="brand">
+        <div class="brand-mark">LH</div>
+        LifeHub
+      </div>
+      <div class="user-meta">
+        Hallo, Steffen
+        <div class="avatar">S</div>
+        <a href="index.html">Logout</a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <nav class="nav-section">
+        <a class="nav-link" data-link="dashboard" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" data-link="calendar" href="calendar.html">Kalender</a>
+        <a class="nav-link" data-link="tasks" href="tasks.html">Aufgaben</a>
+        <a class="nav-link" data-link="shopping" href="shopping.html">Einkauf</a>
+        <a class="nav-link" data-link="households" href="households.html">Haushalte</a>
+        <a class="nav-link" data-link="settings" href="settings.html">Einstellungen</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="page-header">
+        <h1>Aufgaben</h1>
+        <button class="btn btn-primary">Neue Aufgabe</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Filter</div>
+        </div>
+        <div class="filters">
+          <select class="input" style="max-width: 200px;">
+            <option>Alle</option>
+            <option>Nur offen</option>
+            <option>Nur erledigt</option>
+          </select>
+          <select class="input" style="max-width: 220px;">
+            <option>Fällig: Alle</option>
+            <option>Heute</option>
+            <option>Diese Woche</option>
+            <option>Später</option>
+            <option>Kein Datum</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-header">
+          <div class="card-title">Aufgabenliste</div>
+        </div>
+        <ul class="list">
+          <li class="list-item">
+            <div class="checkbox" data-checkbox>✓</div>
+            <div class="item-meta">
+              <strong>Wocheneinkauf planen</strong>
+              <span class="meta-sub">Fällig: 24.11. · Zugewiesen an Alex</span>
+            </div>
+            <div class="actions">
+              <button class="btn btn-secondary">Bearbeiten</button>
+              <button class="btn btn-danger">Löschen</button>
+            </div>
+          </li>
+          <li class="list-item">
+            <div class="checkbox" data-checkbox></div>
+            <div class="item-meta">
+              <strong>Haus putzen</strong>
+              <span class="meta-sub">Fällig: Diese Woche · Zugewiesen an Lea</span>
+            </div>
+            <div class="actions">
+              <button class="btn btn-secondary">Bearbeiten</button>
+              <button class="btn btn-danger">Löschen</button>
+            </div>
+          </li>
+          <li class="list-item">
+            <div class="checkbox" data-checkbox></div>
+            <div class="item-meta">
+              <strong>Geschenke kaufen</strong>
+              <span class="meta-sub">Kein Datum · Zugewiesen an Steffen</span>
+            </div>
+            <div class="actions">
+              <button class="btn btn-secondary">Bearbeiten</button>
+              <button class="btn btn-danger">Löschen</button>
+            </div>
+          </li>
+          <li class="empty-state">Du hast noch keine Aufgaben. Lege jetzt deine erste Aufgabe an.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-header">
+          <div class="card-title">Neue Aufgabe</div>
+        </div>
+        <form class="section-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+          <div class="form-group">
+            <label for="taskTitle">Titel</label>
+            <input class="input" id="taskTitle" placeholder="z. B. Müll rausbringen" required />
+          </div>
+          <div class="form-group">
+            <label for="taskDescription">Beschreibung</label>
+            <textarea class="input" id="taskDescription" rows="3" placeholder="Notizen zur Aufgabe"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="taskDue">Fälligkeitsdatum</label>
+            <input class="input" type="date" id="taskDue" />
+          </div>
+          <div class="form-group">
+            <label for="taskResponsible">Verantwortliche Person</label>
+            <select id="taskResponsible" class="input">
+              <option>Niemand</option>
+              <option>Steffen</option>
+              <option>Alex</option>
+              <option>Lea</option>
+            </select>
+          </div>
+          <div class="actions" style="margin-top: 8px;">
+            <button type="submit" class="btn btn-primary">Speichern</button>
+            <button type="button" class="btn btn-secondary">Abbrechen</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

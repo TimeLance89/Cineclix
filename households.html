@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LifeHub – Haushalte</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="households">
+  <div class="app-shell">
+    <header class="header">
+      <button class="sidebar-toggle" aria-label="Menü öffnen">☰</button>
+      <div class="brand">
+        <div class="brand-mark">LH</div>
+        LifeHub
+      </div>
+      <div class="user-meta">
+        Hallo, Steffen
+        <div class="avatar">S</div>
+        <a href="index.html">Logout</a>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <nav class="nav-section">
+        <a class="nav-link" data-link="dashboard" href="dashboard.html">Dashboard</a>
+        <a class="nav-link" data-link="calendar" href="calendar.html">Kalender</a>
+        <a class="nav-link" data-link="tasks" href="tasks.html">Aufgaben</a>
+        <a class="nav-link" data-link="shopping" href="shopping.html">Einkauf</a>
+        <a class="nav-link" data-link="households" href="households.html">Haushalte</a>
+        <a class="nav-link" data-link="settings" href="settings.html">Einstellungen</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <div class="page-header">
+        <h1>Haushalte</h1>
+        <button class="btn btn-primary">Neuen Haushalt anlegen</button>
+      </div>
+
+      <div class="section-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Aktive Haushalte</div>
+          </div>
+          <div class="list">
+            <div class="list-item">
+              <div class="item-meta">
+                <strong>Familie Müller</strong>
+                <span class="meta-sub">Owner · 3 Mitglieder</span>
+              </div>
+              <div class="actions">
+                <span class="badge success">Aktiv</span>
+                <button class="btn btn-secondary">Mitglieder einladen</button>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="item-meta">
+                <strong>WG Mitte</strong>
+                <span class="meta-sub">Mitglied · 4 Mitglieder</span>
+              </div>
+              <div class="actions">
+                <button class="btn btn-secondary">Als aktiv auswählen</button>
+                <button class="btn btn-secondary">Mitglieder einladen</button>
+              </div>
+            </div>
+            <div class="empty-state">Kein weiterer Haushalt vorhanden.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Neuen Haushalt anlegen</div>
+          </div>
+          <form>
+            <div class="form-group">
+              <label for="householdName">Name des Haushalts</label>
+              <input class="input" id="householdName" placeholder="z. B. Familie Schmidt" />
+            </div>
+            <button type="submit" class="btn btn-primary">Erstellen</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
